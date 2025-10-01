@@ -7,7 +7,7 @@ interface Job {
   title: string;
   description: string;
 }
-//empty comment
+
 const API_URL = process.env.NEXT_PUBLIC_API_URL as string;
 
 export default function Home() {
