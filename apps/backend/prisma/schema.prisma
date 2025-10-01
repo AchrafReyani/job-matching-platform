@@ -14,3 +14,16 @@ model Job {
   description String
   createdAt   DateTime @default(now())
 }
+
+model User {
+  id           String   @id @default(uuid())
+  email        String   @unique
+  passwordHash String
+  role         Role
+  createdAt    DateTime @default(now())
+}
+
+enum Role {
+  JOB_SEEKER
+  COMPANY
+}
