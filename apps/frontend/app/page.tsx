@@ -8,25 +8,30 @@ interface Job {
   description: string;
 }
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL as string;
+
 export default function Home() {
   const [jobs, setJobs] = useState<Job[]>([]);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
 
+  const fetchJobs = async () => {
+    const res = await fetch(`${API_URL}/jobs`);
+    const data = await res.json();
+    setJobs(data);
+  };
+
   useEffect(() => {
-    fetch('http://localhost:3001/jobs')
-      .then(res => res.json())
-      .then(data => setJobs(data));
+    fetchJobs();
   }, []);
 
   const submitJob = async () => {
-    await fetch('http://localhost:3001/jobs', {
+    await fetch(`${API_URL}/jobs`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ title, description }),
     });
-    const res = await fetch('http://localhost:3001/jobs');
-    setJobs(await res.json());
+    await fetchJobs();
     setTitle('');
     setDescription('');
   };
@@ -34,13 +39,26 @@ export default function Home() {
   return (
     <div style={{ padding: '2rem' }}>
       <h1>Job Matching</h1>
-      <input placeholder="Title" value={title} onChange={e => setTitle(e.target.value)} />
-      <input placeholder="Description" value={description} onChange={e => setDescription(e.target.value)} />
-      <button onClick={submitJob}>Add Job</button>
+
+      <div style={{ marginBottom: '1rem' }}>
+        <input
+          placeholder="Title"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+        />
+        <input
+          placeholder="Description"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+        />
+        <button onClick={submitJob}>Add Job</button>
+      </div>
 
       <ul>
-        {jobs.map(job => (
-          <li key={job.id}>{job.title}: {job.description}</li>
+        {jobs.map((job) => (
+          <li key={job.id}>
+            <strong>{job.title}</strong>: {job.description}
+          </li>
         ))}
       </ul>
     </div>
