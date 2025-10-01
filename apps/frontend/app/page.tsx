@@ -14,18 +14,18 @@ export default function Home() {
   const [description, setDescription] = useState('');
 
   useEffect(() => {
-    fetch('http://localhost:3000/jobs')
+    fetch('http://localhost:3001/jobs')
       .then(res => res.json())
       .then(data => setJobs(data));
   }, []);
 
   const submitJob = async () => {
-    await fetch('http://localhost:3000/jobs', {
+    await fetch('http://localhost:3001/jobs', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ title, description }),
     });
-    const res = await fetch('http://localhost:3000/jobs');
+    const res = await fetch('http://localhost:3001/jobs');
     setJobs(await res.json());
     setTitle('');
     setDescription('');
