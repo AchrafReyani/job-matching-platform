@@ -21,9 +21,22 @@ model User {
   passwordHash String
   role         Role
   createdAt    DateTime @default(now())
+
+  jobSeeker    JobSeeker?
 }
 
 enum Role {
   JOB_SEEKER
   COMPANY
 }
+
+model JobSeeker {
+  id                Int    @id @default(autoincrement())
+  userId            String @unique
+  fullName          String
+  portfolioUrl      String?
+  experienceSummary String?
+
+  user              User   @relation(fields: [userId], references: [id])
+}
+
