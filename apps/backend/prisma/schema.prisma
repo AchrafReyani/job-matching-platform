@@ -23,6 +23,7 @@ model User {
   createdAt    DateTime @default(now())
 
   jobSeeker    JobSeeker?
+  company      Company?
 }
 
 enum Role {
@@ -40,3 +41,12 @@ model JobSeeker {
   user              User   @relation(fields: [userId], references: [id])
 }
 
+model Company {
+  id          Int    @id @default(autoincrement())
+  userId      String @unique
+  companyName String
+  websiteUrl  String?
+  description String?
+
+  user        User   @relation(fields: [userId], references: [id])
+}
