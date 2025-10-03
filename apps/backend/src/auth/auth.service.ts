@@ -2,6 +2,9 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from '../prisma/prisma.service';
+import { RegisterJobSeekerDto } from './dto/register-jobseeker.dto';
+import { RegisterCompanyDto } from './dto/register-company.dto';
+import { LoginDto } from './dto/login.dto';
 
 @Injectable()
 export class AuthService {
@@ -11,7 +14,7 @@ export class AuthService {
     private prisma: PrismaService,
   ) {}
 
-  async registerJobSeeker(dto: any) { //todo update with actual dto
+  async registerJobSeeker(dto: RegisterJobSeekerDto) {
     const user = await this.usersService.createUser(dto.email, dto.password, 'JOB_SEEKER');
 
     await this.prisma.jobSeeker.create({
@@ -26,7 +29,7 @@ export class AuthService {
     return { message: 'Job seeker registered successfully' };
   }
 
-  async registerCompany(dto: any) { //todo update with actual dto
+  async registerCompany(dto: RegisterCompanyDto) {
     const user = await this.usersService.createUser(dto.email, dto.password, 'COMPANY');
 
     await this.prisma.company.create({
@@ -41,8 +44,8 @@ export class AuthService {
     return { message: 'Company registered successfully' };
   }
 
-  async login(email: string, password: string) {
-    const user = await this.usersService.validateUser(email, password);
+  async login(dto: LoginDto) {
+    const user = await this.usersService.validateUser(dto.email, dto.password);
     if (!user) throw new UnauthorizedException('Invalid credentials');
 
     const payload = { sub: user.id, role: user.role };
