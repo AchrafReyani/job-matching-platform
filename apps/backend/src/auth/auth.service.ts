@@ -50,4 +50,25 @@ export class AuthService {
       access_token: this.jwtService.sign(payload),
     };
   }
+
+  async getProfile(userId: string, role: string) {
+  const user = await this.prisma.user.findUnique({
+    where: { id: userId },
+    select: {
+      id: true,
+      email: true,
+      role: true,
+      createdAt: true,
+      jobSeeker: {
+        select: { fullName: true, portfolioUrl: true, experienceSummary: true },
+      },
+      company: {
+        select: { companyName: true, websiteUrl: true, description: true },
+      },
+    },
+  });
+
+  return user;
+}
+
 }
