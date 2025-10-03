@@ -6,12 +6,12 @@ export class AuthController {
   constructor(private authService: AuthService) {}
 
   @Post('register/job-seeker')
-  registerJobSeeker(@Body() dto: any) {
+  registerJobSeeker(@Body() dto: any) { //todo add actual dto
     return this.authService.registerJobSeeker(dto);
   }
 
   @Post('register/company')
-  registerCompany(@Body() dto: any) {
+  registerCompany(@Body() dto: any) { //todo add actual dto
     return this.authService.registerCompany(dto);
   }
 
