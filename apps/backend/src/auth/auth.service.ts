@@ -11,7 +11,7 @@ export class AuthService {
     private prisma: PrismaService,
   ) {}
 
-  async registerJobSeeker(dto: any) {
+  async registerJobSeeker(dto: any) { //todo update with actual dto
     const user = await this.usersService.createUser(dto.email, dto.password, 'JOB_SEEKER');
 
     await this.prisma.jobSeeker.create({
@@ -26,7 +26,7 @@ export class AuthService {
     return { message: 'Job seeker registered successfully' };
   }
 
-  async registerCompany(dto: any) {
+  async registerCompany(dto: any) { //todo update with actual dto
     const user = await this.usersService.createUser(dto.email, dto.password, 'COMPANY');
 
     await this.prisma.company.create({
