@@ -1,66 +1,35 @@
 'use client';
+import { useEffect } from 'react';
+import { registerJobSeeker, login, getProfile, saveToken } from '@/lib/api';
 
-import { useState, useEffect } from 'react';
-
-interface Job {
-  id: number;
-  title: string;
-  description: string;
-}
-
-const API_URL = process.env.NEXT_PUBLIC_API_URL as string;
-
-export default function Home() {
-  const [jobs, setJobs] = useState<Job[]>([]);
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
-
-  const fetchJobs = async () => {
-    const res = await fetch(`${API_URL}/jobs`);
-    const data = await res.json();
-    setJobs(data);
-  };
-
+export default function TestApi() {
   useEffect(() => {
-    fetchJobs();
+    async function run() {
+      try {
+        // Register a new job seeker
+        await registerJobSeeker({
+          email: 'demo@example.com',
+          password: '123456',
+          fullName: 'John Doe',
+        });
+
+        // Login
+        const { access_token } = await login({
+          email: 'demo@example.com',
+          password: '123456',
+        });
+        console.log('Logged in token:', access_token);
+        saveToken(access_token);
+
+        // Fetch profile
+        const profile = await getProfile(access_token);
+        console.log('Profile:', profile);
+      } catch (err) {
+        console.error(err);
+      }
+    }
+    run();
   }, []);
 
-  const submitJob = async () => {
-    await fetch(`${API_URL}/jobs`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ title, description }),
-    });
-    await fetchJobs();
-    setTitle('');
-    setDescription('');
-  };
-
-  return (
-    <div style={{ padding: '2rem' }}>
-      <h1>Job Matching</h1>
-
-      <div style={{ marginBottom: '1rem' }}>
-        <input
-          placeholder="Title"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-        />
-        <input
-          placeholder="Description"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-        />
-        <button onClick={submitJob}>Add Job</button>
-      </div>
-
-      <ul>
-        {jobs.map((job) => (
-          <li key={job.id}>
-            <strong>{job.title}</strong>: {job.description}
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
+  return <div>Testing API layer... check console</div>;
 }
