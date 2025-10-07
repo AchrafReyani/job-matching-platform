@@ -15,7 +15,7 @@ export default function LoginPage() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
-  // If already logged in, go straight to profile
+  // If already logged in, redirect to profile
   useEffect(() => {
     const token = getToken();
     if (token) {
@@ -31,14 +31,20 @@ export default function LoginPage() {
     try {
       const { access_token } = await login(email, password);
 
-      // ✅ use our helper to save token
+      // Save token
       saveToken(access_token);
 
       // Redirect to profile page after login
       router.push('/profile');
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error(err);
-      setError('Invalid email or password');
+
+      // Type guard to safely access error message
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError('Invalid email or password');
+      }
     } finally {
       setLoading(false);
     }
