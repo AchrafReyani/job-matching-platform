@@ -34,13 +34,17 @@ export default function RegisterJobSeekerPage() {
       });
 
       // Auto login
-      const { access_token } = await login( email, password );
+      const { access_token } = await login(email, password);
       saveToken(access_token);
 
       router.push('/profile');
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error(err);
-      setError('Failed to register. Please check your input.');
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError('Failed to register. Please check your input.');
+      }
     } finally {
       setLoading(false);
     }
