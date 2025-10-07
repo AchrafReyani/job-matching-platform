@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { registerJobSeeker } from '@/lib/auth';
+import { registerJobSeeker, login } from '@/lib/auth';
 import { saveToken } from '@/lib/api';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
@@ -24,7 +24,8 @@ export default function RegisterJobSeekerPage() {
     setError(null);
 
     try {
-      const { access_token } = await registerJobSeeker({
+      // Register
+      await registerJobSeeker({
         email,
         password,
         fullName,
@@ -32,7 +33,10 @@ export default function RegisterJobSeekerPage() {
         experienceSummary,
       });
 
+      // Auto login
+      const { access_token } = await login( email, password );
       saveToken(access_token);
+
       router.push('/profile');
     } catch (err: any) {
       console.error(err);
@@ -48,37 +52,10 @@ export default function RegisterJobSeekerPage() {
         <h1 className="text-2xl font-bold mb-6 text-center">Register as Job Seeker</h1>
 
         <form onSubmit={handleRegister} className="flex flex-col gap-4">
-          <Input
-            type="email"
-            placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-
-          <Input
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-
-          <Input
-            type="text"
-            placeholder="Full Name"
-            value={fullName}
-            onChange={(e) => setFullName(e.target.value)}
-            required
-          />
-
-          <Input
-            type="url"
-            placeholder="Portfolio URL (optional)"
-            value={portfolioUrl}
-            onChange={(e) => setPortfolioUrl(e.target.value)}
-          />
-
+          <Input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+          <Input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+          <Input type="text" placeholder="Full Name" value={fullName} onChange={(e) => setFullName(e.target.value)} required />
+          <Input type="url" placeholder="Portfolio URL (optional)" value={portfolioUrl} onChange={(e) => setPortfolioUrl(e.target.value)} />
           <textarea
             placeholder="Experience Summary (optional)"
             value={experienceSummary}
