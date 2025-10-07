@@ -1,7 +1,7 @@
 const API_URL = process.env.NEXT_PUBLIC_API_URL as string;
 
 /** Utility function to handle JSON requests + errors cleanly */
-export async function request<T = any>(
+export async function request<T>(
   endpoint: string,
   options: RequestInit = {}
 ): Promise<T> {
@@ -18,12 +18,12 @@ export async function request<T = any>(
     throw new Error(`API error: ${res.status} - ${errText}`);
   }
 
-  return res.json();
+  return (await res.json()) as T;
 }
 
 /* ---------- TOKEN HELPERS ---------- */
 
-export function saveToken(token: string) {
+export function saveToken(token: string): void {
   if (typeof window !== 'undefined') {
     localStorage.setItem('token', token);
   }
@@ -34,7 +34,7 @@ export function getToken(): string | null {
   return localStorage.getItem('token');
 }
 
-export function clearToken() {
+export function clearToken(): void {
   if (typeof window !== 'undefined') {
     localStorage.removeItem('token');
   }
