@@ -17,7 +17,6 @@ model User {
 
   jobSeeker JobSeeker?
   company   Company?
-  Vacancy   Vacancy[]
 }
 
 enum Role {
@@ -56,6 +55,4 @@ model Vacancy {
   createdAt      DateTime @default(now())
 
   company Company @relation(fields: [companyId], references: [id])
-  User    User?   @relation(fields: [userId], references: [id])
-  userId  String?
 }
