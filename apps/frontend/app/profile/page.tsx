@@ -32,6 +32,8 @@ export default function ProfilePage() {
 
   useEffect(() => {
     const token = getToken();
+
+    // 🚪 Redirect to login if not logged in
     if (!token) {
       router.push('/login');
       return;
@@ -44,6 +46,7 @@ export default function ProfilePage() {
       } catch (err) {
         console.error('Profile fetch failed', err);
         clearToken();
+        setError('Session expired. Please log in again.');
         router.push('/login');
       } finally {
         setLoading(false);
@@ -68,26 +71,15 @@ export default function ProfilePage() {
 
         {profile ? (
           <div className="space-y-3">
-            <p>
-              <strong>Email:</strong> {profile.email}
-            </p>
-            <p>
-              <strong>Role:</strong> {profile.role}
-            </p>
-            <p>
-              <strong>User ID (UUID):</strong> {profile.id}
-            </p>
-            <p>
-              <strong>Created At:</strong>{' '}
-              {new Date(profile.createdAt).toLocaleString()}
-            </p>
+            <p><strong>Email:</strong> {profile.email}</p>
+            <p><strong>Role:</strong> {profile.role}</p>
+            <p><strong>User ID (UUID):</strong> {profile.id}</p>
+            <p><strong>Created At:</strong> {new Date(profile.createdAt).toLocaleString()}</p>
 
             {profile.role === 'JOB_SEEKER' && profile.jobSeeker && (
               <div className="mt-4 border-t pt-3">
                 <h2 className="font-semibold text-lg mb-2">Job Seeker Info</h2>
-                <p>
-                  <strong>Name:</strong> {profile.jobSeeker.fullName}
-                </p>
+                <p><strong>Name:</strong> {profile.jobSeeker.fullName}</p>
                 {profile.jobSeeker.portfolioUrl && (
                   <p>
                     <strong>Portfolio:</strong>{' '}
@@ -101,10 +93,7 @@ export default function ProfilePage() {
                   </p>
                 )}
                 {profile.jobSeeker.experienceSummary && (
-                  <p>
-                    <strong>Experience:</strong>{' '}
-                    {profile.jobSeeker.experienceSummary}
-                  </p>
+                  <p><strong>Experience:</strong> {profile.jobSeeker.experienceSummary}</p>
                 )}
               </div>
             )}
@@ -112,9 +101,7 @@ export default function ProfilePage() {
             {profile.role === 'COMPANY' && profile.company && (
               <div className="mt-4 border-t pt-3">
                 <h2 className="font-semibold text-lg mb-2">Company Info</h2>
-                <p>
-                  <strong>Company:</strong> {profile.company.companyName}
-                </p>
+                <p><strong>Company:</strong> {profile.company.companyName}</p>
                 {profile.company.websiteUrl && (
                   <p>
                     <strong>Website:</strong>{' '}
@@ -128,9 +115,7 @@ export default function ProfilePage() {
                   </p>
                 )}
                 {profile.company.description && (
-                  <p>
-                    <strong>Description:</strong> {profile.company.description}
-                  </p>
+                  <p><strong>Description:</strong> {profile.company.description}</p>
                 )}
               </div>
             )}
