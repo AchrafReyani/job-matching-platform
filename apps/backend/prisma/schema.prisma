@@ -22,8 +22,9 @@ model User {
   role         Role
   createdAt    DateTime @default(now())
 
-  jobSeeker    JobSeeker?
-  company      Company?
+  jobSeeker JobSeeker?
+  company   Company?
+  Vacancy   Vacancy[]
 }
 
 enum Role {
@@ -32,21 +33,36 @@ enum Role {
 }
 
 model JobSeeker {
-  id                Int    @id @default(autoincrement())
-  userId            String @unique
+  id                Int     @id @default(autoincrement())
+  userId            String  @unique
   fullName          String
   portfolioUrl      String?
   experienceSummary String?
 
-  user              User   @relation(fields: [userId], references: [id])
+  user User @relation(fields: [userId], references: [id])
 }
 
 model Company {
-  id          Int    @id @default(autoincrement())
-  userId      String @unique
+  id          Int     @id @default(autoincrement())
+  userId      String  @unique
   companyName String
   websiteUrl  String?
   description String?
 
-  user        User   @relation(fields: [userId], references: [id])
+  user    User      @relation(fields: [userId], references: [id])
+  Vacancy Vacancy[]
+}
+
+model Vacancy {
+  id             Int      @id @default(autoincrement())
+  companyId      Int
+  title          String
+  salaryRange    String?
+  role           String
+  jobDescription String
+  createdAt      DateTime @default(now())
+
+  company Company @relation(fields: [companyId], references: [id])
+  User    User?   @relation(fields: [userId], references: [id])
+  userId  String?
 }
