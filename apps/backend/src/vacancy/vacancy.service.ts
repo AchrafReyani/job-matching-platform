@@ -1,18 +1,19 @@
-// src/vacancy/vacancy.service.ts
-import { Injectable, NotFoundException, ForbiddenException } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateVacancyDto } from './dto/create-vacancy.dto';
 import { UpdateVacancyDto } from './dto/update-vacancy.dto';
-
 @Injectable()
 export class VacancyService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) {}
 
   async createVacancy(companyId: number, data: CreateVacancyDto) {
     return this.prisma.vacancy.create({
       data: {
-        ...data,
         companyId,
+        title: data.title,
+        role: data.role,
+        salaryRange: data.salaryRange,
+        jobDescription: data.jobDescription,
       },
     });
   }
@@ -34,10 +35,11 @@ export class VacancyService {
     return vacancy;
   }
 
-  async updateVacancy(id: number, companyId: number, data: UpdateVacancyDto) {
+  async updateVacancy(companyId: number, id: number, data: UpdateVacancyDto) {
     const vacancy = await this.prisma.vacancy.findUnique({ where: { id } });
     if (!vacancy) throw new NotFoundException('Vacancy not found');
-    if (vacancy.companyId !== companyId) throw new ForbiddenException('Not allowed to edit this vacancy');
+    if (vacancy.companyId !== companyId)
+      throw new NotFoundException('You cannot edit this vacancy');
 
     return this.prisma.vacancy.update({
       where: { id },
@@ -45,10 +47,11 @@ export class VacancyService {
     });
   }
 
-  async deleteVacancy(id: number, companyId: number) {
+  async deleteVacancy(companyId: number, id: number) {
     const vacancy = await this.prisma.vacancy.findUnique({ where: { id } });
     if (!vacancy) throw new NotFoundException('Vacancy not found');
-    if (vacancy.companyId !== companyId) throw new ForbiddenException('Not allowed to delete this vacancy');
+    if (vacancy.companyId !== companyId)
+      throw new NotFoundException('You cannot delete this vacancy');
 
     return this.prisma.vacancy.delete({ where: { id } });
   }
