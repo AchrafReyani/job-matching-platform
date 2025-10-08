@@ -31,13 +31,16 @@ export class VacancyController {
   async create(@Request() req, @Body() data: CreateVacancyDto) {
     if (req.user.role !== 'COMPANY') throw new ForbiddenException('Only companies can create vacancies');
 
-    const company = await this.prisma.company.findUnique({
-      where: { userId: req.user.id },
-    });
+   const company = await this.prisma.company.findUnique({
+     where: { userId: req.user.userId },
+});
     if (!company) throw new NotFoundException('Company not found');
 
     return this.vacancyService.createVacancy(company.id, data);
   }
+
+
+
 
   @UseGuards(JwtAuthGuard)
   @Patch(':id')
