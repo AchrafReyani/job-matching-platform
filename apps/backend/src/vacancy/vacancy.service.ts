@@ -1,58 +1,52 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+// src/vacancy/vacancy.service.ts
+import { Injectable, BadRequestException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateVacancyDto } from './dto/create-vacancy.dto';
 import { UpdateVacancyDto } from './dto/update-vacancy.dto';
+
 @Injectable()
 export class VacancyService {
   constructor(private readonly prisma: PrismaService) {}
 
   async createVacancy(companyId: number, data: CreateVacancyDto) {
+    // Defensive validation: ensure required fields are present
+    const { title, role, jobDescription, salaryRange } = data;
+
+    if (!title || !role || !jobDescription) {
+      throw new BadRequestException(
+        'Missing required fields: title, role, and jobDescription are all required.'
+      );
+    }
+
     return this.prisma.vacancy.create({
       data: {
         companyId,
-        title: data.title,
-        role: data.role,
-        salaryRange: data.salaryRange,
-        jobDescription: data.jobDescription,
+        title,
+        role,
+        jobDescription,
+        salaryRange, // optional
       },
     });
   }
 
-  async getAllVacancies() {
-    return this.prisma.vacancy.findMany({
-      include: {
-        company: true,
-      },
-    });
-  }
-
-  async getVacancyById(id: number) {
-    const vacancy = await this.prisma.vacancy.findUnique({
-      where: { id },
-      include: { company: true },
-    });
-    if (!vacancy) throw new NotFoundException('Vacancy not found');
-    return vacancy;
-  }
-
-  async updateVacancy(companyId: number, id: number, data: UpdateVacancyDto) {
-    const vacancy = await this.prisma.vacancy.findUnique({ where: { id } });
-    if (!vacancy) throw new NotFoundException('Vacancy not found');
-    if (vacancy.companyId !== companyId)
-      throw new NotFoundException('You cannot edit this vacancy');
-
-    return this.prisma.vacancy.update({
-      where: { id },
+  async updateVacancy(id: number, companyId: number, data: UpdateVacancyDto) {
+    return this.prisma.vacancy.updateMany({
+      where: { id, companyId },
       data,
     });
   }
 
-  async deleteVacancy(companyId: number, id: number) {
-    const vacancy = await this.prisma.vacancy.findUnique({ where: { id } });
-    if (!vacancy) throw new NotFoundException('Vacancy not found');
-    if (vacancy.companyId !== companyId)
-      throw new NotFoundException('You cannot delete this vacancy');
+  async deleteVacancy(id: number, companyId: number) {
+    return this.prisma.vacancy.deleteMany({
+      where: { id, companyId },
+    });
+  }
 
-    return this.prisma.vacancy.delete({ where: { id } });
+  async getAllVacancies() {
+    return this.prisma.vacancy.findMany();
+  }
+
+  async getVacancyById(id: number) {
+    return this.prisma.vacancy.findUnique({ where: { id } });
   }
 }
