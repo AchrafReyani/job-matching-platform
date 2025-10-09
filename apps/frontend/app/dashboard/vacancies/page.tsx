@@ -71,7 +71,7 @@ export default function VacanciesPage() {
           vacancies.map((vacancy) => (
             <Card key={vacancy.id} className="p-4">
               <h2 className="font-semibold text-lg">{vacancy.title}</h2>
-              {/* <p><strong>Company:</strong> {vacancy.company.companyName}</p> */}
+              {/* <p><strong>Company:</strong> {vacancy.company.companyName}</p> TODO add company name inside vacancy */}
               <p><strong>Role:</strong> {vacancy.role}</p>
               {vacancy.salaryRange && <p><strong>Salary:</strong> {vacancy.salaryRange}</p>}
               <p>{vacancy.jobDescription}</p>
