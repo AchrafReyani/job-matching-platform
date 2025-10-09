@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { getToken } from '@/lib/api';
+import { getToken, clearToken } from '@/lib/api';
 import { getProfile, ProfileResponse } from '@/lib/auth';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
@@ -41,6 +41,11 @@ export default function DashboardPage() {
       ? profile.jobSeeker?.fullName
       : profile?.company?.companyName;
 
+  const handleLogout = () => {
+    clearToken();
+    router.push('/home');
+  };
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
       <Card className="w-full max-w-md p-6 text-center">
@@ -51,6 +56,9 @@ export default function DashboardPage() {
         <div className="flex flex-col gap-4 mt-6">
           <Button onClick={() => router.push('/dashboard/profile')}>Go to Profile</Button>
           <Button onClick={() => router.push('/dashboard/vacancies')}>Go to Vacancies</Button>
+          <Button onClick={handleLogout} variant="destructive">
+            Logout
+          </Button>
         </div>
       </Card>
     </div>
