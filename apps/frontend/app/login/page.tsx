@@ -15,11 +15,11 @@ export default function LoginPage() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
-  // If already logged in, redirect to profile
+  // If already logged in, redirect to dashboard
   useEffect(() => {
     const token = getToken();
     if (token) {
-      router.push('/profile');
+      router.push('/dashboard');
     }
   }, [router]);
 
@@ -34,8 +34,8 @@ export default function LoginPage() {
       // Save token
       saveToken(access_token);
 
-      // Redirect to profile page after login
-      router.push('/profile');
+      // Redirect to dashboard after login
+      router.push('/dashboard');
     } catch (err: unknown) {
       console.error(err);
 
