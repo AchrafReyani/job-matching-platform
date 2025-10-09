@@ -5,9 +5,10 @@ import { UsersModule } from './users/users.module';
 import { JobSeekerModule } from './job-seeker/job-seeker.module';
 import { CompanyModule } from './company/company.module';
 import { VacancyModule } from './vacancy/vacancy.module';
+import { CompaniesModule } from './companies/companies.module';
 
 @Module({
-  imports: [ AuthModule, UsersModule, JobSeekerModule, CompanyModule, VacancyModule],
+  imports: [ AuthModule, UsersModule, JobSeekerModule, CompanyModule, VacancyModule, CompaniesModule],
   providers: [PrismaService],
   exports: [PrismaService],
 })
