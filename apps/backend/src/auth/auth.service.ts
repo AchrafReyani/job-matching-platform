@@ -63,10 +63,10 @@ export class AuthService {
       role: true,
       createdAt: true,
       jobSeeker: {
-        select: { fullName: true, portfolioUrl: true, experienceSummary: true },
+        select: { id: true, fullName: true, portfolioUrl: true, experienceSummary: true },
       },
       company: {
-        select: { companyName: true, websiteUrl: true, description: true },
+        select: { id: true, companyName: true, websiteUrl: true, description: true },
       },
     },
   });
