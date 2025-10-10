@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { getToken } from '@/lib/api';
-import { getProfile } from '@/lib/auth';
+import { getProfile, ProfileResponse } from '@/lib/auth';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 
@@ -21,9 +21,10 @@ export default function CompanyVacanciesPage() {
   const [vacancies, setVacancies] = useState<Vacancy[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [companyId, setCompanyId] = useState<number | null>(null);
 
   useEffect(() => {
-    const fetchVacancies = async () => {
+    const fetchProfileAndVacancies = async () => {
       const token = getToken();
       if (!token) {
         router.push('/login');
@@ -31,14 +32,18 @@ export default function CompanyVacanciesPage() {
       }
 
       try {
-        // First get profile to know companyId
-        const profile = await getProfile(token);
-        const companyId = profile.company?.id;
-        if (!companyId) throw new Error('Company ID not found');
+        // Get company info
+        const profile: ProfileResponse = await getProfile(token);
+        if (!profile.company?.id) throw new Error('Company ID not found');
+        setCompanyId(profile.company.id);
 
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/vacancies/company/${companyId}`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        // Fetch vacancies for this company
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/vacancies/company/${profile.company.id}`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
         if (!res.ok) throw new Error('Failed to fetch your vacancies');
 
         const data: Vacancy[] = await res.json();
@@ -51,7 +56,7 @@ export default function CompanyVacanciesPage() {
       }
     };
 
-    fetchVacancies();
+    fetchProfileAndVacancies();
   }, [router]);
 
   if (loading) return <div className="flex justify-center mt-10">Loading...</div>;
@@ -62,7 +67,9 @@ export default function CompanyVacanciesPage() {
       <h1 className="text-2xl font-bold mb-6">My Vacancies</h1>
 
       <div className="flex flex-col gap-4 w-full max-w-2xl mb-6">
-        <Button onClick={() => router.push('/dashboard/company/vacancies/add')}>Add New Vacancy</Button>
+        <Button onClick={() => router.push('/dashboard/company/vacancies/add')}>
+          Add New Vacancy
+        </Button>
       </div>
 
       <div className="flex flex-col gap-4 w-full max-w-2xl">
@@ -79,7 +86,11 @@ export default function CompanyVacanciesPage() {
                 Posted: {new Date(vacancy.createdAt).toLocaleDateString()}
               </p>
               <div className="mt-2">
-                <Button onClick={() => router.push(`/dashboard/company/vacancies/edit/${vacancy.id}`)}>
+                <Button
+                  onClick={() =>
+                    router.push(`/dashboard/company/vacancies/edit/${vacancy.id}`)
+                  }
+                >
                   Edit
                 </Button>
               </div>
