@@ -2,8 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { login } from '@/lib/auth';
-import { saveToken, getToken } from '@/lib/api';
+import { login, getProfile } from '@/lib/auth';
+import { saveToken, getToken, clearToken } from '@/lib/api';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
@@ -15,12 +15,25 @@ export default function LoginPage() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
-  // If already logged in, redirect to dashboard
+  // 🔐 If already logged in, send to the right dashboard
   useEffect(() => {
-    const token = getToken();
-    if (token) {
-      router.push('/dashboard');
-    }
+    const checkExistingSession = async () => {
+      const token = getToken();
+      if (!token) return;
+
+      try {
+        const profile = await getProfile(token);
+        if (profile.role === 'JOB_SEEKER') {
+          router.push('/dashboard/job-seeker');
+        } else if (profile.role === 'COMPANY') {
+          router.push('/dashboard/company');
+        }
+      } catch {
+        clearToken();
+      }
+    };
+
+    checkExistingSession();
   }, [router]);
 
   const handleLogin = async (e: React.FormEvent) => {
@@ -29,17 +42,23 @@ export default function LoginPage() {
     setError(null);
 
     try {
+      // 1️⃣ Login and get token
       const { access_token } = await login(email, password);
-
-      // Save token
       saveToken(access_token);
 
-      // Redirect to dashboard after login
-      router.push('/dashboard');
+      // 2️⃣ Get user profile to determine role
+      const profile = await getProfile(access_token);
+
+      // 3️⃣ Redirect based on role
+      if (profile.role === 'JOB_SEEKER') {
+        router.push('/dashboard/job-seeker');
+      } else if (profile.role === 'COMPANY') {
+        router.push('/dashboard/company');
+      } else {
+        router.push('/dashboard');
+      }
     } catch (err: unknown) {
       console.error(err);
-
-      // Type guard to safely access error message
       if (err instanceof Error) {
         setError(err.message);
       } else {
@@ -82,10 +101,7 @@ export default function LoginPage() {
         <div className="mt-6 text-center text-sm">
           <p>
             Don’t have an account?{' '}
-            <a
-              href="/home"
-              className="text-blue-600 hover:underline font-medium"
-            >
+            <a href="/home" className="text-blue-600 hover:underline font-medium">
               Go back
             </a>
           </p>
