@@ -10,11 +10,13 @@ export interface ProfileResponse {
   role: 'JOB_SEEKER' | 'COMPANY';
   createdAt: string;
   jobSeeker?: {
+    id: number;
     fullName?: string;
     portfolioUrl?: string;
     experienceSummary?: string;
   };
   company?: {
+    id: number;
     companyName?: string;
     websiteUrl?: string;
     description?: string;
