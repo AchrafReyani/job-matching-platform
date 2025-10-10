@@ -32,6 +32,7 @@ model JobSeeker {
   experienceSummary String?
 
   user User @relation(fields: [userId], references: [id])
+  applications  Application[]
 }
 
 model Company {
@@ -55,4 +56,23 @@ model Vacancy {
   createdAt      DateTime @default(now())
 
   company Company @relation(fields: [companyId], references: [id])
+  applications  Application[]
+}
+
+model Application {
+  id           Int        @id @default(autoincrement())
+  vacancyId    Int
+  jobSeekerId  Int
+  status       ApplicationStatus @default(APPLIED)
+  appliedAt    DateTime   @default(now())
+
+  // Relations
+  vacancy   Vacancy   @relation(fields: [vacancyId], references: [id])
+  jobSeeker JobSeeker @relation(fields: [jobSeekerId], references: [id])
+}
+
+enum ApplicationStatus {
+  APPLIED
+  ACCEPTED
+  REJECTED
 }
