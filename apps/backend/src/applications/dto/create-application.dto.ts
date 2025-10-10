@@ -9,7 +9,7 @@ export class CreateApplicationDto {
 
   // Hardcoded enum values for now
   @IsString()
-  status: 'applied' | 'accepted' | 'rejected';
+  status: 'APPLIED' | 'ACCEPTED' | 'REJECTED';
 
   @IsString()
   appliedAt: string; // ISO date string
