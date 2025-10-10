@@ -1,12 +1,13 @@
 import { Injectable, NotFoundException, ForbiddenException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateApplicationDto } from './dto/create-application.dto';
-import { UpdateApplicationDto, ApplicationStatus } from './dto/update-application-status.dto';
+import { UpdateApplicationDto } from './dto/update-application-status.dto';
 
 @Injectable()
 export class ApplicationsService {
   constructor(private readonly prisma: PrismaService) {}
 
+  // Job seeker applies for a vacancy
   async createApplication(jobSeekerId: number, dto: CreateApplicationDto) {
     // Check vacancy exists
     const vacancy = await this.prisma.vacancy.findUnique({
@@ -14,17 +15,18 @@ export class ApplicationsService {
     });
     if (!vacancy) throw new NotFoundException('Vacancy not found');
 
-    // Create application
+    // Create application with string literal status
     return this.prisma.application.create({
       data: {
         vacancyId: dto.vacancyId,
         jobSeekerId,
-        status: ApplicationStatus.APPLIED,
+        status: 'APPLIED',
         appliedAt: new Date(),
       },
     });
   }
 
+  // List applications for a job seeker
   async getApplicationsForJobSeeker(jobSeekerId: number) {
     return this.prisma.application.findMany({
       where: { jobSeekerId },
@@ -32,6 +34,7 @@ export class ApplicationsService {
     });
   }
 
+  // List applications for a company (all vacancies they posted)
   async getApplicationsForCompany(companyId: number) {
     return this.prisma.application.findMany({
       where: {
@@ -41,7 +44,12 @@ export class ApplicationsService {
     });
   }
 
-  async updateApplication(companyId: number, applicationId: number, dto: UpdateApplicationDto) {
+  // Company updates the status of an application
+  async updateApplication(
+    companyId: number,
+    applicationId: number,
+    dto: UpdateApplicationDto,
+  ) {
     const application = await this.prisma.application.findUnique({
       where: { id: applicationId },
       include: { vacancy: true },
@@ -55,7 +63,9 @@ export class ApplicationsService {
 
     return this.prisma.application.update({
       where: { id: applicationId },
-      data: dto,
+      data: {
+        status: dto.status, // literal string 'APPLIED' | 'ACCEPTED' | 'REJECTED'
+      },
     });
   }
 }

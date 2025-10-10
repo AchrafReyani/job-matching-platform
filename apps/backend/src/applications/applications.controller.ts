@@ -1,6 +1,16 @@
-import { Controller, Post, Body, UseGuards, Request, Get, Param, Patch } from '@nestjs/common';
-import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import {
+  Controller,
+  Post,
+  Get,
+  Patch,
+  Param,
+  Body,
+  Request,
+  UseGuards,
+  NotFoundException,
+} from '@nestjs/common';
 import { ApplicationsService } from './applications.service';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { CreateApplicationDto } from './dto/create-application.dto';
 import { UpdateApplicationDto } from './dto/update-application-status.dto';
 
@@ -8,31 +18,56 @@ import { UpdateApplicationDto } from './dto/update-application-status.dto';
 export class ApplicationsController {
   constructor(private readonly applicationsService: ApplicationsService) {}
 
+  // ---------------- JOB SEEKER ROUTES ----------------
+
+  // Apply to a vacancy
   @UseGuards(JwtAuthGuard)
   @Post()
-  async create(@Request() req, @Body() dto: CreateApplicationDto) {
-    if (req.user.role !== 'JOB_SEEKER') throw new Error('Only job seekers can apply');
-    return this.applicationsService.createApplication(parseInt(req.user.userId), dto);
+  async apply(@Request() req, @Body() dto: CreateApplicationDto) {
+    if (req.user.role !== 'JOB_SEEKER') {
+      throw new NotFoundException('Only job seekers can apply');
+    }
+    return this.applicationsService.createApplication(req.user.userId, dto);
   }
 
+  // List all applications for logged-in job seeker
   @UseGuards(JwtAuthGuard)
-  @Get('job-seeker')
-  async getForJobSeeker(@Request() req) {
-    if (req.user.role !== 'JOB_SEEKER') throw new Error('Only job seekers allowed');
-    return this.applicationsService.getApplicationsForJobSeeker(parseInt(req.user.userId));
+  @Get('me')
+  async getMyApplications(@Request() req) {
+    if (req.user.role !== 'JOB_SEEKER') {
+      throw new NotFoundException('Only job seekers can view their applications');
+    }
+    return this.applicationsService.getApplicationsForJobSeeker(req.user.userId);
   }
 
+  // ---------------- COMPANY ROUTES ----------------
+
+  // List all applications for company vacancies
   @UseGuards(JwtAuthGuard)
   @Get('company')
-  async getForCompany(@Request() req) {
-    if (req.user.role !== 'COMPANY') throw new Error('Only companies allowed');
-    return this.applicationsService.getApplicationsForCompany(parseInt(req.user.userId));
+  async getApplicationsForCompany(@Request() req) {
+    if (req.user.role !== 'COMPANY') {
+      throw new NotFoundException('Only companies can view applications');
+    }
+    return this.applicationsService.getApplicationsForCompany(req.user.userId);
   }
 
+  // Update status of an application
   @UseGuards(JwtAuthGuard)
   @Patch(':id')
-  async update(@Request() req, @Param('id') id: string, @Body() dto: UpdateApplicationDto) {
-    if (req.user.role !== 'COMPANY') throw new Error('Only companies can update applications');
-    return this.applicationsService.updateApplication(parseInt(req.user.userId), parseInt(id), dto);
+  async updateApplication(
+    @Request() req,
+    @Param('id') id: string,
+    @Body() dto: UpdateApplicationDto,
+  ) {
+    if (req.user.role !== 'COMPANY') {
+      throw new NotFoundException('Only companies can update applications');
+    }
+
+    return this.applicationsService.updateApplication(
+      req.user.userId,
+      parseInt(id, 10),
+      dto,
+    );
   }
 }

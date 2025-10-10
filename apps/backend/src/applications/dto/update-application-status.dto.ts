@@ -1,13 +1,7 @@
-import { IsOptional, IsEnum } from 'class-validator';
-
-export enum ApplicationStatus {
-  APPLIED = 'applied',
-  ACCEPTED = 'accepted',
-  REJECTED = 'rejected',
-}
+import { IsOptional, IsEnum, IsString } from 'class-validator';
 
 export class UpdateApplicationDto {
   @IsOptional()
-  @IsEnum(ApplicationStatus)
-  status?: ApplicationStatus;
+  @IsString()
+  status?: 'APPLIED' | 'ACCEPTED' | 'REJECTED';
 }
