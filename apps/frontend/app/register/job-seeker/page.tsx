@@ -37,7 +37,7 @@ export default function RegisterJobSeekerPage() {
       const { access_token } = await login(email, password);
       saveToken(access_token);
 
-      router.push('/dashboard');
+      router.push('/dashboard/job-seeker');
     } catch (err: unknown) {
       console.error(err);
       if (err instanceof Error) {

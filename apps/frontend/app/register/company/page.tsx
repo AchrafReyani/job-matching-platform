@@ -37,7 +37,7 @@ export default function RegisterCompanyPage() {
       const { access_token } = await login(email, password);
       saveToken(access_token);
 
-      router.push('/dashboard');
+      router.push('/dashboard/company');
     } catch (err: unknown) {
       console.error(err);
 
