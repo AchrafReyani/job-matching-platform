@@ -25,15 +25,22 @@ export class VacancyController {
     private readonly prisma: PrismaService,
   ) {}
 
-  // Anyone can view vacancies
+  // Anyone can view all vacancies
   @Get()
   async getAll() {
     return this.vacancyService.getAllVacancies();
   }
 
+  // Get a single vacancy by ID
   @Get(':id')
   async getById(@Param('id', ParseIntPipe) id: number) {
     return this.vacancyService.getVacancyById(id);
+  }
+
+  // New route: Get vacancies by company ID
+  @Get('company/:companyId')
+  async getByCompany(@Param('companyId', ParseIntPipe) companyId: number) {
+    return this.vacancyService.getVacanciesByCompany(companyId);
   }
 
   // Only companies can create vacancies

@@ -1,4 +1,3 @@
-// src/vacancy/vacancy.service.ts
 import { Injectable, BadRequestException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateVacancyDto } from './dto/create-vacancy.dto';
@@ -9,9 +8,7 @@ export class VacancyService {
   constructor(private readonly prisma: PrismaService) {}
 
   async createVacancy(companyId: number, data: CreateVacancyDto) {
-    // Defensive validation: ensure required fields are present
     const { title, role, jobDescription, salaryRange } = data;
-
     if (!title || !role || !jobDescription) {
       throw new BadRequestException(
         'Missing required fields: title, role, and jobDescription are all required.'
@@ -24,7 +21,7 @@ export class VacancyService {
         title,
         role,
         jobDescription,
-        salaryRange, // optional
+        salaryRange,
       },
     });
   }
@@ -48,5 +45,12 @@ export class VacancyService {
 
   async getVacancyById(id: number) {
     return this.prisma.vacancy.findUnique({ where: { id } });
+  }
+
+  // New method: get vacancies by company
+  async getVacanciesByCompany(companyId: number) {
+    return this.prisma.vacancy.findMany({
+      where: { companyId },
+    });
   }
 }
