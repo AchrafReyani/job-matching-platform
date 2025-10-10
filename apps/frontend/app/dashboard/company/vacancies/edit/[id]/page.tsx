@@ -161,7 +161,7 @@ export default function EditVacancyPage() {
               <Button type="submit" disabled={loading}>
                 {loading ? 'Updating...' : 'Update'}
               </Button>
-              <Button variant="secondary" onClick={handleDelete}>
+              <Button variant="destructive" onClick={handleDelete}>
                 Delete
               </Button>
             </div>

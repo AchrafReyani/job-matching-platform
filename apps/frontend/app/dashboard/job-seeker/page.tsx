@@ -38,7 +38,7 @@ export default function JobSeekerDashboard() {
         <Button onClick={() => router.push('/dashboard/job-seeker/vacancies')}>
           Browse Vacancies
         </Button>
-        <Button variant="secondary" onClick={handleLogout}>
+        <Button variant="destructive" onClick={handleLogout}>
           Logout
         </Button>
       </div>

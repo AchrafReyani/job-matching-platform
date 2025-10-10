@@ -38,7 +38,7 @@ export default function CompanyDashboard() {
         <Button onClick={() => router.push('/dashboard/company/vacancies')}>
           Manage Vacancies
         </Button>
-        <Button variant="secondary" onClick={handleLogout}>
+        <Button variant="destructive" onClick={handleLogout}>
           Logout
         </Button>
       </div>
