@@ -26,7 +26,9 @@ export default function JobSeekerVacanciesPage() {
   const [vacancies, setVacancies] = useState<Vacancy[]>([]);
   const [companies, setCompanies] = useState<Record<number, string>>({});
   const [loading, setLoading] = useState(true);
+  const [submitting, setSubmitting] = useState<number | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [message, setMessage] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -65,12 +67,52 @@ export default function JobSeekerVacanciesPage() {
     fetchData();
   }, [router]);
 
+  const handleApply = async (vacancyId: number) => {
+    const token = getToken();
+    if (!token) {
+      router.push('/login');
+      return;
+    }
+
+    setSubmitting(vacancyId);
+    setMessage(null);
+    setError(null);
+
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/applications`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ vacancyId }),
+      });
+
+      if (res.status === 409) {
+        // conflict = already applied
+        setMessage('You have already applied to this vacancy.');
+      } else if (!res.ok) {
+        throw new Error('Failed to apply to vacancy');
+      } else {
+        setMessage('Application submitted successfully!');
+      }
+    } catch (err) {
+      console.error(err);
+      setError('An error occurred while applying.');
+    } finally {
+      setSubmitting(null);
+    }
+  };
+
   if (loading) return <div className="flex justify-center mt-10">Loading...</div>;
   if (error) return <div className="text-red-500 text-center mt-10">{error}</div>;
 
   return (
     <div className="min-h-screen bg-gray-50 p-4 flex flex-col items-center">
       <h1 className="text-2xl font-bold mb-6">All Vacancies</h1>
+
+      {message && <p className="text-green-600 mb-4">{message}</p>}
+      {error && <p className="text-red-500 mb-4">{error}</p>}
 
       <div className="flex flex-col gap-4 w-full max-w-2xl">
         {vacancies.length === 0 ? (
@@ -87,7 +129,12 @@ export default function JobSeekerVacanciesPage() {
                 Posted: {new Date(vacancy.createdAt).toLocaleDateString()}
               </p>
               <div className="mt-2">
-                <Button onClick={() => alert('Apply feature coming soon')}>Apply</Button>
+                <Button
+                  onClick={() => handleApply(vacancy.id)}
+                  disabled={submitting === vacancy.id}
+                >
+                  {submitting === vacancy.id ? 'Applying...' : 'Apply'}
+                </Button>
               </div>
             </Card>
           ))
