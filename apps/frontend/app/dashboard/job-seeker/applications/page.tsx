@@ -36,7 +36,7 @@ export default function JobSeekerApplicationsPage() {
 
     const fetchApplications = async () => {
       try {
-        const data = await request('/applications/job-seeker', {
+        const data = await request('/applications/me', {
           method: 'GET',
           headers: { Authorization: `Bearer ${token}` },
         }) as unknown;
