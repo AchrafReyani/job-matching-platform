@@ -64,7 +64,7 @@ export default function JobSeekerApplicationsPage() {
         <h1 className="text-2xl font-bold text-center mb-6">My Applications</h1>
 
         {applications.length === 0 ? (
-          <p className="text-center text-gray-500">You haven't applied to any jobs yet.</p>
+          <p className="text-center text-gray-500">You haven&apos;t applied to any jobs yet.</p>
         ) : (
           <div className="space-y-4">
             {applications.map((app) => (
