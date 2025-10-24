@@ -1,4 +1,9 @@
-import { Injectable, NotFoundException, ForbiddenException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  ForbiddenException,
+  ConflictException,
+} from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateApplicationDto } from './dto/create-application.dto';
 import { UpdateApplicationDto } from './dto/update-application-status.dto';
@@ -9,7 +14,7 @@ export class ApplicationsService {
 
   // 🟢 Create new application (Job Seeker applies)
   async createApplication(userId: string, dto: CreateApplicationDto) {
-    // 1️⃣ Check vacancy exists
+    // 1️⃣ Check if vacancy exists
     const vacancy = await this.prisma.vacancy.findUnique({
       where: { id: dto.vacancyId },
     });
@@ -28,7 +33,10 @@ export class ApplicationsService {
         vacancyId: dto.vacancyId,
       },
     });
-    if (existing) throw new ForbiddenException('You already applied for this job');
+
+    if (existing) {
+      throw new ConflictException('You have already applied to this vacancy');
+    }
 
     // 4️⃣ Create new application
     return this.prisma.application.create({
@@ -52,9 +60,7 @@ export class ApplicationsService {
       where: { jobSeekerId: jobSeeker.id },
       include: {
         vacancy: {
-          include: {
-            company: true,
-          },
+          include: { company: true },
         },
       },
       orderBy: { appliedAt: 'desc' },
@@ -81,7 +87,11 @@ export class ApplicationsService {
   }
 
   // 🔵 Company updates the application status (ACCEPTED, REJECTED)
-  async updateApplication(userId: string, applicationId: number, dto: UpdateApplicationDto) {
+  async updateApplication(
+    userId: string,
+    applicationId: number,
+    dto: UpdateApplicationDto,
+  ) {
     const company = await this.prisma.company.findUnique({
       where: { userId },
     });
