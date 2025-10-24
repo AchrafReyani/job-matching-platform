@@ -157,25 +157,30 @@ export default function CompanyApplicationsPage() {
 
                 {/* Buttons */}
                 <div className="mt-3 flex gap-3">
-                  <Button
-                    disabled={
-                      app.status !== 'APPLIED' || processingId === app.id
-                    }
+                <Button
+                    disabled={app.status !== 'APPLIED' || processingId === app.id}
                     onClick={() => handleDecision(app.id, 'ACCEPTED')}
-                    className="bg-green-600 hover:bg-green-700 text-white"
-                  >
+                    className={`text-white transition ${
+                    app.status !== 'APPLIED' || processingId === app.id
+                        ? 'bg-green-300 hover:bg-green-300 cursor-not-allowed'
+                        : 'bg-green-600 hover:bg-green-700 cursor-pointer'
+                    }`}
+                >
                     Accept
-                  </Button>
-                  <Button
-                    disabled={
-                      app.status !== 'APPLIED' || processingId === app.id
-                    }
+                </Button>
+                <Button
+                    disabled={app.status !== 'APPLIED' || processingId === app.id}
                     onClick={() => handleDecision(app.id, 'REJECTED')}
-                    className="bg-red-600 hover:bg-red-700 text-white"
-                  >
+                    className={`text-white transition ${
+                    app.status !== 'APPLIED' || processingId === app.id
+                        ? 'bg-red-300 hover:bg-red-300 cursor-not-allowed'
+                        : 'bg-red-600 hover:bg-red-700 cursor-pointer'
+                    }`}
+                >
                     Reject
-                  </Button>
+                </Button>
                 </div>
+
               </div>
             ))}
           </div>
