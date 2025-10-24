@@ -28,7 +28,7 @@ export default function JobSeekerVacanciesPage() {
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState<number | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [message, setMessage] = useState<string | null>(null);
+  const [popupMessage, setPopupMessage] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -39,22 +39,24 @@ export default function JobSeekerVacanciesPage() {
       }
 
       try {
-        // Fetch vacancies
-        const vacRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/vacancies`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        if (!vacRes.ok) throw new Error('Failed to fetch vacancies');
-        const vacData: Vacancy[] = await vacRes.json();
-        setVacancies(vacData);
+        const [vacRes, compRes] = await Promise.all([
+          fetch(`${process.env.NEXT_PUBLIC_API_URL}/vacancies`, {
+            headers: { Authorization: `Bearer ${token}` },
+          }),
+          fetch(`${process.env.NEXT_PUBLIC_API_URL}/companies`, {
+            headers: { Authorization: `Bearer ${token}` },
+          }),
+        ]);
 
-        // Fetch companies
-        const compRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/companies`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        if (!vacRes.ok) throw new Error('Failed to fetch vacancies');
         if (!compRes.ok) throw new Error('Failed to fetch companies');
+
+        const vacData: Vacancy[] = await vacRes.json();
         const compData: Company[] = await compRes.json();
         const compMap: Record<number, string> = {};
         compData.forEach((c) => (compMap[c.id] = c.companyName));
+
+        setVacancies(vacData);
         setCompanies(compMap);
       } catch (err: unknown) {
         console.error(err);
@@ -75,7 +77,6 @@ export default function JobSeekerVacanciesPage() {
     }
 
     setSubmitting(vacancyId);
-    setMessage(null);
     setError(null);
 
     try {
@@ -88,31 +89,30 @@ export default function JobSeekerVacanciesPage() {
         body: JSON.stringify({ vacancyId }),
       });
 
-      if (res.status === 409) {
-        // conflict = already applied
-        setMessage('You have already applied to this vacancy.');
+      if (res.status === 409 || res.status === 403) {
+        // duplicate application
+        setPopupMessage('⚠️ You have already applied for this vacancy.');
       } else if (!res.ok) {
         throw new Error('Failed to apply to vacancy');
       } else {
-        setMessage('Application submitted successfully!');
+        setPopupMessage('✅ Application submitted successfully!');
       }
     } catch (err) {
       console.error(err);
-      setError('An error occurred while applying.');
+      setPopupMessage('❌ An error occurred while applying.');
     } finally {
       setSubmitting(null);
     }
   };
 
+  const closePopup = () => setPopupMessage(null);
+
   if (loading) return <div className="flex justify-center mt-10">Loading...</div>;
   if (error) return <div className="text-red-500 text-center mt-10">{error}</div>;
 
   return (
-    <div className="min-h-screen bg-gray-50 p-4 flex flex-col items-center">
+    <div className="min-h-screen bg-gray-50 p-4 flex flex-col items-center relative">
       <h1 className="text-2xl font-bold mb-6">All Vacancies</h1>
-
-      {message && <p className="text-green-600 mb-4">{message}</p>}
-      {error && <p className="text-red-500 mb-4">{error}</p>}
 
       <div className="flex flex-col gap-4 w-full max-w-2xl">
         {vacancies.length === 0 ? (
@@ -144,6 +144,16 @@ export default function JobSeekerVacanciesPage() {
       <div className="mt-6">
         <Button onClick={() => router.push('/dashboard/job-seeker')}>Back to Dashboard</Button>
       </div>
+
+      {/* 🟢 Simple Popup Modal */}
+      {popupMessage && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black/50 z-50">
+          <div className="bg-white p-6 rounded-2xl shadow-lg max-w-sm text-center">
+            <p className="mb-4">{popupMessage}</p>
+            <Button onClick={closePopup}>OK</Button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
