@@ -33,19 +33,21 @@ export class AuthController {
     return this.authService.login(dto);
   }
 
+  // NOTE: JwtStrategy returns { userId, role }, so use req.user.userId
   @UseGuards(JwtAuthGuard)
   @Get('profile')
   async getProfile(@Request() req) {
-    const user = await this.authService.getProfile(req.user.sub, req.user.role);
-    return user;
+    const userId = req.user?.userId;
+    const role = req.user?.role;
+    return this.authService.getProfile(userId, role);
   }
 
+  // Edit profile for both job seeker and company (keeps it centralized)
   @UseGuards(JwtAuthGuard)
   @Put('profile')
-  async editProfile(
-    @Request() req,
-    @Body() dto: UpdateJobSeekerDto | UpdateCompanyDto,
-  ) {
-    return this.authService.editProfile(req.user.sub, req.user.role, dto);
+  async editProfile(@Request() req, @Body() dto: UpdateJobSeekerDto | UpdateCompanyDto) {
+    const userId = req.user?.userId;
+    const role = req.user?.role;
+    return this.authService.editProfile(userId, role, dto);
   }
 }
