@@ -69,3 +69,14 @@ export async function getProfile(token: string): Promise<ProfileResponse> {
     },
   });
 }
+
+export async function updateProfile(token: string, body: any) {
+  return request('/auth/profile', {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(body),
+  });
+}
