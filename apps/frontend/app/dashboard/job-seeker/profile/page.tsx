@@ -74,8 +74,14 @@ export default function DashboardJobSeekerProfilePage() {
               )}
             </div>
 
-            <div className="mt-6 text-center">
+            <div className="mt-6 flex justify-between">
               <Button onClick={() => router.push('/dashboard/job-seeker')}>Back to Dashboard</Button>
+              <Button
+                onClick={() => router.push('/dashboard/job-seeker/profile/edit')}
+                className="bg-blue-600 hover:bg-blue-700 text-white"
+              >
+                Edit Profile
+              </Button>
             </div>
           </div>
         ) : (
