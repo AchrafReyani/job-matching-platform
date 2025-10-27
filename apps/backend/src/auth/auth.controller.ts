@@ -1,8 +1,18 @@
-import { Body, Controller, Post, Get, UseGuards, Request } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Post,
+  Get,
+  Put,
+  UseGuards,
+  Request,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { JwtAuthGuard } from './jwt-auth.guard';
 import { RegisterJobSeekerDto } from './dto/register-jobseeker.dto';
 import { RegisterCompanyDto } from './dto/register-company.dto';
+import { UpdateJobSeekerDto } from './dto/update-jobseeker.dto';
+import { UpdateCompanyDto } from './dto/update-company.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -26,8 +36,16 @@ export class AuthController {
   @UseGuards(JwtAuthGuard)
   @Get('profile')
   async getProfile(@Request() req) {
-    // req.user = { userId, role } from JwtStrategy
-    const user = await this.authService.getProfile(req.user.userId, req.user.role);
+    const user = await this.authService.getProfile(req.user.sub, req.user.role);
     return user;
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Put('profile')
+  async editProfile(
+    @Request() req,
+    @Body() dto: UpdateJobSeekerDto | UpdateCompanyDto,
+  ) {
+    return this.authService.editProfile(req.user.sub, req.user.role, dto);
   }
 }
