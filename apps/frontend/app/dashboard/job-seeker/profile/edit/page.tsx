@@ -108,7 +108,7 @@ export default function EditJobSeekerProfilePage() {
         <div className="flex justify-between mt-6">
           <Button
             onClick={() => router.push('/dashboard/job-seeker/profile')}
-            className="bg-gray-300 text-gray-800 hover:bg-gray-400"
+            className="bg-blue-600 hover:bg-blue-700 text-white"
           >
             Back
           </Button>
