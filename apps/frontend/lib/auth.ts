@@ -23,6 +23,27 @@ export interface ProfileResponse {
   };
 }
 
+/* ---------- TYPES FOR UPDATE ---------- */
+
+// Only editable fields for job seekers
+export interface UpdateJobSeekerProfile {
+  fullName?: string;
+  portfolioUrl?: string;
+  experienceSummary?: string;
+}
+
+// Only editable fields for companies
+export interface UpdateCompanyProfile {
+  companyName?: string;
+  websiteUrl?: string;
+  description?: string;
+}
+
+// Combined union type — backend will infer from user role
+export type UpdateProfileRequest =
+  | UpdateJobSeekerProfile
+  | UpdateCompanyProfile;
+
 /* ---------- AUTH ENDPOINTS ---------- */
 
 export async function registerJobSeeker(data: {
@@ -70,7 +91,10 @@ export async function getProfile(token: string): Promise<ProfileResponse> {
   });
 }
 
-export async function updateProfile(token: string, body: any) {
+export async function updateProfile(
+  token: string,
+  body: UpdateProfileRequest
+): Promise<{ message: string }> {
   return request('/auth/profile', {
     method: 'PUT',
     headers: {
