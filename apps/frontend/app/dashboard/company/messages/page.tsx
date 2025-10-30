@@ -11,28 +11,35 @@ interface JobSeeker {
   id: number;
   userId: string;
   fullName: string;
-  portfolioUrl: string;
-  experienceSummary: string;
+  portfolioUrl?: string;
+  experienceSummary?: string;
+}
+
+interface Company {
+  id: number;
+  userId: string;
+  companyName: string;
 }
 
 interface Vacancy {
   id: number;
   companyId: number;
   title: string;
-  salaryRange: string;
+  salaryRange?: string;
   role: string;
   jobDescription: string;
   createdAt: string;
+  company?: Company;
 }
 
 interface Application {
   id: number;
   vacancyId: number;
   jobSeekerId: number;
-  status: string; // e.g., 'ACCEPTED' | 'REJECTED' | 'PENDING'
+  status: string;
   appliedAt: string;
-  vacancy: Vacancy;
-  jobSeeker: JobSeeker;
+  vacancy?: Vacancy;
+  jobSeeker?: JobSeeker;
 }
 
 // UI-friendly type
@@ -61,10 +68,11 @@ export default function CompanyMessagesPage() {
         const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/applications/company`, {
           headers: { Authorization: `Bearer ${token}` },
         });
+
         if (!res.ok) throw new Error('Failed to fetch applications');
 
-        // Typed API response
         const data: Application[] = await res.json();
+        console.log('Company applications API response:', data); // debug
 
         const acceptedApps: ApplicationUI[] = data
           .filter(app => app.status === 'ACCEPTED')
@@ -106,7 +114,7 @@ export default function CompanyMessagesPage() {
               </p>
               <p className="text-gray-500 text-sm mt-1">Status: {app.status}</p>
 
-              <div className="mt-3">
+              <div className="mt-3 flex gap-2">
                 <Button
                   onClick={() =>
                     router.push(`/dashboard/company/messages/${app.id}`)
