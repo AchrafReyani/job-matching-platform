@@ -9,7 +9,7 @@ import { Button } from '@/components/ui/Button';
 interface JobSeeker {
   id: number;
   fullName: string;
-  portfolioUrl?: string;
+  userId: string;
 }
 
 interface Vacancy {
@@ -62,7 +62,6 @@ export default function CompanyApplicationsPage() {
     fetchApplications();
   }, [router]);
 
-  // 🔵 Handle accept/reject with confirmation
   const handleDecision = async (id: number, status: 'ACCEPTED' | 'REJECTED') => {
     const token = getToken();
     if (!token) {
@@ -93,7 +92,6 @@ export default function CompanyApplicationsPage() {
         throw new Error(msg || 'Failed to update application');
       }
 
-      // Update UI locally
       setApplications((prev) =>
         prev.map((app) =>
           app.id === id ? { ...app, status } : app
@@ -128,16 +126,17 @@ export default function CompanyApplicationsPage() {
                 <p className="text-gray-600">
                   Applicant: <strong>{app.jobSeeker.fullName}</strong>
                 </p>
-                {app.jobSeeker.portfolioUrl && (
-                  <a
-                    href={app.jobSeeker.portfolioUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-blue-600 text-sm hover:underline"
+
+                {/* 🔵 View Profile Button */}
+                <div className="mt-2">
+                  <Button
+                    onClick={() => router.push(`/profiles/${app.jobSeeker.userId}`)}
+                    className="text-blue-600 border border-blue-600 hover:bg-blue-50"
                   >
-                    View Portfolio
-                  </a>
-                )}
+                    View Profile
+                  </Button>
+                </div>
+
                 <div className="mt-2 flex justify-between items-center">
                   <span
                     className={`px-3 py-1 rounded-full text-sm font-medium ${
@@ -155,32 +154,30 @@ export default function CompanyApplicationsPage() {
                   </span>
                 </div>
 
-                {/* Buttons */}
                 <div className="mt-3 flex gap-3">
-                <Button
+                  <Button
                     disabled={app.status !== 'APPLIED' || processingId === app.id}
                     onClick={() => handleDecision(app.id, 'ACCEPTED')}
                     className={`text-white transition ${
-                    app.status !== 'APPLIED' || processingId === app.id
+                      app.status !== 'APPLIED' || processingId === app.id
                         ? 'bg-green-300 hover:bg-green-300 cursor-not-allowed'
                         : 'bg-green-600 hover:bg-green-700 cursor-pointer'
                     }`}
-                >
+                  >
                     Accept
-                </Button>
-                <Button
+                  </Button>
+                  <Button
                     disabled={app.status !== 'APPLIED' || processingId === app.id}
                     onClick={() => handleDecision(app.id, 'REJECTED')}
                     className={`text-white transition ${
-                    app.status !== 'APPLIED' || processingId === app.id
+                      app.status !== 'APPLIED' || processingId === app.id
                         ? 'bg-red-300 hover:bg-red-300 cursor-not-allowed'
                         : 'bg-red-600 hover:bg-red-700 cursor-pointer'
                     }`}
-                >
+                  >
                     Reject
-                </Button>
+                  </Button>
                 </div>
-
               </div>
             ))}
           </div>
