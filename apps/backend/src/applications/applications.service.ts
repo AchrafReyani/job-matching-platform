@@ -14,19 +14,16 @@ export class ApplicationsService {
 
   // 🟢 Create new application (Job Seeker applies)
   async createApplication(userId: string, dto: CreateApplicationDto) {
-    // 1️⃣ Check if vacancy exists
     const vacancy = await this.prisma.vacancy.findUnique({
       where: { id: dto.vacancyId },
     });
     if (!vacancy) throw new NotFoundException('Vacancy not found');
 
-    // 2️⃣ Get job seeker (UUID -> int)
     const jobSeeker = await this.prisma.jobSeeker.findUnique({
       where: { userId },
     });
     if (!jobSeeker) throw new NotFoundException('Job seeker profile not found');
 
-    // 3️⃣ Prevent duplicate applications
     const existing = await this.prisma.application.findFirst({
       where: {
         jobSeekerId: jobSeeker.id,
@@ -38,7 +35,6 @@ export class ApplicationsService {
       throw new ConflictException('You have already applied to this vacancy');
     }
 
-    // 4️⃣ Create new application
     return this.prisma.application.create({
       data: {
         vacancyId: dto.vacancyId,
@@ -67,7 +63,15 @@ export class ApplicationsService {
           },
         },
         vacancy: {
-          include: { company: true },
+          include: {
+            company: {
+              select: {
+                id: true,
+                userId: true,
+                companyName: true,
+              },
+            },
+          },
         },
       },
       orderBy: { appliedAt: 'desc' },
@@ -86,8 +90,24 @@ export class ApplicationsService {
         vacancy: { companyId: company.id },
       },
       include: {
-        vacancy: true,
-        jobSeeker: true,
+        vacancy: {
+          include: {
+            company: {
+              select: {
+                id: true,
+                userId: true,
+                companyName: true,
+              },
+            },
+          },
+        },
+        jobSeeker: {
+          select: {
+            id: true,
+            userId: true,
+            fullName: true,
+          },
+        },
       },
       orderBy: { appliedAt: 'desc' },
     });
