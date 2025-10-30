@@ -31,7 +31,7 @@ export default function CompanyChatPage() {
     }
 
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/messages/application/${id}`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/messages/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (!res.ok) throw new Error('Failed to fetch messages');
