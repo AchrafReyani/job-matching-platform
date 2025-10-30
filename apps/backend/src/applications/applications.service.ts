@@ -59,6 +59,13 @@ export class ApplicationsService {
     return this.prisma.application.findMany({
       where: { jobSeekerId: jobSeeker.id },
       include: {
+        jobSeeker: {
+          select: {
+            id: true,
+            userId: true,
+            fullName: true,
+          },
+        },
         vacancy: {
           include: { company: true },
         },
