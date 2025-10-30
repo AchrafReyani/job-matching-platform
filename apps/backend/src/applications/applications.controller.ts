@@ -18,6 +18,14 @@ import { UpdateApplicationDto } from './dto/update-application-status.dto';
 export class ApplicationsController {
   constructor(private readonly applicationsService: ApplicationsService) {}
 
+  @Get('details/:id')
+  getApplicationById(@Param('id') id: string) {
+    const parsedId = Number(id);
+    if (isNaN(parsedId)) throw new NotFoundException('Invalid application ID');
+    return this.applicationsService.getApplicationById(parsedId);
+}
+
+
   // ---------------- JOB SEEKER ROUTES ----------------
 
   // Apply to a vacancy
@@ -27,7 +35,8 @@ export class ApplicationsController {
     if (req.user.role !== 'JOB_SEEKER') {
       throw new NotFoundException('Only job seekers can apply');
     }
-    return this.applicationsService.createApplication(req.user.userId, dto);
+    const userId = req.user.userId || req.user.sub;
+    return this.applicationsService.createApplication(userId, dto);
   }
 
   // List all applications for logged-in job seeker
@@ -37,7 +46,8 @@ export class ApplicationsController {
     if (req.user.role !== 'JOB_SEEKER') {
       throw new NotFoundException('Only job seekers can view their applications');
     }
-    return this.applicationsService.getApplicationsForJobSeeker(req.user.userId);
+    const userId = req.user.userId || req.user.sub;
+    return this.applicationsService.getApplicationsForJobSeeker(userId);
   }
 
   // ---------------- COMPANY ROUTES ----------------
@@ -49,7 +59,8 @@ export class ApplicationsController {
     if (req.user.role !== 'COMPANY') {
       throw new NotFoundException('Only companies can view applications');
     }
-    return this.applicationsService.getApplicationsForCompany(req.user.userId);
+    const userId = req.user.userId || req.user.sub; // Fix here
+    return this.applicationsService.getApplicationsForCompany(userId);
   }
 
   // Update status of an application
@@ -64,8 +75,9 @@ export class ApplicationsController {
       throw new NotFoundException('Only companies can update applications');
     }
 
+    const userId = req.user.userId || req.user.sub;
     return this.applicationsService.updateApplication(
-      req.user.userId,
+      userId,
       parseInt(id, 10),
       dto,
     );
