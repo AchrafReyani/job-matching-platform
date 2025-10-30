@@ -18,13 +18,14 @@ interface Vacancy {
 
 interface Company {
   id: number;
+  userId: string;
   companyName: string;
 }
 
 export default function JobSeekerVacanciesPage() {
   const router = useRouter();
   const [vacancies, setVacancies] = useState<Vacancy[]>([]);
-  const [companies, setCompanies] = useState<Record<number, string>>({});
+  const [companies, setCompanies] = useState<Record<number, Company>>({});
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState<number | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -53,8 +54,8 @@ export default function JobSeekerVacanciesPage() {
 
         const vacData: Vacancy[] = await vacRes.json();
         const compData: Company[] = await compRes.json();
-        const compMap: Record<number, string> = {};
-        compData.forEach((c) => (compMap[c.id] = c.companyName));
+        const compMap: Record<number, Company> = {};
+        compData.forEach((c) => (compMap[c.id] = c));
 
         setVacancies(vacData);
         setCompanies(compMap);
@@ -90,7 +91,6 @@ export default function JobSeekerVacanciesPage() {
       });
 
       if (res.status === 409 || res.status === 403) {
-        // duplicate application
         setPopupMessage('⚠️ You have already applied for this vacancy.');
       } else if (!res.ok) {
         throw new Error('Failed to apply to vacancy');
@@ -118,26 +118,40 @@ export default function JobSeekerVacanciesPage() {
         {vacancies.length === 0 ? (
           <p className="text-gray-600 text-center">No vacancies available.</p>
         ) : (
-          vacancies.map((vacancy) => (
-            <Card key={vacancy.id} className="p-4">
-              <h2 className="font-semibold text-lg">{vacancy.title}</h2>
-              <p><strong>Company:</strong> {companies[vacancy.companyId] || 'Unknown'}</p>
-              <p><strong>Role:</strong> {vacancy.role}</p>
-              {vacancy.salaryRange && <p><strong>Salary:</strong> {vacancy.salaryRange}</p>}
-              <p>{vacancy.jobDescription}</p>
-              <p className="text-sm text-gray-500 mt-1">
-                Posted: {new Date(vacancy.createdAt).toLocaleDateString()}
-              </p>
-              <div className="mt-2">
-                <Button
-                  onClick={() => handleApply(vacancy.id)}
-                  disabled={submitting === vacancy.id}
-                >
-                  {submitting === vacancy.id ? 'Applying...' : 'Apply'}
-                </Button>
-              </div>
-            </Card>
-          ))
+          vacancies.map((vacancy) => {
+            const company = companies[vacancy.companyId];
+            return (
+              <Card key={vacancy.id} className="p-4">
+                <h2 className="font-semibold text-lg">{vacancy.title}</h2>
+                <p>
+                  <strong>Company:</strong> {company?.companyName || 'Unknown'}{' '}
+                  {company?.userId && (
+                    <Button
+                      variant="primary"
+                      className="ml-2 text-sm"
+                      onClick={() => router.push(`/profiles/${company.userId}`)}
+                    >
+                      View Profile
+                    </Button>
+                  )}
+                </p>
+                <p><strong>Role:</strong> {vacancy.role}</p>
+                {vacancy.salaryRange && <p><strong>Salary:</strong> {vacancy.salaryRange}</p>}
+                <p>{vacancy.jobDescription}</p>
+                <p className="text-sm text-gray-500 mt-1">
+                  Posted: {new Date(vacancy.createdAt).toLocaleDateString()}
+                </p>
+                <div className="mt-2">
+                  <Button
+                    onClick={() => handleApply(vacancy.id)}
+                    disabled={submitting === vacancy.id}
+                  >
+                    {submitting === vacancy.id ? 'Applying...' : 'Apply'}
+                  </Button>
+                </div>
+              </Card>
+            );
+          })
         )}
       </div>
 
@@ -145,7 +159,6 @@ export default function JobSeekerVacanciesPage() {
         <Button onClick={() => router.push('/dashboard/job-seeker')}>Back to Dashboard</Button>
       </div>
 
-      {/* 🟢 Simple Popup Modal */}
       {popupMessage && (
         <div className="fixed inset-0 flex items-center justify-center bg-black/50 z-50">
           <div className="bg-white p-6 rounded-2xl shadow-lg max-w-sm text-center">
