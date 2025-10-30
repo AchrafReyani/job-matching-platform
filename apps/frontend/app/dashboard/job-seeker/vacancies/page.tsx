@@ -124,17 +124,9 @@ export default function JobSeekerVacanciesPage() {
               <Card key={vacancy.id} className="p-4">
                 <h2 className="font-semibold text-lg">{vacancy.title}</h2>
 
-                <div className="flex items-center gap-2">
-                  <p>
-                    <strong>Company:</strong> {company?.companyName || 'Unknown'}
-                  </p>
-                    <Button
-                      variant="primary"
-                      onClick={() => router.push(`/profiles/${company.userId}`)}
-                    >
-                      View Profile
-                    </Button>
-                </div>
+                <p>
+                  <strong>Company:</strong> {company?.companyName || 'Unknown'}
+                </p>
 
                 <p><strong>Role:</strong> {vacancy.role}</p>
                 {vacancy.salaryRange && <p><strong>Salary:</strong> {vacancy.salaryRange}</p>}
@@ -143,12 +135,20 @@ export default function JobSeekerVacanciesPage() {
                   Posted: {new Date(vacancy.createdAt).toLocaleDateString()}
                 </p>
 
-                <div className="mt-2">
+                <div className="mt-4 flex gap-3">
                   <Button
                     onClick={() => handleApply(vacancy.id)}
                     disabled={submitting === vacancy.id}
                   >
                     {submitting === vacancy.id ? 'Applying...' : 'Apply'}
+                  </Button>
+
+                  <Button
+                    variant="outline"
+                    onClick={() => router.push(`/profiles/${company?.userId}`)}
+                    disabled={!company?.userId}
+                  >
+                    View Profile
                   </Button>
                 </div>
               </Card>
