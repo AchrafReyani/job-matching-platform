@@ -8,9 +8,10 @@ import { VacancyModule } from './vacancy/vacancy.module';
 import { CompaniesModule } from './companies/companies.module';
 import { ApplicationsModule } from './applications/applications.module';
 import { MessagesModule } from './messages/messages.module';
+import { ProfilesModule } from './profiles/profiles.module';
 
 @Module({
-  imports: [ AuthModule, UsersModule, JobSeekerModule, CompanyModule, VacancyModule, CompaniesModule, ApplicationsModule, MessagesModule],
+  imports: [ AuthModule, UsersModule, JobSeekerModule, CompanyModule, VacancyModule, CompaniesModule, ApplicationsModule, MessagesModule, ProfilesModule],
   providers: [PrismaService],
   exports: [PrismaService],
 })
