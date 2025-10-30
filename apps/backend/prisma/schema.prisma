@@ -17,6 +17,7 @@ model User {
 
   jobSeeker JobSeeker?
   company   Company?
+  messages Message[]
 }
 
 enum Role {
@@ -69,10 +70,23 @@ model Application {
   // Relations
   vacancy   Vacancy   @relation(fields: [vacancyId], references: [id])
   jobSeeker JobSeeker @relation(fields: [jobSeekerId], references: [id])
+  messages Message[]
 }
 
 enum ApplicationStatus {
   APPLIED
   ACCEPTED
   REJECTED
+}
+
+model Message {
+  id             Int      @id @default(autoincrement())
+  applicationId  Int
+  senderId       String
+  messageText    String
+  sentAt         DateTime @default(now())
+
+  // Relations
+  application Application @relation(fields: [applicationId], references: [id])
+  sender      User         @relation(fields: [senderId], references: [id])
 }
