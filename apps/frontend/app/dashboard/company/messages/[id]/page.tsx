@@ -20,10 +20,23 @@ interface Message {
   sender: Sender;
 }
 
+interface ApplicationInfo {
+  jobSeeker: {
+    id: number;
+    fullName: string;
+    userId: string;
+  };
+  vacancy: {
+    title: string;
+    role?: string;
+  };
+}
+
 export default function CompanyChatPage() {
   const router = useRouter();
   const { id } = useParams();
   const [messages, setMessages] = useState<Message[]>([]);
+  const [applicationInfo, setApplicationInfo] = useState<ApplicationInfo | null>(null);
   const [newMessage, setNewMessage] = useState('');
   const [loading, setLoading] = useState(true);
   const [sending, setSending] = useState(false);
@@ -43,6 +56,27 @@ export default function CompanyChatPage() {
     }
   }, [token]);
 
+  /** Fetch application info (job seeker + vacancy) */
+  const fetchApplicationInfo = async () => {
+    if (!token) {
+      router.push('/login');
+      return;
+    }
+
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/applications/details/${id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (!res.ok) throw new Error('Failed to fetch application info');
+      const data = await res.json();
+      setApplicationInfo(data);
+    } catch (err) {
+      console.error(err);
+      setError('Could not load application info.');
+    }
+  };
+
+  /** Fetch messages */
   const fetchMessages = async () => {
     if (!token) {
       router.push('/login');
@@ -65,11 +99,15 @@ export default function CompanyChatPage() {
   };
 
   useEffect(() => {
+    fetchApplicationInfo();
     fetchMessages();
+
+    // Poll messages every 5 seconds
     const interval = setInterval(fetchMessages, 5000);
     return () => clearInterval(interval);
   }, [id]);
 
+  /** Handle send */
   const handleSend = async () => {
     if (!newMessage.trim()) return;
     setSending(true);
@@ -102,10 +140,34 @@ export default function CompanyChatPage() {
   if (loading) return <div className="flex justify-center mt-10">Loading...</div>;
   if (error) return <div className="text-red-500 text-center mt-10">{error}</div>;
 
+  const jobSeekerName = applicationInfo?.jobSeeker.fullName;
+  const jobSeekerUserId = applicationInfo?.jobSeeker.userId;
+  const vacancyTitle = applicationInfo?.vacancy.title;
+
   return (
     <div className="min-h-screen bg-gray-50 p-6 flex flex-col items-center">
       <Card className="w-full max-w-3xl p-6 flex flex-col">
-        <h1 className="text-2xl font-bold mb-4 text-center">Chat</h1>
+        {/* Header */}
+        <div className="flex flex-col items-center mb-4">
+          <h1 className="text-2xl font-bold text-center">
+            {jobSeekerName ? `Chat with ${jobSeekerName}` : 'Chat'}
+          </h1>
+          {vacancyTitle && (
+            <p className="text-gray-600 mt-1 text-center">
+              Regarding position: <span className="font-medium">{vacancyTitle}</span>
+            </p>
+          )}
+          {jobSeekerUserId && (
+            <div className="mt-3">
+              <Button
+                variant="outline"
+                onClick={() => router.push(`/profiles/${jobSeekerUserId}`)}
+              >
+                View Job Seeker Profile
+              </Button>
+            </div>
+          )}
+        </div>
 
         {/* Chat window */}
         <div className="flex-1 overflow-y-auto border rounded-lg p-4 bg-white h-[60vh] mb-4 flex flex-col">
@@ -141,7 +203,7 @@ export default function CompanyChatPage() {
           )}
         </div>
 
-        {/* Input area */}
+        {/* Input */}
         <div className="flex gap-2">
           <input
             type="text"
@@ -157,6 +219,7 @@ export default function CompanyChatPage() {
           </Button>
         </div>
 
+        {/* Back button */}
         <div className="mt-6 text-center">
           <Button onClick={() => router.push('/dashboard/company/messages')}>
             Back to Messages
