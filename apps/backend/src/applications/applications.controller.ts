@@ -19,12 +19,10 @@ export class ApplicationsController {
   constructor(private readonly applicationsService: ApplicationsService) {}
 
   @Get('details/:id')
-  getApplicationById(@Param('id') id: string) {
-    const parsedId = Number(id);
-    if (isNaN(parsedId)) throw new NotFoundException('Invalid application ID');
-    return this.applicationsService.getApplicationById(parsedId);
-}
-
+  @UseGuards(JwtAuthGuard)
+  async getApplicationById(@Param('id') id: string, @Request() req) {
+    return this.applicationsService.getApplicationById(Number(id), req.user.userId);
+  }
 
   // ---------------- JOB SEEKER ROUTES ----------------
 
