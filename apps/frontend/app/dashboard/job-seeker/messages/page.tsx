@@ -37,8 +37,7 @@ export default function JobSeekerMessagesPage() {
 
       if (!res.ok) throw new Error('Failed to fetch applications');
       const data = await res.json();
-
-      // ✅ Filter only accepted applications
+/* eslint-disable @typescript-eslint/no-explicit-any */
       const acceptedApps = data
         .filter((app: any) => app.status === 'ACCEPTED')
         .map((app: any) => ({
@@ -51,6 +50,7 @@ export default function JobSeekerMessagesPage() {
             },
           },
         }));
+/* eslint-enable @typescript-eslint/no-explicit-any */
 
       setApplications(acceptedApps);
     } catch (err) {
