@@ -7,18 +7,12 @@ import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 
 interface ProfileResponse {
-  id: string;
-  email: string;
+  userId: string;
   role: 'JOB_SEEKER' | 'COMPANY';
-  createdAt: string;
-  jobSeeker?: {
-    id: number;
+  profile: {
     fullName?: string;
     portfolioUrl?: string;
     experienceSummary?: string;
-  };
-  company?: {
-    id: number;
     companyName?: string;
     websiteUrl?: string;
     description?: string;
@@ -73,41 +67,40 @@ export default function ViewProfilePage() {
           {profile.role === 'JOB_SEEKER' ? 'Job Seeker Profile' : 'Company Profile'}
         </h1>
 
-        <p><strong>Email:</strong> {profile.email}</p>
         <p><strong>Role:</strong> {profile.role}</p>
 
-        {profile.jobSeeker && (
+        {profile.role === 'JOB_SEEKER' && profile.profile && (
           <div className="mt-4 border-t pt-3">
             <h2 className="font-semibold text-lg mb-2">Job Seeker Info</h2>
-            <p><strong>Name:</strong> {profile.jobSeeker.fullName}</p>
-            {profile.jobSeeker.portfolioUrl && (
+            <p><strong>Name:</strong> {profile.profile.fullName}</p>
+            {profile.profile.portfolioUrl && (
               <p>
                 <strong>Portfolio:</strong>{' '}
-                <a href={profile.jobSeeker.portfolioUrl} target="_blank" className="text-blue-600 underline">
-                  {profile.jobSeeker.portfolioUrl}
+                <a href={profile.profile.portfolioUrl} target="_blank" className="text-blue-600 underline">
+                  {profile.profile.portfolioUrl}
                 </a>
               </p>
             )}
-            {profile.jobSeeker.experienceSummary && (
-              <p><strong>Experience:</strong> {profile.jobSeeker.experienceSummary}</p>
+            {profile.profile.experienceSummary && (
+              <p><strong>Experience:</strong> {profile.profile.experienceSummary}</p>
             )}
           </div>
         )}
 
-        {profile.company && (
+        {profile.role === 'COMPANY' && profile.profile && (
           <div className="mt-4 border-t pt-3">
             <h2 className="font-semibold text-lg mb-2">Company Info</h2>
-            <p><strong>Company Name:</strong> {profile.company.companyName}</p>
-            {profile.company.websiteUrl && (
+            <p><strong>Company Name:</strong> {profile.profile.companyName}</p>
+            {profile.profile.websiteUrl && (
               <p>
                 <strong>Website:</strong>{' '}
-                <a href={profile.company.websiteUrl} target="_blank" className="text-blue-600 underline">
-                  {profile.company.websiteUrl}
+                <a href={profile.profile.websiteUrl} target="_blank" className="text-blue-600 underline">
+                  {profile.profile.websiteUrl}
                 </a>
               </p>
             )}
-            {profile.company.description && (
-              <p><strong>Description:</strong> {profile.company.description}</p>
+            {profile.profile.description && (
+              <p><strong>Description:</strong> {profile.profile.description}</p>
             )}
           </div>
         )}
