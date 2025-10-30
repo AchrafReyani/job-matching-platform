@@ -6,11 +6,18 @@ import { getToken } from '@/lib/api';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 
+interface Sender {
+  id: string;
+  email: string;
+  role: string;
+}
+
 interface Message {
   id: number;
   senderId: string;
   messageText: string;
   sentAt: string;
+  sender: Sender;
 }
 
 export default function CompanyChatPage() {
@@ -22,8 +29,20 @@ export default function CompanyChatPage() {
   const [sending, setSending] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const token = getToken();
+  const [currentUserId, setCurrentUserId] = useState<string | null>(null);
 
-  // Fetch messages for this application
+  // Decode JWT to extract user ID (sub)
+  useEffect(() => {
+    if (token) {
+      try {
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        setCurrentUserId(payload.sub);
+      } catch {
+        console.warn('Failed to decode token');
+      }
+    }
+  }, [token]);
+
   const fetchMessages = async () => {
     if (!token) {
       router.push('/login');
@@ -47,7 +66,7 @@ export default function CompanyChatPage() {
 
   useEffect(() => {
     fetchMessages();
-    const interval = setInterval(fetchMessages, 5000); // Poll every 5s
+    const interval = setInterval(fetchMessages, 5000);
     return () => clearInterval(interval);
   }, [id]);
 
@@ -88,30 +107,41 @@ export default function CompanyChatPage() {
       <Card className="w-full max-w-3xl p-6 flex flex-col">
         <h1 className="text-2xl font-bold mb-4 text-center">Chat</h1>
 
-        {/* Messages area */}
-        <div className="flex-1 overflow-y-auto border rounded-lg p-4 bg-white h-[60vh] mb-4">
+        {/* Chat window */}
+        <div className="flex-1 overflow-y-auto border rounded-lg p-4 bg-white h-[60vh] mb-4 flex flex-col">
           {messages.length === 0 ? (
             <p className="text-gray-500 text-center mt-4">No messages yet.</p>
           ) : (
-            messages.map((msg) => (
-              <div
-                key={msg.id}
-                className={`mb-3 p-3 rounded-lg max-w-[80%] ${
-                  msg.senderId === 'COMPANY'
-                    ? 'bg-blue-100 self-end ml-auto'
-                    : 'bg-gray-100'
-                }`}
-              >
-                <p className="text-gray-800">{msg.messageText}</p>
-                <p className="text-xs text-gray-500 mt-1">
-                  {new Date(msg.sentAt).toLocaleString()}
-                </p>
-              </div>
-            ))
+            messages.map((msg) => {
+              const isSent = msg.senderId === currentUserId;
+              return (
+                <div
+                  key={msg.id}
+                  className={`mb-3 flex ${isSent ? 'justify-end' : 'justify-start'}`}
+                >
+                  <div
+                    className={`max-w-[70%] p-3 rounded-2xl shadow-sm ${
+                      isSent
+                        ? 'bg-blue-600 text-white rounded-br-none'
+                        : 'bg-gray-200 text-gray-900 rounded-bl-none'
+                    }`}
+                  >
+                    <p className="whitespace-pre-wrap break-words">{msg.messageText}</p>
+                    <p
+                      className={`text-xs mt-1 ${
+                        isSent ? 'text-blue-100 text-right' : 'text-gray-500 text-left'
+                      }`}
+                    >
+                      {new Date(msg.sentAt).toLocaleString()}
+                    </p>
+                  </div>
+                </div>
+              );
+            })
           )}
         </div>
 
-        {/* Message input */}
+        {/* Input area */}
         <div className="flex gap-2">
           <input
             type="text"
