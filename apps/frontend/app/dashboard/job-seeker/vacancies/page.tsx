@@ -123,24 +123,26 @@ export default function JobSeekerVacanciesPage() {
             return (
               <Card key={vacancy.id} className="p-4">
                 <h2 className="font-semibold text-lg">{vacancy.title}</h2>
-                <p>
-                  <strong>Company:</strong> {company?.companyName || 'Unknown'}{' '}
-                  {company?.userId && (
+
+                <div className="flex items-center gap-2">
+                  <p>
+                    <strong>Company:</strong> {company?.companyName || 'Unknown'}
+                  </p>
                     <Button
                       variant="primary"
-                      className="ml-2 text-sm"
                       onClick={() => router.push(`/profiles/${company.userId}`)}
                     >
                       View Profile
                     </Button>
-                  )}
-                </p>
+                </div>
+
                 <p><strong>Role:</strong> {vacancy.role}</p>
                 {vacancy.salaryRange && <p><strong>Salary:</strong> {vacancy.salaryRange}</p>}
                 <p>{vacancy.jobDescription}</p>
                 <p className="text-sm text-gray-500 mt-1">
                   Posted: {new Date(vacancy.createdAt).toLocaleDateString()}
                 </p>
+
                 <div className="mt-2">
                   <Button
                     onClick={() => handleApply(vacancy.id)}
