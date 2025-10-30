@@ -45,6 +45,40 @@ export class ApplicationsService {
     });
   }
 
+async getApplicationById(id: number) {
+  if (!id || isNaN(id)) {
+    throw new NotFoundException('Invalid application ID');
+  }
+
+  const application = await this.prisma.application.findUnique({
+    where: { id },
+    include: {
+      vacancy: {
+        include: {
+          company: {
+            select: {
+              id: true,
+              userId: true,
+              companyName: true,
+            },
+          },
+        },
+      },
+      jobSeeker: {
+        select: {
+          id: true,
+          userId: true,
+          fullName: true,
+        },
+      },
+    },
+  });
+
+  if (!application) throw new NotFoundException('Application not found');
+  return application;
+}
+
+
   // 🟡 Get all applications for a job seeker
   async getApplicationsForJobSeeker(userId: string) {
     const jobSeeker = await this.prisma.jobSeeker.findUnique({
