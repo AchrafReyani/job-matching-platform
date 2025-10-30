@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/Button';
 
 interface Application {
   id: number;
+  status: string;
   vacancy: {
     title: string;
     company: {
@@ -34,9 +35,24 @@ export default function JobSeekerMessagesPage() {
         headers: { Authorization: `Bearer ${token}` },
       });
 
-      if (!res.ok) throw new Error('Failed to fetch accepted applications');
+      if (!res.ok) throw new Error('Failed to fetch applications');
       const data = await res.json();
-      setApplications(data);
+
+      // ✅ Filter only accepted applications
+      const acceptedApps = data
+        .filter((app: any) => app.status === 'ACCEPTED')
+        .map((app: any) => ({
+          id: app.id,
+          status: app.status,
+          vacancy: {
+            title: app.vacancy?.title || 'Untitled Vacancy',
+            company: {
+              companyName: app.vacancy?.company?.companyName || 'Unknown Company',
+            },
+          },
+        }));
+
+      setApplications(acceptedApps);
     } catch (err) {
       console.error(err);
       setError('Could not load applications.');
@@ -72,7 +88,11 @@ export default function JobSeekerMessagesPage() {
                     {app.vacancy.company.companyName}
                   </p>
                 </div>
-                <Button onClick={() => router.push(`/dashboard/job-seeker/messages/${app.id}`)}>
+                <Button
+                  onClick={() =>
+                    router.push(`/dashboard/job-seeker/messages/${app.id}`)
+                  }
+                >
                   Open Chat
                 </Button>
               </div>
