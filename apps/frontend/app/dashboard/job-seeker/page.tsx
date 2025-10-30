@@ -41,6 +41,9 @@ export default function JobSeekerDashboard() {
         <Button onClick={() => router.push('/dashboard/job-seeker/applications')}>
           Browse applications
         </Button>
+        <Button onClick={() => router.push('/dashboard/job-seeker/messages')}>
+          Messages
+        </Button>
         <Button variant="destructive" onClick={handleLogout}>
           Logout
         </Button>
