@@ -6,20 +6,48 @@ import { getToken } from '@/lib/api';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 
+// Full API types
+interface Company {
+  id: number;
+  userId: string;
+  companyName: string;
+  websiteUrl: string;
+  description: string;
+}
+
+interface Vacancy {
+  id: number;
+  companyId: number;
+  title: string;
+  salaryRange: string;
+  role: string;
+  jobDescription: string;
+  createdAt: string;
+  company: Company;
+}
+
 interface Application {
+  id: number;
+  vacancyId: number;
+  jobSeekerId: number;
+  status: string; // could use union type e.g., 'ACCEPTED' | 'PENDING' | 'REJECTED'
+  appliedAt: string;
+  vacancy: Vacancy;
+}
+
+// UI-friendly type
+interface ApplicationUI {
   id: number;
   status: string;
   vacancy: {
     title: string;
-    company: {
-      companyName: string;
-    };
+    company: { companyName: string };
   };
 }
 
 export default function JobSeekerMessagesPage() {
   const router = useRouter();
-  const [applications, setApplications] = useState<Application[]>([]);
+  const [applications, setApplications] = useState<ApplicationUI[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const token = getToken();
@@ -36,11 +64,13 @@ export default function JobSeekerMessagesPage() {
       });
 
       if (!res.ok) throw new Error('Failed to fetch applications');
-      const data = await res.json();
-/* eslint-disable @typescript-eslint/no-explicit-any */
-      const acceptedApps = data
-        .filter((app: any) => app.status === 'ACCEPTED')
-        .map((app: any) => ({
+
+      // Parse the API response as typed
+      const data: Application[] = await res.json();
+
+      const acceptedApps: ApplicationUI[] = data
+        .filter(app => app.status === 'ACCEPTED')
+        .map(app => ({
           id: app.id,
           status: app.status,
           vacancy: {
@@ -50,7 +80,6 @@ export default function JobSeekerMessagesPage() {
             },
           },
         }));
-/* eslint-enable @typescript-eslint/no-explicit-any */
 
       setApplications(acceptedApps);
     } catch (err) {
@@ -77,7 +106,7 @@ export default function JobSeekerMessagesPage() {
           <p className="text-gray-600 text-center">No accepted applications yet.</p>
         ) : (
           <div className="space-y-3">
-            {applications.map((app) => (
+            {applications.map(app => (
               <div
                 key={app.id}
                 className="border rounded-lg p-4 flex justify-between items-center hover:bg-gray-100 transition"
