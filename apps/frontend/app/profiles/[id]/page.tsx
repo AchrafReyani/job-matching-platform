@@ -3,10 +3,27 @@
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { getToken } from '@/lib/api';
-import { ProfileResponse, getProfile } from '@/lib/auth';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 
+interface ProfileResponse {
+  id: string;
+  email: string;
+  role: 'JOB_SEEKER' | 'COMPANY';
+  createdAt: string;
+  jobSeeker?: {
+    id: number;
+    fullName?: string;
+    portfolioUrl?: string;
+    experienceSummary?: string;
+  };
+  company?: {
+    id: number;
+    companyName?: string;
+    websiteUrl?: string;
+    description?: string;
+  };
+}
 
 export default function ViewProfilePage() {
   const router = useRouter();
@@ -26,7 +43,13 @@ export default function ViewProfilePage() {
       }
 
       try {
-        const data = await getProfile(token, profileId);
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/profiles/${profileId}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        if (!res.ok) throw new Error('Failed to fetch profile');
+
+        const data: ProfileResponse = await res.json();
         setProfile(data);
       } catch (err) {
         console.error(err);
