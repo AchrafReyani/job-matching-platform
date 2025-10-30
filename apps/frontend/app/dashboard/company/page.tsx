@@ -41,6 +41,9 @@ export default function CompanyDashboard() {
         <Button onClick={() => router.push('/dashboard/company/applications')}>
           Browse applications
         </Button>
+        <Button onClick={() => router.push('/dashboard/company/messages')}>
+          Messages
+        </Button>
         <Button variant="destructive" onClick={handleLogout}>
           Logout
         </Button>
