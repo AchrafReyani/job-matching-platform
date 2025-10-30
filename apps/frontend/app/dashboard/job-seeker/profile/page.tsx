@@ -51,7 +51,6 @@ export default function DashboardJobSeekerProfilePage() {
         {profile?.jobSeeker ? (
           <div className="space-y-3">
             <p><strong>Email:</strong> {profile.email}</p>
-            <p><strong>User ID:</strong> {profile.id}</p>
             <p><strong>Created At:</strong> {new Date(profile.createdAt).toLocaleString()}</p>
 
             <div className="mt-4 border-t pt-3">
