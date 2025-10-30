@@ -45,7 +45,7 @@ export class ApplicationsService {
     });
   }
 
-async getApplicationById(id: number) {
+async getApplicationById(id: number, requesterUserId: string) {
   if (!id || isNaN(id)) {
     throw new NotFoundException('Invalid application ID');
   }
@@ -75,6 +75,15 @@ async getApplicationById(id: number) {
   });
 
   if (!application) throw new NotFoundException('Application not found');
+
+  // Check if requester is either the job seeker or the company owner
+  const isJobSeeker = application.jobSeeker.userId === requesterUserId;
+  const isCompany = application.vacancy.company.userId === requesterUserId;
+
+  if (!isJobSeeker && !isCompany) {
+    throw new ForbiddenException('You are not allowed to view this application');
+  }
+
   return application;
 }
 
