@@ -1,14 +1,22 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
 import { Button } from './Button';
-import { clearToken } from '@/lib/api';
+import { getToken, clearToken } from '@/lib/api';
 
 export function Header() {
   const router = useRouter();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    const token = getToken();
+    setIsLoggedIn(!!token);
+  }, []);
 
   const handleLogout = () => {
     clearToken();
+    setIsLoggedIn(false);
     router.push('/home');
   };
 
@@ -22,13 +30,15 @@ export function Header() {
       </h1>
 
       <nav className="flex gap-3">
-        <Button
-          variant="destructive"
-          className="text-sm px-3 py-1"
-          onClick={handleLogout}
-        >
-          Logout
-        </Button>
+        {isLoggedIn && (
+          <Button
+            variant="destructive"
+            className="text-sm px-3 py-1"
+            onClick={handleLogout}
+          >
+            Logout
+          </Button>
+        )}
       </nav>
     </header>
   );
