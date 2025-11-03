@@ -2,9 +2,15 @@
 
 import { useRouter } from 'next/navigation';
 import { Button } from './Button';
+import { clearToken } from '@/lib/api';
 
 export function Header() {
   const router = useRouter();
+
+  const handleLogout = () => {
+    clearToken();
+    router.push('/home');
+  };
 
   return (
     <header className="bg-white shadow-sm border-b border-gray-200 px-6 py-3 flex justify-between items-center">
@@ -16,24 +22,10 @@ export function Header() {
       </h1>
 
       <nav className="flex gap-3">
-        {/* <Button
-          variant="secondary"
-          className="text-sm px-3 py-1"
-          onClick={() => router.push('/dashboard/job-seeker')}
-        >
-          Job Seeker
-        </Button>
-        <Button
-          variant="secondary"
-          className="text-sm px-3 py-1"
-          onClick={() => router.push('/dashboard/company')}
-        >
-          Company
-        </Button> */}
         <Button
           variant="destructive"
           className="text-sm px-3 py-1"
-          onClick={() => router.push('/logout')}
+          onClick={handleLogout}
         >
           Logout
         </Button>
