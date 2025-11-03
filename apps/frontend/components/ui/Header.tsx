@@ -12,6 +12,14 @@ export function Header() {
   useEffect(() => {
     const token = getToken();
     setIsLoggedIn(!!token);
+
+    const handleStorageChange = () => {
+      const newToken = getToken();
+      setIsLoggedIn(!!newToken);
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
   }, []);
 
   const handleLogout = () => {
