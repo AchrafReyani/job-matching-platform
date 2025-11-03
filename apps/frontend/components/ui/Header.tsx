@@ -10,21 +10,17 @@ export function Header() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
-    const token = getToken();
-    setIsLoggedIn(!!token);
+    // Check token initially
+    const updateLoginState = () => setIsLoggedIn(!!getToken());
+    updateLoginState();
 
-    const handleStorageChange = () => {
-      const newToken = getToken();
-      setIsLoggedIn(!!newToken);
-    };
-
-    window.addEventListener('storage', handleStorageChange);
-    return () => window.removeEventListener('storage', handleStorageChange);
+    // Listen for token changes (login/logout)
+    window.addEventListener('tokenChanged', updateLoginState);
+    return () => window.removeEventListener('tokenChanged', updateLoginState);
   }, []);
 
   const handleLogout = () => {
     clearToken();
-    setIsLoggedIn(false);
     router.push('/home');
   };
 
