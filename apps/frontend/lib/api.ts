@@ -23,19 +23,32 @@ export async function request<T>(
 
 /* ---------- TOKEN HELPERS ---------- */
 
+/**
+ * Save auth token to localStorage and notify app that it changed.
+ */
 export function saveToken(token: string): void {
   if (typeof window !== 'undefined') {
     localStorage.setItem('token', token);
+    // 🔔 Let other parts of the app know token was updated
+    window.dispatchEvent(new Event('tokenChanged'));
   }
 }
 
+/**
+ * Get the saved auth token (if any).
+ */
 export function getToken(): string | null {
   if (typeof window === 'undefined') return null;
   return localStorage.getItem('token');
 }
 
+/**
+ * Remove auth token and notify app that it changed.
+ */
 export function clearToken(): void {
   if (typeof window !== 'undefined') {
     localStorage.removeItem('token');
+    // 🔔 Let other parts of the app know token was cleared
+    window.dispatchEvent(new Event('tokenChanged'));
   }
 }
