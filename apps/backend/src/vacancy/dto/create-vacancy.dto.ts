@@ -2,13 +2,13 @@ import { IsString, IsOptional } from 'class-validator';
 
 export class CreateVacancyDto {
   @IsString()
-  title: string;
+  title!: string;
 
   @IsString()
-  role: string;
+  role!: string;
 
   @IsString()
-  jobDescription: string;
+  jobDescription!: string;
 
   @IsOptional()
   @IsString()
