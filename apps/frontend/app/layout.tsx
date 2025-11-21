@@ -14,9 +14,33 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const domain = "https://job-matching-website.vercel.app/";
+const imageUrl = `${domain}/images/preview-image.jpg`;
+
 export const metadata: Metadata = {
-  title: "Job matching app",
-  description: "Job matching app",
+  title: "Job Matching App",
+  description: "Full-stack job matching platform with user accounts, vacancies, applications, and chat",
+  openGraph: {
+    title: "Job Matching App",
+    description: "Full-stack job matching platform with user accounts, vacancies, applications, and chat",
+    url: domain,
+    siteName: "Job Matching App",
+    images: [
+      {
+        url: imageUrl,
+        width: 1200,
+        height: 630,
+        alt: "Job Matching App Preview",
+      },
+    ],
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Job Matching App",
+    description: "Full-stack job matching platform with user accounts, vacancies, applications, and chat",
+    images: [imageUrl],
+  },
 };
 
 export default function RootLayout({
@@ -29,15 +53,8 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased flex flex-col min-h-screen`}
       >
-        {/* Header always on top */}
         <Header />
-
-        {/* Main content grows to fill space */}
-        <main className="flex-1 w-full px-6 py-4">
-          {children}
-        </main>
-
-        {/* Footer always at bottom */}
+        <main className="flex-1 w-full px-6 py-4">{children}</main>
         <Footer />
       </body>
     </html>
