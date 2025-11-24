@@ -40,51 +40,70 @@ export default function DashboardJobSeekerProfilePage() {
     fetchProfile();
   }, [router]);
 
-  if (loading) return <div className="flex justify-center items-center min-h-screen">Loading...</div>;
-  if (error) return <div className="text-red-500 text-center mt-10">{error}</div>;
+  if (loading)
+    return (
+      <div className="flex justify-center items-center min-h-screen text-[var(--color-text)] bg-[var(--color-bg)]">
+        Loading...
+      </div>
+    );
+
+  if (error)
+    return (
+      <div className="text-[var(--color-error-dark)] text-center mt-10">{error}</div>
+    );
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
-      <Card className="w-full max-w-md p-6">
+    <div className="min-h-screen flex items-center justify-center bg-[var(--color-bg)] p-4 text-[var(--color-text)]">
+      <Card className="w-full max-w-md p-6 bg-[var(--color-secondary)] text-[var(--color-text)]">
         <h1 className="text-2xl font-bold mb-4 text-center">Your Profile</h1>
 
         {profile?.jobSeeker ? (
           <div className="space-y-3">
-            <p><strong>Email:</strong> {profile.email}</p>
-            <p><strong>Created At:</strong> {new Date(profile.createdAt).toLocaleString()}</p>
+            <p>
+              <strong>Email:</strong> {profile.email}
+            </p>
+            <p>
+              <strong>Created At:</strong> {new Date(profile.createdAt).toLocaleString()}
+            </p>
 
-            <div className="mt-4 border-t pt-3">
+            <div className="mt-4 border-t border-[var(--color-muted)] pt-3">
               <h2 className="font-semibold text-lg mb-2">Job Seeker Info</h2>
-              <p><strong>Name:</strong> {profile.jobSeeker.fullName}</p>
+              <p>
+                <strong>Name:</strong> {profile.jobSeeker.fullName}
+              </p>
               {profile.jobSeeker.portfolioUrl && (
                 <p>
                   <strong>Portfolio:</strong>{' '}
                   <a
                     href={profile.jobSeeker.portfolioUrl}
                     target="_blank"
-                    className="text-blue-600 underline"
+                    className="text-[var(--color-primary)] underline"
                   >
                     {profile.jobSeeker.portfolioUrl}
                   </a>
                 </p>
               )}
               {profile.jobSeeker.experienceSummary && (
-                <p><strong>Experience:</strong> {profile.jobSeeker.experienceSummary}</p>
+                <p>
+                  <strong>Experience:</strong> {profile.jobSeeker.experienceSummary}
+                </p>
               )}
             </div>
 
             <div className="mt-6 flex justify-between">
-              <Button onClick={() => router.push('/dashboard/job-seeker')}>Back to Dashboard</Button>
+              <Button className="bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] text-[var(--color-on-primary)]" onClick={() => router.push('/dashboard/job-seeker')}>
+                Back to Dashboard
+              </Button>
               <Button
+                className="bg-[var(--color-accent)] hover:bg-[var(--color-accent-dark)] text-[var(--color-on-primary)]"
                 onClick={() => router.push('/dashboard/job-seeker/profile/edit')}
-                className="bg-blue-600 hover:bg-blue-700 text-white"
               >
                 Edit Profile
               </Button>
             </div>
           </div>
         ) : (
-          <p className="text-gray-600 text-center">No job seeker profile found.</p>
+          <p className="text-[var(--color-muted)] text-center">No job seeker profile found.</p>
         )}
       </Card>
     </div>
