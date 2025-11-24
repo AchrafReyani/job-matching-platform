@@ -51,33 +51,51 @@ export default function RegisterJobSeekerPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
+    <div className="min-h-screen flex items-center justify-center bg-[var(--color-bg)]">
       <Card className="w-full max-w-md p-6">
-        <h1 className="text-2xl font-bold mb-6 text-center">Register as Job Seeker</h1>
+        <h1 className="text-2xl font-bold mb-6 text-center text-[var(--color-text)]">
+          Register as Job Seeker
+        </h1>
 
         <form onSubmit={handleRegister} className="flex flex-col gap-4">
           <Input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required />
           <Input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} required />
           <Input type="text" placeholder="Full Name" value={fullName} onChange={(e) => setFullName(e.target.value)} required />
           <Input type="url" placeholder="Portfolio URL (optional)" value={portfolioUrl} onChange={(e) => setPortfolioUrl(e.target.value)} />
+
           <textarea
             placeholder="Experience Summary (optional)"
             value={experienceSummary}
             onChange={(e) => setExperienceSummary(e.target.value)}
-            className="border rounded-lg p-2 resize-none h-24 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+            className="
+              border border-[var(--color-muted)]
+              rounded-lg p-2
+              resize-none h-24
+              bg-[var(--color-bg)]
+              text-[var(--color-text)]
+              focus:ring-2 focus:ring-[var(--color-primary)]
+              focus:outline-none
+            "
           />
 
-          {error && <p className="text-red-500 text-sm text-center">{error}</p>}
+          {error && (
+            <p className="text-[var(--color-destructive)] text-sm text-center">
+              {error}
+            </p>
+          )}
 
           <Button type="submit" disabled={loading}>
             {loading ? 'Registering...' : 'Register'}
           </Button>
         </form>
 
-        <div className="mt-6 text-center text-sm">
+        <div className="mt-6 text-center text-sm text-[var(--color-text)]">
           <p>
             Already have an account?{' '}
-            <a href="/login" className="text-blue-600 hover:underline font-medium">
+            <a
+              href="/login"
+              className="text-[var(--color-primary)] hover:underline font-medium"
+            >
               Login here
             </a>
           </p>
