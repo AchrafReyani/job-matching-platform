@@ -15,16 +15,7 @@ Before you start, make sure you have installed:
 
 ---
 
-## 2. Clone the Repository
-
-```bash
-git clone <your-repo-url>
-cd <your-repo-folder>
-```
-
----
-
-## 3. Configure Environment Variables
+## 2. Configure Environment Variables
 
 Create a `.env` file at the root of the project with at least these variables:
 
@@ -41,7 +32,7 @@ JWT_SECRET="<your_jwt_secret_here>"
 
 ---
 
-## 4. Set Up PostgreSQL with Docker
+## 3. Set Up PostgreSQL with Docker
 
 The project includes a `docker-compose.yml` file to run a local PostgreSQL database. Example:
 
@@ -82,7 +73,7 @@ docker ps
 
 ---
 
-## 5. Install Backend Dependencies
+## 4. Install Backend Dependencies
 
 ```bash
 pnpm install
@@ -96,7 +87,7 @@ npm install
 
 ---
 
-## 6. Prisma Setup
+## 5. Prisma Setup
 
 ### Generate Prisma Client
 
@@ -125,7 +116,7 @@ Prisma Studio allows you to explore and manipulate the database visually.
 
 ---
 
-## 7. Start the Backend
+## 6. Start the Backend
 
 ```bash
 pnpm start:dev
@@ -141,7 +132,7 @@ The backend should now be running at `http://localhost:3001`.
 
 ---
 
-## 8. Verifying the Setup
+## 7. Verifying the Setup
 
 - Ensure the PostgreSQL container is running (`docker ps`).  
 - Check that migrations ran successfully (`npx prisma migrate status`).  
@@ -149,7 +140,7 @@ The backend should now be running at `http://localhost:3001`.
 
 ---
 
-## 9. Key Notes
+## 8. Key Notes
 
 1. **Docker Compose credentials**  
    - Only used for **initializing the database**.  
