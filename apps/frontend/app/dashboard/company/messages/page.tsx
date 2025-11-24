@@ -6,7 +6,6 @@ import { getToken } from '@/lib/api';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 
-// Full API types
 interface JobSeeker {
   id: number;
   userId: string;
@@ -42,7 +41,6 @@ interface Application {
   jobSeeker?: JobSeeker;
 }
 
-// UI-friendly type
 interface ApplicationUI {
   id: number;
   vacancyTitle: string;
@@ -72,7 +70,6 @@ export default function CompanyMessagesPage() {
         if (!res.ok) throw new Error('Failed to fetch applications');
 
         const data: Application[] = await res.json();
-        console.log('Company applications API response:', data); // debug
 
         const acceptedApps: ApplicationUI[] = data
           .filter(app => app.status === 'ACCEPTED')
@@ -95,30 +92,28 @@ export default function CompanyMessagesPage() {
     fetchApplications();
   }, [router]);
 
-  if (loading) return <div className="flex justify-center mt-10">Loading...</div>;
-  if (error) return <div className="text-red-500 text-center mt-10">{error}</div>;
+  if (loading) return <div className="flex justify-center mt-10 text-[var(--color-text)]">Loading...</div>;
+  if (error) return <div className="text-[var(--color-error-dark)] text-center mt-10">{error}</div>;
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6 flex flex-col items-center">
+    <div className="min-h-screen bg-[var(--color-bg)] p-6 flex flex-col items-center text-[var(--color-text)]">
       <h1 className="text-2xl font-bold mb-6">Your Chats</h1>
 
       {applications.length === 0 ? (
-        <p className="text-gray-600 text-center">No accepted applications yet.</p>
+        <p className="text-[var(--color-muted)] text-center">No accepted applications yet.</p>
       ) : (
         <div className="flex flex-col gap-4 w-full max-w-3xl">
           {applications.map(app => (
-            <Card key={app.id} className="p-4">
+            <Card key={app.id} className="p-4 bg-[var(--color-secondary)] text-[var(--color-text)]">
               <h2 className="font-semibold text-lg">{app.jobSeekerName}</h2>
-              <p className="text-gray-700">
+              <p className="text-[var(--color-text)]">
                 <strong>Vacancy:</strong> {app.vacancyTitle}
               </p>
-              <p className="text-gray-500 text-sm mt-1">Status: {app.status}</p>
+              <p className="text-[var(--color-muted)] text-sm mt-1">Status: {app.status}</p>
 
               <div className="mt-3 flex gap-2">
                 <Button
-                  onClick={() =>
-                    router.push(`/dashboard/company/messages/${app.id}`)
-                  }
+                  onClick={() => router.push(`/dashboard/company/messages/${app.id}`)}
                 >
                   Open Chat
                 </Button>
