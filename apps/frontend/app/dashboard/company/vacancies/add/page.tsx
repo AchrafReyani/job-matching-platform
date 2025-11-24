@@ -51,8 +51,8 @@ export default function AddVacancyPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
-      <Card className="w-full max-w-md p-6">
+    <div className="min-h-screen flex items-center justify-center bg-[var(--color-bg)] p-4 text-[var(--color-text)]">
+      <Card className="w-full max-w-md p-6 bg-[var(--color-secondary)] text-[var(--color-text)]">
         <h1 className="text-2xl font-bold mb-4 text-center">Add New Vacancy</h1>
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
@@ -74,7 +74,7 @@ export default function AddVacancyPage() {
             placeholder="Job Description"
             value={jobDescription}
             onChange={(e) => setJobDescription(e.target.value)}
-            className="border rounded-lg p-2 resize-none h-24 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+            className="border rounded-lg p-2 resize-none h-24 focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] bg-[var(--color-bg)] text-[var(--color-text)]"
             required
           />
           <Input
@@ -84,13 +84,21 @@ export default function AddVacancyPage() {
             onChange={(e) => setSalaryRange(e.target.value)}
           />
 
-          {error && <p className="text-red-500 text-sm text-center">{error}</p>}
+          {error && <p className="text-[var(--color-error-dark)] text-sm text-center">{error}</p>}
 
           <div className="flex justify-between mt-4">
-            <Button type="button" onClick={() => router.push('/dashboard/company/vacancies')}>
+            <Button
+              type="button"
+              className="bg-[var(--color-secondary)] hover:bg-[var(--color-secondary-dark)] text-[var(--color-on-primary)]"
+              onClick={() => router.push('/dashboard/company/vacancies')}
+            >
               Back
             </Button>
-            <Button type="submit" disabled={loading}>
+            <Button
+              type="submit"
+              disabled={loading}
+              className="bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] text-[var(--color-on-primary)]"
+            >
               {loading ? 'Adding...' : 'Add Vacancy'}
             </Button>
           </div>
