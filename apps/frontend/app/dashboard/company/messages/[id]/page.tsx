@@ -192,7 +192,7 @@ export default function CompanyChatPage() {
                       className={`text-xs mt-1 ${
                         isSent
                           ? 'text-[var(--color-on-primary)] text-right'
-                          : 'text-[var(--color-text)] text-left' // <-- dynamic, adapts to light/dark
+                          : 'text-[var(--color-text)] text-left'
                       }`}
                     >
                       {new Date(msg.sentAt).toLocaleString()}
