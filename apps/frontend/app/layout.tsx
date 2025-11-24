@@ -56,7 +56,7 @@ export default function RootLayout({
       >
         <ThemeProvider>
           <Header />
-          <main className="flex-1 w-full px-6 py-4">{children}</main>
+          <main className="">{children}</main>
           <Footer />
         </ThemeProvider>
       </body>
