@@ -52,3 +52,13 @@
 
   --shadow-header: var(--shadow-header-light);
 }
+
+/* Status Colors */
+:root {
+  --color-success-light: #d1fae5;
+  --color-success-dark: #065f46;
+  --color-warning-light: #fef3c7;
+  --color-warning-dark: #78350f;
+  --color-error-light: #fee2e2;
+  --color-error-dark: #b91c1c;
+}
