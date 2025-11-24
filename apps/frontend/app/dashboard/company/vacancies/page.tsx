@@ -59,38 +59,38 @@ export default function CompanyVacanciesPage() {
     fetchProfileAndVacancies();
   }, [router]);
 
-  if (loading) return <div className="flex justify-center mt-10">Loading...</div>;
-  if (error) return <div className="text-red-500 text-center mt-10">{error}</div>;
+  if (loading) return <div className="flex justify-center mt-10 text-[var(--color-text)]">Loading...</div>;
+  if (error) return <div className="text-[var(--color-error-dark)] text-center mt-10">{error}</div>;
 
   return (
-    <div className="min-h-screen bg-gray-50 p-4 flex flex-col items-center">
+    <div className="min-h-screen bg-[var(--color-bg)] p-4 flex flex-col items-center text-[var(--color-text)]">
       <h1 className="text-2xl font-bold mb-6">My Vacancies</h1>
 
       <div className="flex flex-col gap-4 w-full max-w-2xl mb-6">
-        <Button onClick={() => router.push('/dashboard/company/vacancies/add')}>
+        <Button className="bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] text-[var(--color-on-primary)]" 
+                onClick={() => router.push('/dashboard/company/vacancies/add')}>
           Add New Vacancy
         </Button>
       </div>
 
       <div className="flex flex-col gap-4 w-full max-w-2xl">
         {vacancies.length === 0 ? (
-          <p className="text-gray-600 text-center">You have not posted any vacancies.</p>
+          <p className="text-[var(--color-muted)] text-center">
+            You have not posted any vacancies.
+          </p>
         ) : (
           vacancies.map((vacancy) => (
-            <Card key={vacancy.id} className="p-4">
+            <Card key={vacancy.id} className="p-4 bg-[var(--color-secondary)] text-[var(--color-text)]">
               <h2 className="font-semibold text-lg">{vacancy.title}</h2>
               <p><strong>Role:</strong> {vacancy.role}</p>
               {vacancy.salaryRange && <p><strong>Salary:</strong> {vacancy.salaryRange}</p>}
               <p>{vacancy.jobDescription}</p>
-              <p className="text-sm text-gray-500 mt-1">
+              <p className="text-sm text-[var(--color-muted)] mt-1">
                 Posted: {new Date(vacancy.createdAt).toLocaleDateString()}
               </p>
               <div className="mt-2">
-                <Button
-                  onClick={() =>
-                    router.push(`/dashboard/company/vacancies/edit/${vacancy.id}`)
-                  }
-                >
+                <Button className="bg-[var(--color-accent)] hover:bg-[var(--color-accent-dark)] text-[var(--color-on-primary)]"
+                        onClick={() => router.push(`/dashboard/company/vacancies/edit/${vacancy.id}`)}>
                   Edit
                 </Button>
               </div>
@@ -100,7 +100,10 @@ export default function CompanyVacanciesPage() {
       </div>
 
       <div className="mt-6">
-        <Button onClick={() => router.push('/dashboard/company')}>Back to Dashboard</Button>
+        <Button className="bg-[var(--color-secondary)] hover:bg-[var(--color-secondary-dark)] text-[var(--color-on-primary)]"
+                onClick={() => router.push('/dashboard/company')}>
+          Back to Dashboard
+        </Button>
       </div>
     </div>
   );
