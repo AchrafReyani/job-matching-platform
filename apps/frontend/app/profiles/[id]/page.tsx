@@ -56,51 +56,74 @@ export default function ViewProfilePage() {
     fetchProfile();
   }, [profileId, router, token]);
 
-  if (loading) return <div className="flex justify-center items-center min-h-screen">Loading...</div>;
-  if (error) return <div className="text-red-500 text-center mt-10">{error}</div>;
-  if (!profile) return <div className="text-gray-600 text-center mt-10">Profile not found.</div>;
+  if (loading)
+    return (
+      <div className="flex justify-center items-center min-h-screen text-[var(--color-text)]">
+        Loading...
+      </div>
+    );
+  if (error)
+    return (
+      <div className="text-[var(--color-destructive)] text-center mt-10">
+        {error}
+      </div>
+    );
+  if (!profile)
+    return (
+      <div className="text-[var(--color-muted)] text-center mt-10">
+        Profile not found.
+      </div>
+    );
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
+    <div className="min-h-screen flex items-center justify-center bg-[var(--color-bg)] p-4">
       <Card className="w-full max-w-md p-6">
-        <h1 className="text-2xl font-bold mb-4 text-center">
+        <h1 className="text-2xl font-bold mb-4 text-center text-[var(--color-text)]">
           {profile.role === 'JOB_SEEKER' ? 'Job Seeker Profile' : 'Company Profile'}
         </h1>
 
-        <p><strong>Role:</strong> {profile.role}</p>
+        <p className="text-[var(--color-text)]"><strong>Role:</strong> {profile.role}</p>
 
         {profile.role === 'JOB_SEEKER' && profile.profile && (
-          <div className="mt-4 border-t pt-3">
-            <h2 className="font-semibold text-lg mb-2">Job Seeker Info</h2>
-            <p><strong>Name:</strong> {profile.profile.fullName}</p>
+          <div className="mt-4 border-t border-[var(--color-muted)] pt-3">
+            <h2 className="font-semibold text-lg mb-2 text-[var(--color-text)]">Job Seeker Info</h2>
+            <p className="text-[var(--color-text)]"><strong>Name:</strong> {profile.profile.fullName}</p>
             {profile.profile.portfolioUrl && (
-              <p>
+              <p className="text-[var(--color-text)]">
                 <strong>Portfolio:</strong>{' '}
-                <a href={profile.profile.portfolioUrl} target="_blank" className="text-blue-600 underline">
+                <a
+                  href={profile.profile.portfolioUrl}
+                  target="_blank"
+                  className="text-[var(--color-primary)] underline"
+                >
                   {profile.profile.portfolioUrl}
                 </a>
               </p>
             )}
             {profile.profile.experienceSummary && (
-              <p><strong>Experience:</strong> {profile.profile.experienceSummary}</p>
+              <p className="text-[var(--color-text)]"><strong>Experience:</strong> {profile.profile.experienceSummary}</p>
             )}
           </div>
         )}
 
         {profile.role === 'COMPANY' && profile.profile && (
-          <div className="mt-4 border-t pt-3">
-            <h2 className="font-semibold text-lg mb-2">Company Info</h2>
-            <p><strong>Company Name:</strong> {profile.profile.companyName}</p>
+          <div className="mt-4 border-t border-[var(--color-muted)] pt-3">
+            <h2 className="font-semibold text-lg mb-2 text-[var(--color-text)]">Company Info</h2>
+            <p className="text-[var(--color-text)]"><strong>Company Name:</strong> {profile.profile.companyName}</p>
             {profile.profile.websiteUrl && (
-              <p>
+              <p className="text-[var(--color-text)]">
                 <strong>Website:</strong>{' '}
-                <a href={profile.profile.websiteUrl} target="_blank" className="text-blue-600 underline">
+                <a
+                  href={profile.profile.websiteUrl}
+                  target="_blank"
+                  className="text-[var(--color-primary)] underline"
+                >
                   {profile.profile.websiteUrl}
                 </a>
               </p>
             )}
             {profile.profile.description && (
-              <p><strong>Description:</strong> {profile.profile.description}</p>
+              <p className="text-[var(--color-text)]"><strong>Description:</strong> {profile.profile.description}</p>
             )}
           </div>
         )}

@@ -2,7 +2,14 @@
 
 export function Footer() {
   return (
-    <footer className="bg-gray-50 border-t border-gray-200 text-gray-500 text-sm py-4 text-center">
+    <footer
+      className="
+        py-4 text-center text-sm
+        bg-[var(--color-bg)]
+        text-[var(--color-muted)]
+        border-t border-[var(--color-muted)]
+      "
+    >
       © {new Date().getFullYear()} JobMatch. All rights reserved.
     </footer>
   );

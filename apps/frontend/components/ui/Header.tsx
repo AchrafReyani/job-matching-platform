@@ -4,17 +4,16 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { Button } from './Button';
 import { getToken, clearToken } from '@/lib/api';
+import { ThemeToggle } from './ThemeToggle';
 
 export function Header() {
   const router = useRouter();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
-    // Check token initially
     const updateLoginState = () => setIsLoggedIn(!!getToken());
     updateLoginState();
 
-    // Listen for token changes (login/logout)
     window.addEventListener('tokenChanged', updateLoginState);
     return () => window.removeEventListener('tokenChanged', updateLoginState);
   }, []);
@@ -25,15 +24,25 @@ export function Header() {
   };
 
   return (
-    <header className="bg-white shadow-sm border-b border-gray-200 px-6 py-3 flex justify-between items-center">
+    <header
+      className="
+        px-6 py-3 flex justify-between items-center
+        bg-[var(--color-bg)]
+        text-[var(--color-text)]
+        shadow-[var(--shadow-header)]
+        border-b border-[var(--color-muted)]
+      "
+    >
+      {/* Logo / Title */}
       <h1
-        className="text-lg font-semibold text-gray-800 cursor-pointer"
+        className="text-lg font-semibold cursor-pointer text-[var(--color-primary)]"
         onClick={() => router.push('/')}
       >
         JobMatch
       </h1>
 
-      <nav className="flex gap-3">
+      {/* Right-side nav */}
+      <nav className="flex items-center gap-3">
         {isLoggedIn && (
           <Button
             variant="destructive"
@@ -43,6 +52,8 @@ export function Header() {
             Logout
           </Button>
         )}
+
+        <ThemeToggle />
       </nav>
     </header>
   );

@@ -41,14 +41,12 @@ export default function CompanyApplicationsPage() {
 
     const fetchApplications = async () => {
       try {
-        const data = await request('/applications/company', {
+        const data = (await request('/applications/company', {
           method: 'GET',
           headers: { Authorization: `Bearer ${token}` },
-        }) as unknown;
+        })) as unknown;
 
-        if (!Array.isArray(data)) {
-          throw new Error('Invalid response format');
-        }
+        if (!Array.isArray(data)) throw new Error('Invalid response format');
 
         setApplications(data as Application[]);
       } catch (err) {
@@ -93,9 +91,7 @@ export default function CompanyApplicationsPage() {
       }
 
       setApplications((prev) =>
-        prev.map((app) =>
-          app.id === id ? { ...app, status } : app
-        )
+        prev.map((app) => (app.id === id ? { ...app, status } : app))
       );
     } catch (err) {
       console.error(err);
@@ -106,32 +102,41 @@ export default function CompanyApplicationsPage() {
   };
 
   if (loading) return <div className="flex justify-center mt-10">Loading...</div>;
-  if (error) return <div className="text-red-500 text-center mt-6">{error}</div>;
+  if (error) return <div className="text-[var(--color-error-dark)] text-center mt-6">{error}</div>;
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50 p-6">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-[var(--color-bg)] p-6">
       <Card className="w-full max-w-3xl p-6">
-        <h1 className="text-2xl font-bold text-center mb-6">Received Applications</h1>
+        <h1 className="text-2xl font-bold text-center mb-6 text-[var(--color-text)]">
+          Received Applications
+        </h1>
 
         {applications.length === 0 ? (
-          <p className="text-center text-gray-500">No one has applied to your vacancies yet.</p>
+          <p className="text-center text-[var(--color-muted)]">
+            No one has applied to your vacancies yet.
+          </p>
         ) : (
           <div className="space-y-4">
             {applications.map((app) => (
               <div
                 key={app.id}
-                className="border border-gray-200 rounded-xl p-4 shadow-sm hover:shadow-md transition"
+                className="border border-[var(--color-muted)] rounded-xl p-4 shadow-sm hover:shadow-md transition"
               >
-                <h2 className="text-lg font-semibold">{app.vacancy.title}</h2>
-                <p className="text-gray-600">
+                <h2 className="text-lg font-semibold text-[var(--color-text)]">{app.vacancy.title}</h2>
+                <p className="text-[var(--color-text)]">
                   Applicant: <strong>{app.jobSeeker.fullName}</strong>
                 </p>
 
-                {/* 🔵 View Profile Button */}
                 <div className="mt-2">
                   <Button
                     onClick={() => router.push(`/profiles/${app.jobSeeker.userId}`)}
-                    className="text-blue-600 border border-blue-600 hover:bg-blue-50"
+                    className="
+                      bg-transparent 
+                      text-[var(--color-primary)] 
+                      border-[var(--color-primary)] 
+                      hover:bg-[var(--color-primary-light)]
+                      hover:text-[var(--color-text)]
+                    "
                   >
                     View Profile
                   </Button>
@@ -141,15 +146,15 @@ export default function CompanyApplicationsPage() {
                   <span
                     className={`px-3 py-1 rounded-full text-sm font-medium ${
                       app.status === 'ACCEPTED'
-                        ? 'bg-green-100 text-green-700'
+                        ? 'bg-[var(--color-success-light)] text-[var(--color-success-dark)]'
                         : app.status === 'REJECTED'
-                        ? 'bg-red-100 text-red-700'
-                        : 'bg-yellow-100 text-yellow-700'
+                        ? 'bg-[var(--color-error-light)] text-[var(--color-error-dark)]'
+                        : 'bg-[var(--color-warning-light)] text-[var(--color-warning-dark)]'
                     }`}
                   >
                     {app.status}
                   </span>
-                  <span className="text-sm text-gray-500">
+                  <span className="text-sm text-[var(--color-muted)]">
                     Applied on {new Date(app.appliedAt).toLocaleDateString()}
                   </span>
                 </div>
@@ -160,8 +165,8 @@ export default function CompanyApplicationsPage() {
                     onClick={() => handleDecision(app.id, 'ACCEPTED')}
                     className={`text-white transition ${
                       app.status !== 'APPLIED' || processingId === app.id
-                        ? 'bg-green-300 hover:bg-green-300 cursor-not-allowed'
-                        : 'bg-green-600 hover:bg-green-700 cursor-pointer'
+                        ? 'bg-[var(--color-success-light)] hover:bg-[var(--color-success-light)] cursor-not-allowed'
+                        : 'bg-[var(--color-success-dark)] hover:bg-[var(--color-success-light)] cursor-pointer'
                     }`}
                   >
                     Accept
@@ -171,8 +176,8 @@ export default function CompanyApplicationsPage() {
                     onClick={() => handleDecision(app.id, 'REJECTED')}
                     className={`text-white transition ${
                       app.status !== 'APPLIED' || processingId === app.id
-                        ? 'bg-red-300 hover:bg-red-300 cursor-not-allowed'
-                        : 'bg-red-600 hover:bg-red-700 cursor-pointer'
+                        ? 'bg-[var(--color-error-light)] hover:bg-[var(--color-error-light)] cursor-not-allowed'
+                        : 'bg-[var(--color-error-dark)] hover:bg-[var(--color-error-dark)] cursor-pointer'
                     }`}
                   >
                     Reject

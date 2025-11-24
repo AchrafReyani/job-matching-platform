@@ -36,13 +36,11 @@ export default function JobSeekerApplicationsPage() {
 
     const fetchApplications = async () => {
       try {
-        const data = await request('/applications/me', {
+        const data = (await request('/applications/me', {
           method: 'GET',
           headers: { Authorization: `Bearer ${token}` },
-        }) as unknown;
-        if (!Array.isArray(data)) {
-          throw new Error('Invalid applications response');
-        }
+        })) as unknown;
+        if (!Array.isArray(data)) throw new Error('Invalid applications response');
         setApplications(data as Application[]);
       } catch (err) {
         console.error(err);
@@ -56,39 +54,44 @@ export default function JobSeekerApplicationsPage() {
   }, [router]);
 
   if (loading) return <div className="flex justify-center mt-10">Loading...</div>;
-  if (error) return <div className="text-red-500 text-center mt-6">{error}</div>;
+  if (error) return <div className="text-[var(--color-error-dark)] text-center mt-6">{error}</div>;
+
+  const getStatusClasses = (status: string) => {
+    switch (status) {
+      case 'ACCEPTED':
+        return 'bg-[var(--color-success-light)] text-[var(--color-success-dark)]';
+      case 'REJECTED':
+        return 'bg-[var(--color-error-light)] text-[var(--color-error-dark)]';
+      default:
+        return 'bg-[var(--color-warning-light)] text-[var(--color-warning-dark)]';
+    }
+  };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50 p-6">
-      <Card className="w-full max-w-2xl p-6">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-[var(--color-bg)] p-6 text-[var(--color-text)]">
+      <Card className="w-full max-w-2xl p-6 bg-[var(--color-secondary)] text-[var(--color-text)]">
         <h1 className="text-2xl font-bold text-center mb-6">My Applications</h1>
 
         {applications.length === 0 ? (
-          <p className="text-center text-gray-500">You haven&apos;t applied to any jobs yet.</p>
+          <p className="text-center text-[var(--color-muted)]">You haven&apos;t applied to any jobs yet.</p>
         ) : (
           <div className="space-y-4">
             {applications.map((app) => (
               <div
                 key={app.id}
-                className="border border-gray-200 rounded-xl p-4 shadow-sm hover:shadow-md transition"
+                className="border border-[var(--color-muted)] rounded-xl p-4 shadow-sm hover:shadow-md transition"
               >
                 <h2 className="text-lg font-semibold">{app.vacancy.title}</h2>
-                <p className="text-gray-600">
+                <p className="text-[var(--color-muted)]">
                   {app.vacancy.company?.companyName ?? 'Unknown Company'}
                 </p>
                 <div className="mt-2 flex justify-between items-center">
                   <span
-                    className={`px-3 py-1 rounded-full text-sm font-medium ${
-                      app.status === 'ACCEPTED'
-                        ? 'bg-green-100 text-green-700'
-                        : app.status === 'REJECTED'
-                        ? 'bg-red-100 text-red-700'
-                        : 'bg-yellow-100 text-yellow-700'
-                    }`}
+                    className={`px-3 py-1 rounded-full text-sm font-medium ${getStatusClasses(app.status)}`}
                   >
                     {app.status}
                   </span>
-                  <span className="text-sm text-gray-500">
+                  <span className="text-sm text-[var(--color-muted)]">
                     Applied on {new Date(app.appliedAt).toLocaleDateString()}
                   </span>
                 </div>
@@ -98,7 +101,10 @@ export default function JobSeekerApplicationsPage() {
         )}
 
         <div className="mt-6 text-center">
-          <Button onClick={() => router.push('/dashboard/job-seeker')}>
+          <Button
+            className="bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] text-[var(--color-on-primary)]"
+            onClick={() => router.push('/dashboard/job-seeker')}
+          >
             Back to Dashboard
           </Button>
         </div>

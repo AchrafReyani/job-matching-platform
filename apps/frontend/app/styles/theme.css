@@ -1,0 +1,64 @@
+@theme {
+  /* ========== Brand Colors ========== */
+  --color-primary-light: #5fc3e7;
+  --color-primary-dark: #38bdf8;
+
+  --color-secondary-light: #f3f4f6;
+  --color-secondary-dark: #1f2937;
+
+  --color-accent-light: #f59e0b;
+  --color-accent-dark: #fbbf24;
+
+  /* ========== Text Colors ========== */
+  --color-text-light: #111827;
+  --color-text-dark: #f9fafb;
+
+  --color-muted-light: #6b7280;
+  --color-muted-dark: #9ca3af;
+
+  /* ========== Background Colors ========== */
+  --color-bg-light: #ffffff;
+  --color-bg-dark: #0f172a;
+
+  /* ========== Shadow Tokens (optional) ========== */
+  --shadow-header-light: 0 4px 6px rgba(0, 0, 0, 0.1);
+  --shadow-header-dark: 0 4px 6px rgba(255, 255, 255, 0.15);
+}
+
+/* ========== Dark Mode Overrides ========== */
+:root.dark {
+  --color-primary: var(--color-primary-dark);
+  --color-secondary: var(--color-secondary-dark);
+  --color-accent: var(--color-accent-dark);
+
+  --color-text: var(--color-text-dark);
+  --color-muted: var(--color-muted-dark);
+
+  --color-bg: var(--color-bg-dark);
+
+  --shadow-header: var(--shadow-header-dark);
+}
+
+/* ========== Light Mode Defaults ========== */
+:root {
+  --color-primary: var(--color-primary-light);
+  --color-secondary: var(--color-secondary-light);
+  --color-accent: var(--color-accent-light);
+
+  --color-text: var(--color-text-light);
+  --color-muted: var(--color-muted-light);
+
+  --color-bg: var(--color-bg-light);
+
+  --shadow-header: var(--shadow-header-light);
+}
+
+/* Status Colors */
+:root {
+  --color-success-light: #d1fae5;
+  --color-success-dark: #065f46;
+  --color-warning-light: #fef3c7;
+  --color-warning-dark: #78350f;
+  --color-error-light: #fee2e2;
+  --color-error-dark: #b91c1c;
+}
