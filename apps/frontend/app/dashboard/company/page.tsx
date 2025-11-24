@@ -29,8 +29,10 @@ export default function CompanyDashboard() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 p-6">
-      <h1 className="text-2xl font-bold mb-6">Welcome, {companyName}</h1>
+    <div className="min-h-screen flex flex-col items-center justify-center bg-[var(--color-bg)] p-6">
+      <h1 className="text-2xl font-bold mb-6 text-[var(--color-text)]">
+        Welcome, {companyName}
+      </h1>
       <div className="flex flex-col gap-4 w-full max-w-sm">
         <Button onClick={() => router.push('/dashboard/company/profile')}>
           Company Profile
@@ -39,7 +41,7 @@ export default function CompanyDashboard() {
           Manage Vacancies
         </Button>
         <Button onClick={() => router.push('/dashboard/company/applications')}>
-          Browse applications
+          Browse Applications
         </Button>
         <Button onClick={() => router.push('/dashboard/company/messages')}>
           Messages
