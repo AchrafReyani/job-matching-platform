@@ -18,8 +18,9 @@ The platform is built using a Next.js frontend and a NestJS backend, with a Post
 
 ## 🔗 Live Demo
 
-🔴 (Demo video coming soon)\
-https://youtu.be/XXXXXXXXXXX
+🎬 **Watch the Demo Video:** [Click here to see it in action](https://youtu.be/A71nbICsReg)  
+
+💻 **Try it Yourself:** Experience the project firsthand by visiting [the live site](https://job-matching-website.vercel.app/)  
 
 ------------------------------------------------------------------------
 
