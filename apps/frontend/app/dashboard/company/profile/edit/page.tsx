@@ -64,41 +64,41 @@ export default function EditCompanyProfilePage() {
     }
   };
 
-  if (loading) return <div className="flex justify-center items-center min-h-screen">Loading...</div>;
+  if (loading) return <div className="flex justify-center items-center min-h-screen text-[var(--color-text)]">Loading...</div>;
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
-      <Card className="w-full max-w-md p-6 space-y-4">
+    <div className="min-h-screen flex items-center justify-center bg-[var(--color-secondary)] p-4">
+      <Card className="w-full max-w-md p-6 space-y-4 bg-[var(--color-bg)] text-[var(--color-text)]">
         <h1 className="text-2xl font-bold text-center mb-4">Edit Company Profile</h1>
 
         <div className="space-y-3">
           <div>
-            <label className="block text-sm font-medium text-gray-700">Company Name</label>
+            <label className="block text-sm font-medium text-[var(--color-text)]">Company Name</label>
             <input
               type="text"
               value={companyName}
               onChange={(e) => setCompanyName(e.target.value)}
-              className="w-full border rounded-md px-3 py-2 mt-1"
+              className="w-full border border-[var(--color-muted)] rounded-md px-3 py-2 mt-1 bg-[var(--color-bg)] text-[var(--color-text)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700">Website URL</label>
+            <label className="block text-sm font-medium text-[var(--color-text)]">Website URL</label>
             <input
               type="text"
               value={websiteUrl}
               onChange={(e) => setWebsiteUrl(e.target.value)}
-              className="w-full border rounded-md px-3 py-2 mt-1"
+              className="w-full border border-[var(--color-muted)] rounded-md px-3 py-2 mt-1 bg-[var(--color-bg)] text-[var(--color-text)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700">Description</label>
+            <label className="block text-sm font-medium text-[var(--color-text)]">Description</label>
             <textarea
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               rows={4}
-              className="w-full border rounded-md px-3 py-2 mt-1"
+              className="w-full border border-[var(--color-muted)] rounded-md px-3 py-2 mt-1 bg-[var(--color-bg)] text-[var(--color-text)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]"
             />
           </div>
         </div>
@@ -108,7 +108,7 @@ export default function EditCompanyProfilePage() {
         <div className="flex justify-between mt-6">
           <Button
             onClick={() => router.push('/dashboard/company/profile')}
-            className="bg-blue-600 hover:bg-blue-700 text-white"
+            className="bg-[var(--color-secondary)] text-[var(--color-text)] hover:bg-[var(--color-secondary-dark)]"
           >
             Back
           </Button>
@@ -116,7 +116,7 @@ export default function EditCompanyProfilePage() {
           <Button
             onClick={handleSave}
             disabled={saving}
-            className="bg-green-600 hover:bg-green-700 text-white"
+            className="bg-[var(--color-success-dark)] text-[var(--color-on-primary)] hover:bg-[var(--color-success-light)]"
           >
             {saving ? 'Saving...' : 'Save Changes'}
           </Button>
