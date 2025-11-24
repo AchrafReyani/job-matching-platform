@@ -53,12 +53,21 @@
   --shadow-header: var(--shadow-header-light);
 }
 
-/* Status Colors */
+/* Status Colors (background-safe) */
 :root {
   --color-success-light: #d1fae5;
   --color-success-dark: #065f46;
   --color-warning-light: #fef3c7;
   --color-warning-dark: #78350f;
-  --color-error-light: #fee2e2;
+  --color-error-light: #fee2e2; 
   --color-error-dark: #b91c1c;
+}
+
+/* Text-safe colors */
+:root {
+  --color-error: #dc2626; /* strong red for light background */
+}
+
+:root.dark {
+  --color-error: #f87171; /* lighter red for dark background */
 }

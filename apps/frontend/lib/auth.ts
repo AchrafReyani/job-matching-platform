@@ -76,11 +76,22 @@ export async function login(
   email: string,
   password: string
 ): Promise<LoginResponse> {
-  return request('/auth/login', {
-    method: 'POST',
-    body: JSON.stringify({ email, password }),
-  });
+  try {
+    return await request('/auth/login', {
+      method: 'POST',
+      body: JSON.stringify({ email, password }),
+    });
+  } catch (err: any) {
+    // Detect the backend 401 error we want to hide
+    if (err.message.includes("401")) {
+      throw new Error("Invalid email or password.");
+    }
+
+    // Everything else gets a generic message
+    throw new Error("Something went wrong. Please try again.");
+  }
 }
+
 
 export async function getProfile(token: string): Promise<ProfileResponse> {
   return request('/auth/profile', {

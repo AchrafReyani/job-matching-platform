@@ -94,7 +94,7 @@ export default function LoginPage() {
           />
 
           {error && (
-            <p className="text-[var(--color-destructive)] text-sm text-center">
+            <p className="text-[var(--color-error)] text-sm text-center">
               {error}
             </p>
           )}
