@@ -70,9 +70,11 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
+    <div className="min-h-screen flex items-center justify-center bg-[var(--color-bg)]">
       <Card className="w-full max-w-md p-6">
-        <h1 className="text-2xl font-bold mb-6 text-center">Login</h1>
+        <h1 className="text-2xl font-bold mb-6 text-center text-[var(--color-text)]">
+          Login
+        </h1>
 
         <form onSubmit={handleLogin} className="flex flex-col gap-4">
           <Input
@@ -91,17 +93,24 @@ export default function LoginPage() {
             required
           />
 
-          {error && <p className="text-red-500 text-sm text-center">{error}</p>}
+          {error && (
+            <p className="text-[var(--color-destructive)] text-sm text-center">
+              {error}
+            </p>
+          )}
 
           <Button type="submit" disabled={loading}>
             {loading ? 'Logging in...' : 'Login'}
           </Button>
         </form>
 
-        <div className="mt-6 text-center text-sm">
+        <div className="mt-6 text-center text-sm text-[var(--color-text)]">
           <p>
             Don’t have an account?{' '}
-            <a href="/home" className="text-blue-600 hover:underline font-medium">
+            <a
+              href="/home"
+              className="text-[var(--color-primary)] hover:underline font-medium"
+            >
               Go back
             </a>
           </p>
