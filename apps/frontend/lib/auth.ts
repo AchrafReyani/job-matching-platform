@@ -81,16 +81,21 @@ export async function login(
       method: 'POST',
       body: JSON.stringify({ email, password }),
     });
-  } catch (err: any) {
-    // Detect the backend 401 error we want to hide
-    if (err.message.includes("401")) {
-      throw new Error("Invalid email or password.");
+  } catch (err: unknown) {
+    // Handle ONLY real errors
+    if (err instanceof Error) {
+      if (err.message.includes("401")) {
+        throw new Error("Invalid email or password.");
+      }
+
+      throw new Error("Something went wrong. Please try again.");
     }
 
-    // Everything else gets a generic message
+    // Fallback if error is not an Error object
     throw new Error("Something went wrong. Please try again.");
   }
 }
+
 
 
 export async function getProfile(token: string): Promise<ProfileResponse> {
