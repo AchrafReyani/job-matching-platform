@@ -9,10 +9,18 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
 
+  const config = new DocumentBuilder()
+  .setTitle('API Docs')
+  .setDescription('My API description')
+  .setVersion('1.0')
+  .build();
+
+  const document = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('api-docs', app, document);
+
   const port = process.env.PORT ? parseInt(process.env.PORT, 10) : 3001;
   const frontendUrl = process.env.FRONTEND_URL ?? 'http://localhost:3000';
 
-  // Allow only your frontend to call the API in production
   app.enableCors({
     origin: frontendUrl,
   });
