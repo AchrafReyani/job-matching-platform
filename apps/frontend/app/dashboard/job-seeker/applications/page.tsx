@@ -54,7 +54,7 @@ export default function JobSeekerApplicationsPage() {
   }, [router]);
 
   if (loading) return <div className="flex justify-center mt-10">Loading...</div>;
-  if (error) return <div className="text-[var(--color-error-dark)] text-center mt-6">{error}</div>;
+  if (error) return <div className="text-(--color-error-dark) text-center mt-6">{error}</div>;
 
   const getStatusClasses = (status: string) => {
     switch (status) {
@@ -68,21 +68,21 @@ export default function JobSeekerApplicationsPage() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-[var(--color-bg)] p-6 text-[var(--color-text)]">
-      <Card className="w-full max-w-2xl p-6 bg-[var(--color-secondary)] text-[var(--color-text)]">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-(--color-bg) p-6 text-(--color-text)">
+      <Card className="w-full max-w-2xl p-6 bg-(--color-secondary) text-(--color-text)">
         <h1 className="text-2xl font-bold text-center mb-6">My Applications</h1>
 
         {applications.length === 0 ? (
-          <p className="text-center text-[var(--color-muted)]">You haven&apos;t applied to any jobs yet.</p>
+          <p className="text-center text-(--color-muted)">You haven&apos;t applied to any jobs yet.</p>
         ) : (
           <div className="space-y-4">
             {applications.map((app) => (
               <div
                 key={app.id}
-                className="border border-[var(--color-muted)] rounded-xl p-4 shadow-sm hover:shadow-md transition"
+                className="border border-(--color-muted) rounded-xl p-4 shadow-sm hover:shadow-md transition"
               >
                 <h2 className="text-lg font-semibold">{app.vacancy.title}</h2>
-                <p className="text-[var(--color-muted)]">
+                <p className="text-(--color-muted)">
                   {app.vacancy.company?.companyName ?? 'Unknown Company'}
                 </p>
                 <div className="mt-2 flex justify-between items-center">
@@ -91,7 +91,7 @@ export default function JobSeekerApplicationsPage() {
                   >
                     {app.status}
                   </span>
-                  <span className="text-sm text-[var(--color-muted)]">
+                  <span className="text-sm text-(--color-muted)">
                     Applied on {new Date(app.appliedAt).toLocaleDateString()}
                   </span>
                 </div>
@@ -102,7 +102,7 @@ export default function JobSeekerApplicationsPage() {
 
         <div className="mt-6 text-center">
           <Button
-            className="bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] text-[var(--color-on-primary)]"
+            className="bg-(--color-primary) hover:bg-primary-dark text-(--color-on-primary)"
             onClick={() => router.push('/dashboard/job-seeker')}
           >
             Back to Dashboard
