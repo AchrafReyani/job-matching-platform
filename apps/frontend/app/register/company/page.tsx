@@ -52,9 +52,9 @@ export default function RegisterCompanyPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[var(--color-bg)]">
+    <div className="min-h-screen flex items-center justify-center bg-(--color-bg)">
       <Card className="w-full max-w-md p-6">
-        <h1 className="text-2xl font-bold mb-6 text-center text-[var(--color-text)]">
+        <h1 className="text-2xl font-bold mb-6 text-center text-(--color-text)">
           Register as Company
         </h1>
 
@@ -95,18 +95,18 @@ export default function RegisterCompanyPage() {
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             className="
-              border border-[var(--color-muted)]
+              border border-(--color-muted)
               rounded-lg p-2
               resize-none h-24
-              bg-[var(--color-bg)]
-              text-[var(--color-text)]
-              focus:ring-2 focus:ring-[var(--color-primary)]
+              bg-(--color-bg)
+              text-(--color-text)
+              focus:ring-2 focus:ring-(--color-primary)
               focus:outline-none
             "
           />
 
           {error && (
-            <p className="text-[var(--color-destructive)] text-sm text-center">
+            <p className="text-(--color-destructive) text-sm text-center">
               {error}
             </p>
           )}
@@ -116,12 +116,12 @@ export default function RegisterCompanyPage() {
           </Button>
         </form>
 
-        <div className="mt-6 text-center text-sm text-[var(--color-text)]">
+        <div className="mt-6 text-center text-sm text-(--color-text)">
           <p>
             Already have an account?{' '}
             <a
               href="/login"
-              className="text-[var(--color-primary)] hover:underline font-medium"
+              className="text-(--color-primary) hover:underline font-medium"
             >
               Login here
             </a>
