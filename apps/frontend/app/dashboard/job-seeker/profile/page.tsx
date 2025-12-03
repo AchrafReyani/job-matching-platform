@@ -42,19 +42,19 @@ export default function DashboardJobSeekerProfilePage() {
 
   if (loading)
     return (
-      <div className="flex justify-center items-center min-h-screen text-[var(--color-text)] bg-[var(--color-bg)]">
+      <div className="flex justify-center items-center min-h-screen text-(--color-text) bg-(--color-bg)">
         Loading...
       </div>
     );
 
   if (error)
     return (
-      <div className="text-[var(--color-error-dark)] text-center mt-10">{error}</div>
+      <div className="text-(--color-error-dark) text-center mt-10">{error}</div>
     );
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[var(--color-bg)] p-4 text-[var(--color-text)]">
-      <Card className="w-full max-w-md p-6 bg-[var(--color-secondary)] text-[var(--color-text)]">
+    <div className="min-h-screen flex items-center justify-center bg-(--color-bg) p-4 text-(--color-text)">
+      <Card className="w-full max-w-md p-6 bg-(--color-secondary) text-(--color-text)">
         <h1 className="text-2xl font-bold mb-4 text-center">Your Profile</h1>
 
         {profile?.jobSeeker ? (
@@ -66,7 +66,7 @@ export default function DashboardJobSeekerProfilePage() {
               <strong>Created At:</strong> {new Date(profile.createdAt).toLocaleString()}
             </p>
 
-            <div className="mt-4 border-t border-[var(--color-muted)] pt-3">
+            <div className="mt-4 border-t border-(--color-muted) pt-3">
               <h2 className="font-semibold text-lg mb-2">Job Seeker Info</h2>
               <p>
                 <strong>Name:</strong> {profile.jobSeeker.fullName}
@@ -77,7 +77,7 @@ export default function DashboardJobSeekerProfilePage() {
                   <a
                     href={profile.jobSeeker.portfolioUrl}
                     target="_blank"
-                    className="text-[var(--color-primary)] underline"
+                    className="text-(--color-primary) underline"
                   >
                     {profile.jobSeeker.portfolioUrl}
                   </a>
@@ -91,11 +91,11 @@ export default function DashboardJobSeekerProfilePage() {
             </div>
 
             <div className="mt-6 flex justify-between">
-              <Button className="bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] text-[var(--color-on-primary)]" onClick={() => router.push('/dashboard/job-seeker')}>
+              <Button className="bg-(--color-primary) hover:bg-primary-dark text-(--color-on-primary)" onClick={() => router.push('/dashboard/job-seeker')}>
                 Back to Dashboard
               </Button>
               <Button
-                className="bg-[var(--color-accent)] hover:bg-[var(--color-accent-dark)] text-[var(--color-on-primary)]"
+                className="bg-(--color-accent) hover:bg-accent-dark text-(--color-on-primary)"
                 onClick={() => router.push('/dashboard/job-seeker/profile/edit')}
               >
                 Edit Profile
@@ -103,7 +103,7 @@ export default function DashboardJobSeekerProfilePage() {
             </div>
           </div>
         ) : (
-          <p className="text-[var(--color-muted)] text-center">No job seeker profile found.</p>
+          <p className="text-(--color-muted) text-center">No job seeker profile found.</p>
         )}
       </Card>
     </div>
