@@ -180,7 +180,7 @@ export default function JobSeekerChatPage() {
                         : 'bg-muted-light text-(--color-text) rounded-bl-none'
                     }`}
                   >
-                    <p className="whitespace-pre-wrap break-words">{msg.messageText}</p>
+                    <p className="whitespace-pre-wrap wrap-break-word">{msg.messageText}</p>
                     <p
                       className={`text-xs mt-1 ${
                         isSent
