@@ -94,30 +94,30 @@ export default function JobSeekerMessagesPage() {
   }, []);
 
   if (loading) return <div className="flex justify-center mt-10">Loading...</div>;
-  if (error) return <div className="text-[var(--color-error-dark)] text-center mt-10">{error}</div>;
+  if (error) return <div className="text-(--color-error-dark) text-center mt-10">{error}</div>;
 
   return (
-    <div className="min-h-screen bg-[var(--color-bg)] flex flex-col items-center p-6 text-[var(--color-text)]">
-      <Card className="w-full max-w-3xl p-6 bg-[var(--color-secondary)] text-[var(--color-text)]">
+    <div className="min-h-screen bg-(--color-bg) flex flex-col items-center p-6 text-(--color-text)">
+      <Card className="w-full max-w-3xl p-6 bg-(--color-secondary) text-(--color-text)">
         <h1 className="text-2xl font-bold mb-4 text-center">Your Chats</h1>
 
         {applications.length === 0 ? (
-          <p className="text-[var(--color-muted)] text-center">No accepted applications yet.</p>
+          <p className="text-(--color-muted) text-center">No accepted applications yet.</p>
         ) : (
           <div className="space-y-3">
             {applications.map(app => (
               <div
                 key={app.id}
-                className="border border-[var(--color-muted)] rounded-lg p-4 flex justify-between items-center hover:bg-[var(--color-secondary-dark)] transition"
+                className="border border-(--color-muted) rounded-lg p-4 flex justify-between items-center hover:bg-secondary-dark transition"
               >
                 <div>
                   <p className="font-semibold">{app.vacancy.title}</p>
-                  <p className="text-[var(--color-muted)] text-sm">
+                  <p className="text-(--color-muted) text-sm">
                     {app.vacancy.company.companyName}
                   </p>
                 </div>
                 <Button
-                  className="bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] text-[var(--color-on-primary)]"
+                  className="bg-(--color-primary) hover:bg-primary-dark text-(--color-on-primary)"
                   onClick={() =>
                     router.push(`/dashboard/job-seeker/messages/${app.id}`)
                   }
@@ -131,7 +131,7 @@ export default function JobSeekerMessagesPage() {
 
         <div className="mt-6 text-center">
           <Button
-            className="bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] text-[var(--color-on-primary)]"
+            className="bg-(--color-primary) hover:bg-primary-dark text-(--color-on-primary)"
             onClick={() => router.push('/dashboard/job-seeker')}
           >
             Back to Dashboard
