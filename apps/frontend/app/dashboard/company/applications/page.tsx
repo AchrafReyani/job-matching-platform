@@ -102,17 +102,17 @@ export default function CompanyApplicationsPage() {
   };
 
   if (loading) return <div className="flex justify-center mt-10">Loading...</div>;
-  if (error) return <div className="text-[var(--color-error-dark)] text-center mt-6">{error}</div>;
+  if (error) return <div className="text-(--color-error-dark) text-center mt-6">{error}</div>;
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-[var(--color-bg)] p-6">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-(--color-bg) p-6">
       <Card className="w-full max-w-3xl p-6">
-        <h1 className="text-2xl font-bold text-center mb-6 text-[var(--color-text)]">
+        <h1 className="text-2xl font-bold text-center mb-6 text-(--color-text)">
           Received Applications
         </h1>
 
         {applications.length === 0 ? (
-          <p className="text-center text-[var(--color-muted)]">
+          <p className="text-center text-(--color-muted)">
             No one has applied to your vacancies yet.
           </p>
         ) : (
@@ -120,10 +120,10 @@ export default function CompanyApplicationsPage() {
             {applications.map((app) => (
               <div
                 key={app.id}
-                className="border border-[var(--color-muted)] rounded-xl p-4 shadow-sm hover:shadow-md transition"
+                className="border border-(--color-muted) rounded-xl p-4 shadow-sm hover:shadow-md transition"
               >
-                <h2 className="text-lg font-semibold text-[var(--color-text)]">{app.vacancy.title}</h2>
-                <p className="text-[var(--color-text)]">
+                <h2 className="text-lg font-semibold text-(--color-text)">{app.vacancy.title}</h2>
+                <p className="text-(--color-text)">
                   Applicant: <strong>{app.jobSeeker.fullName}</strong>
                 </p>
 
@@ -132,10 +132,10 @@ export default function CompanyApplicationsPage() {
                     onClick={() => router.push(`/profiles/${app.jobSeeker.userId}`)}
                     className="
                       bg-transparent 
-                      text-[var(--color-primary)] 
-                      border-[var(--color-primary)] 
-                      hover:bg-[var(--color-primary-light)]
-                      hover:text-[var(--color-text)]
+                      text-(--color-primary) 
+                      border-(--color-primary) 
+                      hover:bg-primary-light
+                      hover:text-(--color-text)
                     "
                   >
                     View Profile
@@ -146,15 +146,15 @@ export default function CompanyApplicationsPage() {
                   <span
                     className={`px-3 py-1 rounded-full text-sm font-medium ${
                       app.status === 'ACCEPTED'
-                        ? 'bg-[var(--color-success-light)] text-[var(--color-success-dark)]'
+                        ? 'bg-(--color-success-light) text-(--color-success-dark)'
                         : app.status === 'REJECTED'
-                        ? 'bg-[var(--color-error-light)] text-[var(--color-error-dark)]'
-                        : 'bg-[var(--color-warning-light)] text-[var(--color-warning-dark)]'
+                        ? 'bg-(--color-error-light) text-(--color-error-dark)'
+                        : 'bg-(--color-warning-light) text-(--color-warning-dark)'
                     }`}
                   >
                     {app.status}
                   </span>
-                  <span className="text-sm text-[var(--color-muted)]">
+                  <span className="text-sm text-(--color-muted)">
                     Applied on {new Date(app.appliedAt).toLocaleDateString()}
                   </span>
                 </div>
@@ -165,8 +165,8 @@ export default function CompanyApplicationsPage() {
                     onClick={() => handleDecision(app.id, 'ACCEPTED')}
                     className={`text-white transition ${
                       app.status !== 'APPLIED' || processingId === app.id
-                        ? 'bg-[var(--color-success-light)] hover:bg-[var(--color-success-light)] cursor-not-allowed'
-                        : 'bg-[var(--color-success-dark)] hover:bg-[var(--color-success-light)] cursor-pointer'
+                        ? 'bg-(--color-success-light) hover:bg-(--color-success-light) cursor-not-allowed'
+                        : 'bg-(--color-success-dark) hover:bg-(--color-success-light) cursor-pointer'
                     }`}
                   >
                     Accept
@@ -176,8 +176,8 @@ export default function CompanyApplicationsPage() {
                     onClick={() => handleDecision(app.id, 'REJECTED')}
                     className={`text-white transition ${
                       app.status !== 'APPLIED' || processingId === app.id
-                        ? 'bg-[var(--color-error-light)] hover:bg-[var(--color-error-light)] cursor-not-allowed'
-                        : 'bg-[var(--color-error-dark)] hover:bg-[var(--color-error-dark)] cursor-pointer'
+                        ? 'bg-(--color-error-light) hover:bg-(--color-error-light) cursor-not-allowed'
+                        : 'bg-(--color-error-dark) hover:bg-(--color-error-dark) cursor-pointer'
                     }`}
                   >
                     Reject
