@@ -5,9 +5,9 @@ export function Card({ children, className = '' }: { children: ReactNode; classN
   return (
     <div
       className={`
-        bg-[var(--color-bg)] 
+        bg-(--color-bg) 
         rounded-2xl 
-        shadow-[var(--shadow-header)] 
+        shadow-(--shadow-header) 
         p-6
         ${className}
       `}
