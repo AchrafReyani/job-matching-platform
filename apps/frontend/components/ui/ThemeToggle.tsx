@@ -19,9 +19,9 @@ export function ThemeToggle() {
       onClick={() => setTheme(isDark ? "light" : "dark")}
       className="
         p-2 rounded-full
-        bg-[var(--color-secondary)]
-        text-[var(--color-text)]
-        hover:bg-[var(--color-accent)]
+        bg-(--color-secondary)
+        text-(--color-text)
+        hover:bg-(--color-accent)
         active:scale-95
         transition-all
         flex items-center justify-center
