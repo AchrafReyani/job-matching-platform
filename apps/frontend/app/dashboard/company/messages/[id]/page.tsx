@@ -135,23 +135,23 @@ export default function CompanyChatPage() {
     }
   };
 
-  if (loading) return <div className="flex justify-center mt-10 text-[var(--color-text)]">Loading...</div>;
-  if (error) return <div className="text-[var(--color-error-dark)] text-center mt-10">{error}</div>;
+  if (loading) return <div className="flex justify-center mt-10 text-(--color-text)">Loading...</div>;
+  if (error) return <div className="text-(--color-error-dark) text-center mt-10">{error}</div>;
 
   const jobSeekerName = applicationInfo?.jobSeeker.fullName;
   const jobSeekerUserId = applicationInfo?.jobSeeker.userId;
   const vacancyTitle = applicationInfo?.vacancy.title;
 
   return (
-    <div className="min-h-screen bg-[var(--color-bg)] p-6 flex flex-col items-center text-[var(--color-text)]">
-      <Card className="w-full max-w-3xl p-6 flex flex-col bg-[var(--color-secondary)] text-[var(--color-text)]">
+    <div className="min-h-screen bg-(--color-bg) p-6 flex flex-col items-center text-(--color-text)">
+      <Card className="w-full max-w-3xl p-6 flex flex-col bg-(--color-secondary) text-(--color-text)">
         {/* Header */}
         <div className="flex flex-col items-center mb-4">
           <h1 className="text-2xl font-bold text-center">
             {jobSeekerName ? `Chat with ${jobSeekerName}` : 'Chat'}
           </h1>
           {vacancyTitle && (
-            <p className="text-[var(--color-muted)] mt-1 text-center">
+            <p className="text-(--color-muted) mt-1 text-center">
               Regarding position: <span className="font-medium">{vacancyTitle}</span>
             </p>
           )}
@@ -160,7 +160,7 @@ export default function CompanyChatPage() {
               <Button
                 variant="outline"
                 onClick={() => router.push(`/profiles/${jobSeekerUserId}`)}
-                className="text-[var(--color-primary)] border-[var(--color-primary)] hover:bg-[var(--color-accent)]"
+                className="text-(--color-primary) border-(--color-primary) hover:bg-(--color-accent)"
               >
                 View Job Seeker Profile
               </Button>
@@ -169,9 +169,9 @@ export default function CompanyChatPage() {
         </div>
 
         {/* Chat window */}
-        <div className="flex-1 overflow-y-auto border rounded-lg p-4 bg-[var(--color-bg)] h-[60vh] mb-4 flex flex-col">
+        <div className="flex-1 overflow-y-auto border rounded-lg p-4 bg-(--color-bg) h-[60vh] mb-4 flex flex-col">
           {messages.length === 0 ? (
-            <p className="text-[var(--color-muted)] text-center mt-4">No messages yet.</p>
+            <p className="text-(--color-muted) text-center mt-4">No messages yet.</p>
           ) : (
             messages.map((msg) => {
               const isSent = msg.senderId === currentUserId;
@@ -183,16 +183,16 @@ export default function CompanyChatPage() {
                   <div
                     className={`max-w-[70%] p-3 rounded-2xl shadow-sm ${
                       isSent
-                        ? 'bg-[var(--color-primary)] text-[var(--color-on-primary)] rounded-br-none'
-                        : 'bg-[var(--color-muted-light)] text-[var(--color-text)] rounded-bl-none'
+                        ? 'bg-(--color-primary) text-(--color-on-primary) rounded-br-none'
+                        : 'bg-muted-light text-(--color-text) rounded-bl-none'
                     }`}
                   >
-                    <p className="whitespace-pre-wrap break-words">{msg.messageText}</p>
+                    <p className="whitespace-pre-wrap wrap-break-word">{msg.messageText}</p>
                     <p
                       className={`text-xs mt-1 ${
                         isSent
-                          ? 'text-[var(--color-on-primary)] text-right'
-                          : 'text-[var(--color-text)] text-left'
+                          ? 'text-(--color-on-primary) text-right'
+                          : 'text-(--color-text) text-left'
                       }`}
                     >
                       {new Date(msg.sentAt).toLocaleString()}
@@ -208,7 +208,7 @@ export default function CompanyChatPage() {
         <div className="flex gap-2">
           <input
             type="text"
-            className="flex-1 border rounded-lg px-3 py-2 focus:outline-none focus:ring focus:ring-[var(--color-primary)] bg-[var(--color-bg)] text-[var(--color-text)]"
+            className="flex-1 border rounded-lg px-3 py-2 focus:outline-none focus:ring focus:ring-(--color-primary) bg-(--color-bg) text-(--color-text)"
             placeholder="Type your message..."
             value={newMessage}
             onChange={(e) => setNewMessage(e.target.value)}
