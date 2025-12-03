@@ -40,12 +40,12 @@ export default function DashboardCompanyProfilePage() {
     fetchProfile();
   }, [router]);
 
-  if (loading) return <div className="flex justify-center items-center min-h-screen text-[var(--color-text)]">Loading...</div>;
+  if (loading) return <div className="flex justify-center items-center min-h-screen text-(--color-text)">Loading...</div>;
   if (error) return <div className="text-red-500 text-center mt-10">{error}</div>;
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[var(--color-secondary)] p-4">
-      <Card className="w-full max-w-md p-6 bg-[var(--color-bg)] text-[var(--color-text)]">
+    <div className="min-h-screen flex items-center justify-center bg-(--color-secondary) p-4">
+      <Card className="w-full max-w-md p-6 bg-(--color-bg) text-(--color-text)">
         <h1 className="text-2xl font-bold mb-4 text-center">Company Profile</h1>
 
         {profile?.company ? (
@@ -53,7 +53,7 @@ export default function DashboardCompanyProfilePage() {
             <p><strong>Email:</strong> {profile.email}</p>
             <p><strong>Created At:</strong> {new Date(profile.createdAt).toLocaleString()}</p>
 
-            <div className="mt-4 border-t border-[var(--color-muted)] pt-3">
+            <div className="mt-4 border-t border-(--color-muted) pt-3">
               <h2 className="font-semibold text-lg mb-2">Company Info</h2>
               <p><strong>Company Name:</strong> {profile.company.companyName}</p>
               {profile.company.websiteUrl && (
@@ -63,7 +63,7 @@ export default function DashboardCompanyProfilePage() {
                     href={profile.company.websiteUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-[var(--color-primary)] underline"
+                    className="text-(--color-primary) underline"
                   >
                     {profile.company.websiteUrl}
                   </a>
@@ -75,19 +75,19 @@ export default function DashboardCompanyProfilePage() {
             </div>
 
             <div className="mt-6 flex justify-between">
-              <Button onClick={() => router.push('/dashboard/company')} className="bg-[var(--color-secondary)] text-[var(--color-text)] hover:bg-[var(--color-secondary-dark)]">
+              <Button onClick={() => router.push('/dashboard/company')} className="bg-(--color-secondary) text-(--color-text) hover:bg-secondary-dark">
                 Back to Dashboard
               </Button>
               <Button
                 onClick={() => router.push('/dashboard/company/profile/edit')}
-                className="bg-[var(--color-primary)] text-[var(--color-on-primary)] hover:bg-[var(--color-primary-dark)]"
+                className="bg-(--color-primary) text-(--color-on-primary) hover:bg-primary-dark"
               >
                 Edit Profile
               </Button>
             </div>
           </div>
         ) : (
-          <p className="text-[var(--color-muted)] text-center">No company profile found.</p>
+          <p className="text-(--color-muted) text-center">No company profile found.</p>
         )}
       </Card>
     </div>
