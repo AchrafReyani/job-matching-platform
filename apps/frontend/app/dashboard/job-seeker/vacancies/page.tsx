@@ -109,32 +109,32 @@ export default function JobSeekerVacanciesPage() {
 
   if (loading)
     return (
-      <div className="flex justify-center mt-10 text-[var(--color-text)] bg-[var(--color-bg)] min-h-screen items-center">
+      <div className="flex justify-center mt-10 text-(--color-text) bg-(--color-bg) min-h-screen items-center">
         Loading...
       </div>
     );
 
   if (error)
     return (
-      <div className="text-red-500 text-center mt-10 text-[var(--color-text)] bg-[var(--color-bg)] min-h-screen flex items-center justify-center">
+      <div className="text-red-500 text-center mt-10 text-(--color-text) bg-(--color-bg) min-h-screen flex items-center justify-center">
         {error}
       </div>
     );
 
   return (
-    <div className="min-h-screen bg-[var(--color-bg)] p-4 flex flex-col items-center text-[var(--color-text)]">
+    <div className="min-h-screen bg-(--color-bg) p-4 flex flex-col items-center text-(--color-text)">
       <h1 className="text-2xl font-bold mb-6">All Vacancies</h1>
 
       <div className="flex flex-col gap-4 w-full max-w-2xl">
         {vacancies.length === 0 ? (
-          <p className="text-[var(--color-muted)] text-center">No vacancies available.</p>
+          <p className="text-(--color-muted) text-center">No vacancies available.</p>
         ) : (
           vacancies.map((vacancy) => {
             const company = companies[vacancy.companyId];
             return (
               <Card
                 key={vacancy.id}
-                className="p-4 bg-[var(--color-secondary)] text-[var(--color-text)] border border-[var(--color-muted)]"
+                className="p-4 bg-(--color-secondary) text-(--color-text) border border-(--color-muted)"
               >
                 <h2 className="font-semibold text-lg">{vacancy.title}</h2>
 
@@ -150,7 +150,7 @@ export default function JobSeekerVacanciesPage() {
 
                 <p>{vacancy.jobDescription}</p>
 
-                <p className="text-sm text-[var(--color-muted)] mt-1">
+                <p className="text-sm text-(--color-muted) mt-1">
                   Posted: {new Date(vacancy.createdAt).toLocaleDateString()}
                 </p>
 
@@ -158,7 +158,7 @@ export default function JobSeekerVacanciesPage() {
                   <Button
                     onClick={() => handleApply(vacancy.id)}
                     disabled={submitting === vacancy.id}
-                    className="bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] text-[var(--color-on-primary)]"
+                    className="bg-(--color-primary) hover:bg-primary-dark text-(--color-on-primary)"
                   >
                     {submitting === vacancy.id ? 'Applying...' : 'Apply'}
                   </Button>
@@ -180,7 +180,7 @@ export default function JobSeekerVacanciesPage() {
       <div className="mt-6">
         <Button
           onClick={() => router.push('/dashboard/job-seeker')}
-          className="bg-[var(--color-accent)] hover:bg-[var(--color-accent-dark)] text-[var(--color-on-primary)]"
+          className="bg-(--color-accent) hover:bg-accent-dark text-(--color-on-primary)"
         >
           Back to Dashboard
         </Button>
@@ -188,11 +188,11 @@ export default function JobSeekerVacanciesPage() {
 
       {popupMessage && (
         <div className="fixed inset-0 flex items-center justify-center bg-black/50 z-50">
-          <div className="bg-[var(--color-secondary)] p-6 rounded-2xl shadow-lg max-w-sm text-center text-[var(--color-text)]">
+          <div className="bg-(--color-secondary) p-6 rounded-2xl shadow-lg max-w-sm text-center text-(--color-text)">
             <p className="mb-4">{popupMessage}</p>
             <Button
               onClick={closePopup}
-              className="bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] text-[var(--color-on-primary)]"
+              className="bg-(--color-primary) hover:bg-primary-dark text-(--color-on-primary)"
             >
               OK
             </Button>
