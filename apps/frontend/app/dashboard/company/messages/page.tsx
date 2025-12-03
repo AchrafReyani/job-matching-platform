@@ -92,24 +92,24 @@ export default function CompanyMessagesPage() {
     fetchApplications();
   }, [router]);
 
-  if (loading) return <div className="flex justify-center mt-10 text-[var(--color-text)]">Loading...</div>;
-  if (error) return <div className="text-[var(--color-error-dark)] text-center mt-10">{error}</div>;
+  if (loading) return <div className="flex justify-center mt-10 text-(--color-text)">Loading...</div>;
+  if (error) return <div className="text-(--color-error-dark) text-center mt-10">{error}</div>;
 
   return (
-    <div className="min-h-screen bg-[var(--color-bg)] p-6 flex flex-col items-center text-[var(--color-text)]">
+    <div className="min-h-screen bg-(--color-bg) p-6 flex flex-col items-center text-(--color-text)">
       <h1 className="text-2xl font-bold mb-6">Your Chats</h1>
 
       {applications.length === 0 ? (
-        <p className="text-[var(--color-muted)] text-center">No accepted applications yet.</p>
+        <p className="text-(--color-muted) text-center">No accepted applications yet.</p>
       ) : (
         <div className="flex flex-col gap-4 w-full max-w-3xl">
           {applications.map(app => (
-            <Card key={app.id} className="p-4 bg-[var(--color-secondary)] text-[var(--color-text)]">
+            <Card key={app.id} className="p-4 bg-(--color-secondary) text-(--color-text)">
               <h2 className="font-semibold text-lg">{app.jobSeekerName}</h2>
-              <p className="text-[var(--color-text)]">
+              <p className="text-(--color-text)">
                 <strong>Vacancy:</strong> {app.vacancyTitle}
               </p>
-              <p className="text-[var(--color-muted)] text-sm mt-1">Status: {app.status}</p>
+              <p className="text-(--color-muted) text-sm mt-1">Status: {app.status}</p>
 
               <div className="mt-3 flex gap-2">
                 <Button
