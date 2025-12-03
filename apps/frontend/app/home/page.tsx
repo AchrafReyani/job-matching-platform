@@ -8,12 +8,12 @@ export default function HomePage() {
   const router = useRouter();
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[var(--color-bg)]">
+    <div className="min-h-screen flex items-center justify-center bg-(--color-bg)">
       <Card className="w-full max-w-md text-center">
-        <h1 className="text-2xl font-bold mb-4 text-[var(--color-text)]">
+        <h1 className="text-2xl font-bold mb-4 text-(--color-text)">
           Welcome to JobMatch
         </h1>
-        <p className="text-[var(--color-muted)] mb-6">
+        <p className="text-(--color-muted) mb-6">
           Choose how you’d like to get started:
         </p>
 
