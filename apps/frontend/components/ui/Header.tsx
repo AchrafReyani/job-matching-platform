@@ -27,15 +27,15 @@ export function Header() {
     <header
       className="
         px-6 py-3 flex justify-between items-center
-        bg-[var(--color-bg)]
-        text-[var(--color-text)]
-        shadow-[var(--shadow-header)]
-        border-b border-[var(--color-muted)]
+        bg-(--color-bg)
+        text-(--color-text)
+        shadow-(--shadow-header)
+        border-b border-(--color-muted)
       "
     >
       {/* Logo / Title */}
       <h1
-        className="text-lg font-semibold cursor-pointer text-[var(--color-primary)]"
+        className="text-lg font-semibold cursor-pointer text-(--color-primary)"
         onClick={() => router.push('/')}
       >
         JobMatch
