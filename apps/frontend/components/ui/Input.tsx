@@ -16,7 +16,7 @@ export function Input({ label, className = '', type, ...props }: InputProps) {
   return (
     <div className="flex flex-col gap-1 relative">
       {label && (
-        <label className="text-sm font-medium text-[var(--color-text)]">
+        <label className="text-sm font-medium text-(--color-text)">
           {label}
         </label>
       )}
@@ -26,11 +26,11 @@ export function Input({ label, className = '', type, ...props }: InputProps) {
           type={inputType}
           className={`
             w-full
-            border border-[var(--color-muted)]
+            border border-(--color-muted)
             rounded-lg px-3 py-2
-            bg-[var(--color-bg)]
-            text-[var(--color-text)]
-            focus:ring-2 focus:ring-[var(--color-primary)]
+            bg-(--color-bg)
+            text-(--color-text)
+            focus:ring-2 focus:ring-(--color-primary)
             outline-none
             ${isPassword ? 'pr-10' : ''}
             ${className}
@@ -44,8 +44,8 @@ export function Input({ label, className = '', type, ...props }: InputProps) {
             onClick={() => setShowPassword((prev) => !prev)}
             className="
               absolute right-2 top-1/2 -translate-y-1/2
-              text-[var(--color-muted)]
-              hover:text-[var(--color-text)]
+              text-(--color-muted)
+              hover:text-(--color-text)
             "
             tabIndex={-1}
           >
