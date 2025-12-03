@@ -29,8 +29,8 @@ export default function CompanyDashboard() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-[var(--color-bg)] p-6">
-      <h1 className="text-2xl font-bold mb-6 text-[var(--color-text)]">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-(--color-bg) p-6">
+      <h1 className="text-2xl font-bold mb-6 text-(--color-text)">
         Welcome, {companyName}
       </h1>
       <div className="flex flex-col gap-4 w-full max-w-sm">
