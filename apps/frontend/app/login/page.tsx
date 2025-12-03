@@ -70,9 +70,9 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[var(--color-bg)]">
+    <div className="min-h-screen flex items-center justify-center bg-(--color-bg)">
       <Card className="w-full max-w-md p-6">
-        <h1 className="text-2xl font-bold mb-6 text-center text-[var(--color-text)]">
+        <h1 className="text-2xl font-bold mb-6 text-center text-(--color-text)">
           Login
         </h1>
 
@@ -94,7 +94,7 @@ export default function LoginPage() {
           />
 
           {error && (
-            <p className="text-[var(--color-error)] text-sm text-center">
+            <p className="text-(--color-error) text-sm text-center">
               {error}
             </p>
           )}
@@ -104,12 +104,12 @@ export default function LoginPage() {
           </Button>
         </form>
 
-        <div className="mt-6 text-center text-sm text-[var(--color-text)]">
+        <div className="mt-6 text-center text-sm text-(--color-text)">
           <p>
             Don’t have an account?{' '}
             <a
               href="/home"
-              className="text-[var(--color-primary)] hover:underline font-medium"
+              className="text-(--color-primary) hover:underline font-medium"
             >
               Go back
             </a>
