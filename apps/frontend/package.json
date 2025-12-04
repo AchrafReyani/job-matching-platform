@@ -6,7 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint \"**/*.{ts,tsx}\" --fix"
   },
   "dependencies": {
     "@tailwindcss/forms": "^0.5.10",
