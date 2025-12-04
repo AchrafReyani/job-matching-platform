@@ -1,3 +1,5 @@
+/// <reference types="jest" />
+
 import { Test, TestingModule } from '@nestjs/testing';
 import { VacancyController } from './vacancy.controller';
 import { CreateVacancyUseCase } from '../usecase/create-vacancy.usecase';
