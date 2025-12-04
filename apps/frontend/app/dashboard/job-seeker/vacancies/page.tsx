@@ -116,7 +116,7 @@ export default function JobSeekerVacanciesPage() {
 
   if (error)
     return (
-      <div className="text-red-500 text-center mt-10 text-(--color-text) bg-(--color-bg) min-h-screen flex items-center justify-center">
+      <div className="text-red-500 text-center mt-10 bg-(--color-bg) min-h-screen flex items-center justify-center">
         {error}
       </div>
     );
