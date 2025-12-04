@@ -12,38 +12,45 @@ import {
   ForbiddenException,
   NotFoundException,
 } from '@nestjs/common';
-import { VacancyService } from './vacancy.service';
-import { JwtAuthGuard } from '../auth/jwt-auth.guard';
-import { CreateVacancyDto } from './dto/create-vacancy.dto';
-import { UpdateVacancyDto } from './dto/update-vacancy.dto';
-import { PrismaService } from '../prisma/prisma.service';
+import { JwtAuthGuard } from '../../auth/jwt-auth.guard';
+import { CreateVacancyDto } from '../dto/create-vacancy.dto';
+import { UpdateVacancyDto } from '../dto/update-vacancy.dto';
+
+import { CreateVacancyUseCase } from '../usecase/create-vacancy.usecase';
+import { UpdateVacancyUseCase } from '../usecase/update-vacancy.usecase';
+import { DeleteVacancyUseCase } from '../usecase/delete-vacancy.usecase';
+import { GetVacanciesUseCase } from '../usecase/get-vacancies.usecase';
+import { GetVacancyByIdUseCase } from '../usecase/get-vacancy-by-id.usecase';
+import { GetVacanciesByCompanyUseCase } from '../usecase/get-vacancies-by-company.usecase';
+import { PrismaService } from '../../prisma/prisma.service';
 
 @Controller('vacancies')
 export class VacancyController {
   constructor(
-    private readonly vacancyService: VacancyService,
     private readonly prisma: PrismaService,
+    private readonly createVacancyUseCase: CreateVacancyUseCase,
+    private readonly updateVacancyUseCase: UpdateVacancyUseCase,
+    private readonly deleteVacancyUseCase: DeleteVacancyUseCase,
+    private readonly getVacanciesUseCase: GetVacanciesUseCase,
+    private readonly getVacancyByIdUseCase: GetVacancyByIdUseCase,
+    private readonly getVacanciesByCompanyUseCase: GetVacanciesByCompanyUseCase,
   ) {}
 
-  // Anyone can view all vacancies
   @Get()
   async getAll() {
-    return this.vacancyService.getAllVacancies();
+    return this.getVacanciesUseCase.execute();
   }
 
-  // Get a single vacancy by ID
   @Get(':id')
   async getById(@Param('id', ParseIntPipe) id: number) {
-    return this.vacancyService.getVacancyById(id);
+    return this.getVacancyByIdUseCase.execute(id);
   }
 
-  // New route: Get vacancies by company ID
   @Get('company/:companyId')
   async getByCompany(@Param('companyId', ParseIntPipe) companyId: number) {
-    return this.vacancyService.getVacanciesByCompany(companyId);
+    return this.getVacanciesByCompanyUseCase.execute(companyId);
   }
 
-  // Only companies can create vacancies
   @UseGuards(JwtAuthGuard)
   @Post()
   async create(@Request() req, @Body() data: CreateVacancyDto) {
@@ -56,10 +63,9 @@ export class VacancyController {
     });
     if (!company) throw new NotFoundException('Company not found');
 
-    return this.vacancyService.createVacancy(company.id, data);
+    return this.createVacancyUseCase.execute(company.id, data);
   }
 
-  // Only the company who owns the vacancy can update it
   @UseGuards(JwtAuthGuard)
   @Patch(':id')
   async update(
@@ -76,10 +82,9 @@ export class VacancyController {
     });
     if (!company) throw new NotFoundException('Company not found');
 
-    return this.vacancyService.updateVacancy(id, company.id, data);
+    return this.updateVacancyUseCase.execute(id, company.id, data);
   }
 
-  // Only the company who owns the vacancy can delete it
   @UseGuards(JwtAuthGuard)
   @Delete(':id')
   async delete(@Request() req, @Param('id', ParseIntPipe) id: number) {
@@ -92,6 +97,6 @@ export class VacancyController {
     });
     if (!company) throw new NotFoundException('Company not found');
 
-    return this.vacancyService.deleteVacancy(id, company.id);
+    return this.deleteVacancyUseCase.execute(id, company.id);
   }
 }
