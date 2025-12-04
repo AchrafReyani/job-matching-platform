@@ -1,4 +1,8 @@
-import { Injectable, ConflictException, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  ConflictException,
+  NotFoundException,
+} from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import * as bcrypt from 'bcryptjs';
 
@@ -6,7 +10,11 @@ import * as bcrypt from 'bcryptjs';
 export class UsersService {
   constructor(private prisma: PrismaService) {}
 
-  async createUser(email: string, password: string, role: 'JOB_SEEKER' | 'COMPANY') {
+  async createUser(
+    email: string,
+    password: string,
+    role: 'JOB_SEEKER' | 'COMPANY',
+  ) {
     // check if user exists
     const existing = await this.prisma.user.findUnique({ where: { email } });
     if (existing) {

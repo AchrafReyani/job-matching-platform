@@ -45,48 +45,49 @@ export class ApplicationsService {
     });
   }
 
-async getApplicationById(id: number, requesterUserId: string) {
-  if (!id || isNaN(id)) {
-    throw new NotFoundException('Invalid application ID');
-  }
+  async getApplicationById(id: number, requesterUserId: string) {
+    if (!id || isNaN(id)) {
+      throw new NotFoundException('Invalid application ID');
+    }
 
-  const application = await this.prisma.application.findUnique({
-    where: { id },
-    include: {
-      vacancy: {
-        include: {
-          company: {
-            select: {
-              id: true,
-              userId: true,
-              companyName: true,
+    const application = await this.prisma.application.findUnique({
+      where: { id },
+      include: {
+        vacancy: {
+          include: {
+            company: {
+              select: {
+                id: true,
+                userId: true,
+                companyName: true,
+              },
             },
           },
         },
-      },
-      jobSeeker: {
-        select: {
-          id: true,
-          userId: true,
-          fullName: true,
+        jobSeeker: {
+          select: {
+            id: true,
+            userId: true,
+            fullName: true,
+          },
         },
       },
-    },
-  });
+    });
 
-  if (!application) throw new NotFoundException('Application not found');
+    if (!application) throw new NotFoundException('Application not found');
 
-  // Check if requester is either the job seeker or the company owner
-  const isJobSeeker = application.jobSeeker.userId === requesterUserId;
-  const isCompany = application.vacancy.company.userId === requesterUserId;
+    // Check if requester is either the job seeker or the company owner
+    const isJobSeeker = application.jobSeeker.userId === requesterUserId;
+    const isCompany = application.vacancy.company.userId === requesterUserId;
 
-  if (!isJobSeeker && !isCompany) {
-    throw new ForbiddenException('You are not allowed to view this application');
+    if (!isJobSeeker && !isCompany) {
+      throw new ForbiddenException(
+        'You are not allowed to view this application',
+      );
+    }
+
+    return application;
   }
-
-  return application;
-}
-
 
   // 🟡 Get all applications for a job seeker
   async getApplicationsForJobSeeker(userId: string) {

@@ -1,4 +1,8 @@
-import { Injectable, ForbiddenException, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  ForbiddenException,
+  NotFoundException,
+} from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
 import { CreateMessageDto } from './dto/create-message.dto';
 
@@ -23,7 +27,9 @@ export class MessagesService {
     }
 
     if (application.status !== 'ACCEPTED') {
-      throw new ForbiddenException('Chat only available for accepted applications');
+      throw new ForbiddenException(
+        'Chat only available for accepted applications',
+      );
     }
 
     // Verify sender is part of this chat

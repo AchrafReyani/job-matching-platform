@@ -21,7 +21,10 @@ export class ApplicationsController {
   @Get('details/:id')
   @UseGuards(JwtAuthGuard)
   async getApplicationById(@Param('id') id: string, @Request() req) {
-    return this.applicationsService.getApplicationById(Number(id), req.user.userId);
+    return this.applicationsService.getApplicationById(
+      Number(id),
+      req.user.userId,
+    );
   }
 
   // ---------------- JOB SEEKER ROUTES ----------------
@@ -42,7 +45,9 @@ export class ApplicationsController {
   @Get('me')
   async getMyApplications(@Request() req) {
     if (req.user.role !== 'JOB_SEEKER') {
-      throw new NotFoundException('Only job seekers can view their applications');
+      throw new NotFoundException(
+        'Only job seekers can view their applications',
+      );
     }
     const userId = req.user.userId || req.user.sub;
     return this.applicationsService.getApplicationsForJobSeeker(userId);

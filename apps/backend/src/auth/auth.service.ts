@@ -22,7 +22,11 @@ export class AuthService {
   ) {}
 
   async registerJobSeeker(dto: RegisterJobSeekerDto) {
-    const user = await this.usersService.createUser(dto.email, dto.password, 'JOB_SEEKER');
+    const user = await this.usersService.createUser(
+      dto.email,
+      dto.password,
+      'JOB_SEEKER',
+    );
 
     await this.prisma.jobSeeker.create({
       data: {
@@ -37,7 +41,11 @@ export class AuthService {
   }
 
   async registerCompany(dto: RegisterCompanyDto) {
-    const user = await this.usersService.createUser(dto.email, dto.password, 'COMPANY');
+    const user = await this.usersService.createUser(
+      dto.email,
+      dto.password,
+      'COMPANY',
+    );
 
     await this.prisma.company.create({
       data: {
@@ -70,10 +78,20 @@ export class AuthService {
         role: true,
         createdAt: true,
         jobSeeker: {
-          select: { id: true, fullName: true, portfolioUrl: true, experienceSummary: true },
+          select: {
+            id: true,
+            fullName: true,
+            portfolioUrl: true,
+            experienceSummary: true,
+          },
         },
         company: {
-          select: { id: true, companyName: true, websiteUrl: true, description: true },
+          select: {
+            id: true,
+            companyName: true,
+            websiteUrl: true,
+            description: true,
+          },
         },
       },
     });
@@ -82,10 +100,17 @@ export class AuthService {
   }
 
   // 🟢 Edit Profile (unified)
-  async editProfile(userId: string, role: string, dto: UpdateJobSeekerDto | UpdateCompanyDto) {
+  async editProfile(
+    userId: string,
+    role: string,
+    dto: UpdateJobSeekerDto | UpdateCompanyDto,
+  ) {
     if (role === 'JOB_SEEKER') {
-      const jobSeeker = await this.prisma.jobSeeker.findUnique({ where: { userId } });
-      if (!jobSeeker) throw new NotFoundException('Job seeker profile not found');
+      const jobSeeker = await this.prisma.jobSeeker.findUnique({
+        where: { userId },
+      });
+      if (!jobSeeker)
+        throw new NotFoundException('Job seeker profile not found');
 
       const updated = await this.prisma.jobSeeker.update({
         where: { userId },
@@ -100,7 +125,9 @@ export class AuthService {
     }
 
     if (role === 'COMPANY') {
-      const company = await this.prisma.company.findUnique({ where: { userId } });
+      const company = await this.prisma.company.findUnique({
+        where: { userId },
+      });
       if (!company) throw new NotFoundException('Company profile not found');
 
       const updated = await this.prisma.company.update({

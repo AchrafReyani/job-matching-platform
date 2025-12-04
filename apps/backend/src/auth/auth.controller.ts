@@ -45,7 +45,10 @@ export class AuthController {
   // Edit profile for both job seeker and company (keeps it centralized)
   @UseGuards(JwtAuthGuard)
   @Put('profile')
-  async editProfile(@Request() req, @Body() dto: UpdateJobSeekerDto | UpdateCompanyDto) {
+  async editProfile(
+    @Request() req,
+    @Body() dto: UpdateJobSeekerDto | UpdateCompanyDto,
+  ) {
     const userId = req.user?.userId;
     const role = req.user?.role;
     return this.authService.editProfile(userId, role, dto);

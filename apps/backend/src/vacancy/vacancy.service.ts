@@ -11,7 +11,7 @@ export class VacancyService {
     const { title, role, jobDescription, salaryRange } = data;
     if (!title || !role || !jobDescription) {
       throw new BadRequestException(
-        'Missing required fields: title, role, and jobDescription are all required.'
+        'Missing required fields: title, role, and jobDescription are all required.',
       );
     }
 
