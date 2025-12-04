@@ -18,7 +18,7 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "noImplicitAny": false,
-    "types": ["node", "validator"]
+    "types": ["node", "validator", "jest"]
   },
   "include": ["src/**/*.ts", "prisma/**/*.ts"],
   "exclude": ["node_modules", "dist"]
