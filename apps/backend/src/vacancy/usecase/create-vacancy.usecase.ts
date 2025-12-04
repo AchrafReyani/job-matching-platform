@@ -1,10 +1,13 @@
-import { Injectable, BadRequestException } from '@nestjs/common';
-import type { VacancyRepository } from '../repository/vacancy.repository';
+import { Injectable, Inject, BadRequestException } from '@nestjs/common';
+import * as vacancyRepository from '../repository/vacancy.repository';
 import { CreateVacancyDto } from '../dto/create-vacancy.dto';
 
 @Injectable()
 export class CreateVacancyUseCase {
-  constructor(private readonly vacancyRepository: VacancyRepository) {}
+  constructor(
+    @Inject(vacancyRepository.VACANCY_REPOSITORY)
+    private readonly vacancyRepository: vacancyRepository.VacancyRepository,
+  ) {}
 
   async execute(companyId: number, data: CreateVacancyDto) {
     const { title, role, jobDescription } = data;
