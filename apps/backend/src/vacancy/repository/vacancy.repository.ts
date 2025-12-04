@@ -9,3 +9,5 @@ export interface VacancyRepository {
   findById(id: number): Promise<any | null>;
   findByCompany(companyId: number): Promise<any[]>;
 }
+
+export const VACANCY_REPOSITORY = Symbol('VacancyRepository');
