@@ -10,6 +10,7 @@ import {
   Request,
   ParseIntPipe,
   ForbiddenException,
+  NotFoundException,
 } from '@nestjs/common';
 import { JwtAuthGuard } from '../../auth/jwt-auth.guard';
 import { CreateVacancyDto } from '../dto/create-vacancy.dto';
@@ -21,10 +22,12 @@ import { DeleteVacancyUseCase } from '../usecase/delete-vacancy.usecase';
 import { GetVacanciesUseCase } from '../usecase/get-vacancies.usecase';
 import { GetVacancyByIdUseCase } from '../usecase/get-vacancy-by-id.usecase';
 import { GetVacanciesByCompanyUseCase } from '../usecase/get-vacancies-by-company.usecase';
+import { PrismaService } from '../../prisma/prisma.service';
 
 @Controller('vacancies')
 export class VacancyController {
   constructor(
+    private readonly prisma: PrismaService,
     private readonly createVacancyUseCase: CreateVacancyUseCase,
     private readonly updateVacancyUseCase: UpdateVacancyUseCase,
     private readonly deleteVacancyUseCase: DeleteVacancyUseCase,
@@ -55,7 +58,12 @@ export class VacancyController {
       throw new ForbiddenException('Only companies can create vacancies');
     }
 
-    return this.createVacancyUseCase.execute(req.user.companyId, data);
+    const company = await this.prisma.company.findUnique({
+      where: { userId: req.user.userId },
+    });
+    if (!company) throw new NotFoundException('Company not found');
+
+    return this.createVacancyUseCase.execute(company.id, data);
   }
 
   @UseGuards(JwtAuthGuard)
@@ -69,7 +77,12 @@ export class VacancyController {
       throw new ForbiddenException('Only companies can edit vacancies');
     }
 
-    return this.updateVacancyUseCase.execute(id, req.user.companyId, data);
+    const company = await this.prisma.company.findUnique({
+      where: { userId: req.user.userId },
+    });
+    if (!company) throw new NotFoundException('Company not found');
+
+    return this.updateVacancyUseCase.execute(id, company.id, data);
   }
 
   @UseGuards(JwtAuthGuard)
@@ -79,6 +92,11 @@ export class VacancyController {
       throw new ForbiddenException('Only companies can delete vacancies');
     }
 
-    return this.deleteVacancyUseCase.execute(id, req.user.companyId);
+    const company = await this.prisma.company.findUnique({
+      where: { userId: req.user.userId },
+    });
+    if (!company) throw new NotFoundException('Company not found');
+
+    return this.deleteVacancyUseCase.execute(id, company.id);
   }
 }
