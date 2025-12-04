@@ -11,6 +11,8 @@ import { MessagesModule } from './messages/messages.module';
 import { ProfilesModule } from './profiles/profiles.module';
 import { AccountModule } from './account/account.module';
 
+import { AppController } from './app.controller';
+
 @Module({
   imports: [
     AuthModule,
@@ -24,6 +26,7 @@ import { AccountModule } from './account/account.module';
     ProfilesModule,
     AccountModule,
   ],
+  controllers: [AppController],
   providers: [PrismaService],
   exports: [PrismaService],
 })
