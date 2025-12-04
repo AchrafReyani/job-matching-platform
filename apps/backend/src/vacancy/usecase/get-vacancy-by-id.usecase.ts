@@ -1,9 +1,12 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import type { VacancyRepository } from '../repository/vacancy.repository';
+import { Injectable, Inject, NotFoundException } from '@nestjs/common';
+import * as vacancyRepository from '../repository/vacancy.repository';
 
 @Injectable()
 export class GetVacancyByIdUseCase {
-  constructor(private readonly vacancyRepository: VacancyRepository) {}
+  constructor(
+    @Inject(vacancyRepository.VACANCY_REPOSITORY)
+    private readonly vacancyRepository: vacancyRepository.VacancyRepository,
+  ) {}
 
   async execute(id: number) {
     const vacancy = await this.vacancyRepository.findById(id);
