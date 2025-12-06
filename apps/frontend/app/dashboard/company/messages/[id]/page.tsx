@@ -5,6 +5,7 @@ import { useRouter, useParams } from 'next/navigation';
 import { getMessages, sendMessage } from '@/lib/messages/api';
 import type { ChatMessage } from '@/lib/messages/types';
 import type { Application } from '@/lib/applications/types';
+import { getApplicationById } from '@/lib/applications/api';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 
@@ -36,18 +37,7 @@ export default function CompanyChatPage() {
   /* Fetch application info */
   const fetchApplicationHandler = async () => {
     try {
-      const token = localStorage.getItem('token');
-      if (!token) {
-        router.push('/login');
-        return;
-      }
-
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/applications/details/${id}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      if (!res.ok) throw new Error('Failed to fetch application info');
-
-      const data = await res.json();
+      const data = await getApplicationById(Number(id));
       setApplication(data);
     } catch (err) {
       console.error(err);
