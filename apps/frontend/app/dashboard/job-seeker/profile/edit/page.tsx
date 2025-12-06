@@ -25,7 +25,7 @@ export default function EditJobSeekerProfilePage() {
 
     const fetchProfile = async () => {
       try {
-        const data = await getProfile(token);
+        const data = await getProfile();
         if (data.role !== 'JOB_SEEKER') {
           router.push('/dashboard/company');
           return;
@@ -54,7 +54,7 @@ export default function EditJobSeekerProfilePage() {
     setSaving(true);
     setMessage(null);
     try {
-      await updateProfile(token, { fullName, portfolioUrl, experienceSummary });
+      await updateProfile( { fullName, portfolioUrl, experienceSummary });
       setMessage('✅ Profile updated successfully!');
     } catch (err) {
       console.error(err);

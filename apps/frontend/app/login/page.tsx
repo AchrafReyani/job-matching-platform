@@ -22,7 +22,7 @@ export default function LoginPage() {
       if (!token) return;
 
       try {
-        const profile = await getProfile(token);
+        const profile = await getProfile();
         if (profile.role === 'JOB_SEEKER') {
           router.push('/dashboard/job-seeker');
         } else if (profile.role === 'COMPANY') {
@@ -47,7 +47,7 @@ export default function LoginPage() {
       saveToken(access_token);
 
       // 2️⃣ Get user profile to determine role
-      const profile = await getProfile(access_token);
+      const profile = await getProfile();
 
       // 3️⃣ Redirect based on role
       if (profile.role === 'JOB_SEEKER') {

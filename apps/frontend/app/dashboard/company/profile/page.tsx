@@ -23,7 +23,7 @@ export default function DashboardCompanyProfilePage() {
 
     const fetchProfile = async () => {
       try {
-        const data = await getProfile(token);
+        const data = await getProfile();
         if (data.role !== 'COMPANY') {
           router.push('/dashboard/job-seeker'); // Redirect if wrong type
           return;

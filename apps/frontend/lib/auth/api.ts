@@ -1,9 +1,13 @@
-import { request } from '../api';
+import { request, authRequest } from '../api';
 import {
   LoginResponse,
   ProfileResponse,
   UpdateProfileRequest,
 } from './types';
+
+/* ---------------------------------------------
+   REGISTER (Public Endpoints)
+---------------------------------------------- */
 
 // Register job seeker
 export async function registerJobSeeker(data: {
@@ -33,7 +37,10 @@ export async function registerCompany(data: {
   });
 }
 
-// Login
+/* ---------------------------------------------
+   LOGIN (Public)
+---------------------------------------------- */
+
 export async function login(
   email: string,
   password: string
@@ -54,27 +61,23 @@ export async function login(
   }
 }
 
-// Get profile
-export async function getProfile(token: string): Promise<ProfileResponse> {
-  return request('/auth/profile', {
+/* ---------------------------------------------
+   PROFILE (Protected — now uses authRequest)
+---------------------------------------------- */
+
+// Get the logged-in user's profile
+export async function getProfile(): Promise<ProfileResponse> {
+  return authRequest<ProfileResponse>('/auth/profile', {
     method: 'GET',
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
   });
 }
 
-// Update profile
+// Update logged-in user's profile
 export async function updateProfile(
-  token: string,
   body: UpdateProfileRequest
 ): Promise<{ message: string }> {
-  return request('/auth/profile', {
+  return authRequest('/auth/profile', {
     method: 'PUT',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
-    },
     body: JSON.stringify(body),
   });
 }

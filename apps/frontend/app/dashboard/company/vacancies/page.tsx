@@ -30,7 +30,7 @@ export default function CompanyVacanciesPage() {
 
       try {
         // 1. Get profile → includes the company ID
-        const profile: ProfileResponse = await getProfile(token);
+        const profile: ProfileResponse = await getProfile();
         if (!profile.company?.id) throw new Error('Company ID not found');
 
         const companyId = profile.company.id;

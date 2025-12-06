@@ -19,7 +19,7 @@ export default function JobSeekerDashboard() {
     }
 
     (async () => {
-      const profile = await getProfile(token);
+      const profile = await getProfile();
       setName(profile?.jobSeeker?.fullName || 'Job Seeker');
     })();
   }, [router]);

@@ -25,7 +25,7 @@ export default function EditCompanyProfilePage() {
 
     const fetchProfile = async () => {
       try {
-        const data = await getProfile(token);
+        const data = await getProfile();
         if (data.role !== 'COMPANY') {
           router.push('/dashboard/job-seeker');
           return;
@@ -54,7 +54,7 @@ export default function EditCompanyProfilePage() {
     setSaving(true);
     setMessage(null);
     try {
-      await updateProfile(token, { companyName, websiteUrl, description });
+      await updateProfile( { companyName, websiteUrl, description });
       setMessage('✅ Profile updated successfully!');
     } catch (err) {
       console.error(err);

@@ -19,7 +19,7 @@ export default function CompanyDashboard() {
     }
 
     (async () => {
-      const profile = await getProfile(token);
+      const profile = await getProfile();
       setCompanyName(profile?.company?.companyName || 'Company');
     })();
   }, [router]);
