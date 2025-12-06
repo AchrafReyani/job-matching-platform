@@ -2,31 +2,17 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { getToken, request } from '@/lib/api';
+
+import { getToken } from '@/lib/api';
+import { getCompanyApplications, updateApplication } from '@/lib/applications/api';
+import type { Application, ApplicationStatus } from '@/lib/applications/types';
+
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 
-interface JobSeeker {
-  id: number;
-  fullName: string;
-  userId: string;
-}
-
-interface Vacancy {
-  id: number;
-  title: string;
-}
-
-interface Application {
-  id: number;
-  status: string;
-  appliedAt: string;
-  jobSeeker: JobSeeker;
-  vacancy: Vacancy;
-}
-
 export default function CompanyApplicationsPage() {
   const router = useRouter();
+
   const [applications, setApplications] = useState<Application[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -39,34 +25,22 @@ export default function CompanyApplicationsPage() {
       return;
     }
 
-    const fetchApplications = async () => {
+    const load = async () => {
       try {
-        const data = (await request('/applications/company', {
-          method: 'GET',
-          headers: { Authorization: `Bearer ${token}` },
-        })) as unknown;
-
-        if (!Array.isArray(data)) throw new Error('Invalid response format');
-
-        setApplications(data as Application[]);
+        const list = await getCompanyApplications();
+        setApplications(list);
       } catch (err) {
         console.error(err);
-        setError('Failed to fetch company applications');
+        setError('Failed to load company applications');
       } finally {
         setLoading(false);
       }
     };
 
-    fetchApplications();
+    load();
   }, [router]);
 
-  const handleDecision = async (id: number, status: 'ACCEPTED' | 'REJECTED') => {
-    const token = getToken();
-    if (!token) {
-      router.push('/login');
-      return;
-    }
-
+  const handleDecision = async (id: number, status: ApplicationStatus) => {
     const confirmMsg =
       status === 'ACCEPTED'
         ? 'Are you sure you want to ACCEPT this application? This action cannot be undone.'
@@ -76,33 +50,25 @@ export default function CompanyApplicationsPage() {
 
     try {
       setProcessingId(id);
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/applications/${id}`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ status }),
-      });
+      await updateApplication(id, { status });
 
-      if (!res.ok) {
-        const msg = await res.text();
-        throw new Error(msg || 'Failed to update application');
-      }
-
-      setApplications((prev) =>
-        prev.map((app) => (app.id === id ? { ...app, status } : app))
-      );
+      setApplications((prev) => prev.map((app) => (app.id === id ? { ...app, status } : app)));
     } catch (err) {
       console.error(err);
-      alert('Error updating application. Please try again.');
+      alert('Failed to update status');
     } finally {
       setProcessingId(null);
     }
   };
 
   if (loading) return <div className="flex justify-center mt-10">Loading...</div>;
-  if (error) return <div className="text-(--color-error-dark) text-center mt-6">{error}</div>;
+
+  if (error)
+    return (
+      <div className="text-(--color-error-dark) text-center mt-6">
+        {error}
+      </div>
+    );
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-(--color-bg) p-6">
@@ -122,7 +88,10 @@ export default function CompanyApplicationsPage() {
                 key={app.id}
                 className="border border-(--color-muted) rounded-xl p-4 shadow-sm hover:shadow-md transition"
               >
-                <h2 className="text-lg font-semibold text-(--color-text)">{app.vacancy.title}</h2>
+                <h2 className="text-lg font-semibold text-(--color-text)">
+                  {app.vacancy.title}
+                </h2>
+
                 <p className="text-(--color-text)">
                   Applicant: <strong>{app.jobSeeker.fullName}</strong>
                 </p>
@@ -154,6 +123,7 @@ export default function CompanyApplicationsPage() {
                   >
                     {app.status}
                   </span>
+
                   <span className="text-sm text-(--color-muted)">
                     Applied on {new Date(app.appliedAt).toLocaleDateString()}
                   </span>
@@ -163,22 +133,15 @@ export default function CompanyApplicationsPage() {
                   <Button
                     disabled={app.status !== 'APPLIED' || processingId === app.id}
                     onClick={() => handleDecision(app.id, 'ACCEPTED')}
-                    className={`text-white transition ${
-                      app.status !== 'APPLIED' || processingId === app.id
-                        ? 'bg-(--color-success-light) hover:bg-(--color-success-light) cursor-not-allowed'
-                        : 'bg-(--color-success-dark) hover:bg-(--color-success-light) cursor-pointer'
-                    }`}
+                    className="text-white transition bg-(--color-success-dark) hover:bg-(--color-success-light)"
                   >
                     Accept
                   </Button>
+
                   <Button
                     disabled={app.status !== 'APPLIED' || processingId === app.id}
                     onClick={() => handleDecision(app.id, 'REJECTED')}
-                    className={`text-white transition ${
-                      app.status !== 'APPLIED' || processingId === app.id
-                        ? 'bg-(--color-error-light) hover:bg-(--color-error-light) cursor-not-allowed'
-                        : 'bg-(--color-error-dark) hover:bg-(--color-error-dark) cursor-pointer'
-                    }`}
+                    className="text-white transition bg-(--color-error-dark) hover:bg-(--color-error-light)"
                   >
                     Reject
                   </Button>
@@ -189,9 +152,7 @@ export default function CompanyApplicationsPage() {
         )}
 
         <div className="mt-6 text-center">
-          <Button onClick={() => router.push('/dashboard/company')}>
-            Back to Dashboard
-          </Button>
+          <Button onClick={() => router.push('/dashboard/company')}>Back to Dashboard</Button>
         </div>
       </Card>
     </div>
