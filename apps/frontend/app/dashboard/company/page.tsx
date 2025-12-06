@@ -2,8 +2,9 @@
 
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/Button';
-import { getToken, clearToken } from '@/lib/api';
+import { getToken } from '@/lib/api';
 import { getProfile } from '@/lib/auth';
+import { logout } from '@/lib/auth/logout';
 import { useEffect, useState } from 'react';
 
 export default function CompanyDashboard() {
@@ -23,11 +24,6 @@ export default function CompanyDashboard() {
     })();
   }, [router]);
 
-  const handleLogout = () => {
-    clearToken();
-    router.push('/home');
-  };
-
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-(--color-bg) p-6">
       <h1 className="text-2xl font-bold mb-6 text-(--color-text)">
@@ -46,7 +42,7 @@ export default function CompanyDashboard() {
         <Button onClick={() => router.push('/dashboard/company/messages')}>
           Messages
         </Button>
-        <Button variant="destructive" onClick={handleLogout}>
+        <Button variant="destructive" onClick={logout}>
           Logout
         </Button>
       </div>
