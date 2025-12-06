@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { getToken } from '@/lib/api';
+import { getMessages, sendMessage } from '@/lib/messages/api';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 
@@ -34,16 +35,19 @@ interface ApplicationInfo {
 export default function JobSeekerChatPage() {
   const router = useRouter();
   const { id } = useParams();
+
   const [messages, setMessages] = useState<Message[]>([]);
-  const [applicationInfo, setApplicationInfo] = useState<ApplicationInfo | null>(null);
+  const [applicationInfo, setApplicationInfo] =
+    useState<ApplicationInfo | null>(null);
   const [newMessage, setNewMessage] = useState('');
   const [loading, setLoading] = useState(true);
   const [sending, setSending] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
   const token = getToken();
   const [currentUserId, setCurrentUserId] = useState<string | null>(null);
 
-  // Decode JWT to get userId
+  /* Decode userId from token */
   useEffect(() => {
     if (token) {
       try {
@@ -55,16 +59,17 @@ export default function JobSeekerChatPage() {
     }
   }, [token]);
 
+  /* Fetch application details (still raw fetch for now) */
   const fetchApplicationInfo = async () => {
-    if (!token) {
-      router.push('/login');
-      return;
-    }
+    if (!token) return router.push('/login');
+
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/applications/details/${id}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/applications/details/${id}`,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
       if (!res.ok) throw new Error('Failed to fetch application info');
+
       const data = await res.json();
       setApplicationInfo(data);
     } catch (err) {
@@ -73,18 +78,13 @@ export default function JobSeekerChatPage() {
     }
   };
 
-  const fetchMessages = async () => {
-    if (!token) {
-      router.push('/login');
-      return;
-    }
+  /* Fetch chat messages */
+  const fetchMessagesHandler = async () => {
+    if (!token) return router.push('/login');
+
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/messages/${id}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      if (!res.ok) throw new Error('Failed to fetch messages');
-      const data = await res.json();
-      setMessages(data);
+      const data = await getMessages(Number(id));
+      setMessages(data as Message[]);
     } catch (err) {
       console.error(err);
       setError('Could not load messages.');
@@ -95,29 +95,25 @@ export default function JobSeekerChatPage() {
 
   useEffect(() => {
     fetchApplicationInfo();
-    fetchMessages();
-    const interval = setInterval(fetchMessages, 5000);
+    fetchMessagesHandler();
+
+    const interval = setInterval(fetchMessagesHandler, 5000);
     return () => clearInterval(interval);
   }, [id]);
 
+  /* Send a message */
   const handleSend = async () => {
     if (!newMessage.trim()) return;
     setSending(true);
+
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/messages`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          applicationId: Number(id),
-          messageText: newMessage.trim(),
-        }),
+      await sendMessage({
+        applicationId: Number(id),
+        messageText: newMessage.trim(),
       });
-      if (!res.ok) throw new Error('Failed to send message');
+
       setNewMessage('');
-      fetchMessages();
+      fetchMessagesHandler();
     } catch (err) {
       console.error(err);
       setError('Could not send message.');
@@ -127,9 +123,18 @@ export default function JobSeekerChatPage() {
   };
 
   if (loading)
-    return <div className="flex justify-center mt-10">Loading...</div>;
+    return (
+      <div className="flex justify-center mt-10 text-(--color-text)">
+        Loading...
+      </div>
+    );
+
   if (error)
-    return <div className="text-(--color-error-dark) text-center mt-10">{error}</div>;
+    return (
+      <div className="text-(--color-error-dark) text-center mt-10">
+        {error}
+      </div>
+    );
 
   const companyName = applicationInfo?.vacancy.company.companyName;
   const companyUserId = applicationInfo?.vacancy.company.userId;
@@ -137,23 +142,26 @@ export default function JobSeekerChatPage() {
 
   return (
     <div className="min-h-screen bg-(--color-bg) p-6 flex flex-col items-center text-(--color-text)">
-      <Card className="w-full max-w-3xl p-6 flex flex-col bg-(--color-secondary) text-(--color-text)">
+      <Card className="w-full max-w-3xl p-6 flex flex-col bg-(--color-secondary)">
         {/* Header */}
         <div className="flex flex-col items-center mb-4">
           <h1 className="text-2xl font-bold text-center">
             {companyName ? `Chat with ${companyName}` : 'Chat'}
           </h1>
+
           {vacancyTitle && (
             <p className="text-(--color-muted) mt-1 text-center">
-              Regarding position: <span className="font-medium">{vacancyTitle}</span>
+              Regarding position:{' '}
+              <span className="font-medium">{vacancyTitle}</span>
             </p>
           )}
+
           {companyUserId && (
             <div className="mt-3">
               <Button
                 variant="outline"
-                className="border-(--color-muted) text-(--color-text) hover:bg-secondary-dark"
                 onClick={() => router.push(`/profiles/${companyUserId}`)}
+                className="text-(--color-primary) border-(--color-primary) hover:bg-(--color-accent)"
               >
                 View Company Profile
               </Button>
@@ -164,14 +172,19 @@ export default function JobSeekerChatPage() {
         {/* Chat window */}
         <div className="flex-1 overflow-y-auto border rounded-lg p-4 bg-(--color-bg) h-[60vh] mb-4 flex flex-col">
           {messages.length === 0 ? (
-            <p className="text-(--color-muted) text-center mt-4">No messages yet.</p>
+            <p className="text-(--color-muted) text-center mt-4">
+              No messages yet.
+            </p>
           ) : (
             messages.map((msg) => {
               const isSent = msg.senderId === currentUserId;
+
               return (
                 <div
                   key={msg.id}
-                  className={`mb-3 flex ${isSent ? 'justify-end' : 'justify-start'}`}
+                  className={`mb-3 flex ${
+                    isSent ? 'justify-end' : 'justify-start'
+                  }`}
                 >
                   <div
                     className={`max-w-[70%] p-3 rounded-2xl shadow-sm ${
@@ -180,7 +193,10 @@ export default function JobSeekerChatPage() {
                         : 'bg-muted-light text-(--color-text) rounded-bl-none'
                     }`}
                   >
-                    <p className="whitespace-pre-wrap wrap-break-word">{msg.messageText}</p>
+                    <p className="whitespace-pre-wrap wrap-break-word">
+                      {msg.messageText}
+                    </p>
+
                     <p
                       className={`text-xs mt-1 ${
                         isSent
@@ -201,28 +217,21 @@ export default function JobSeekerChatPage() {
         <div className="flex gap-2">
           <input
             type="text"
-            className="flex-1 border rounded-lg px-3 py-2 focus:outline-none focus:ring focus:ring-(--color-primary) bg-(--color-bg) text-(--color-text)"
+            className="flex-1 border rounded-lg px-3 py-2 focus:outline-none focus:ring focus:ring-(--color-primary) bg-(--color-bg)"
             placeholder="Type your message..."
             value={newMessage}
             onChange={(e) => setNewMessage(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && handleSend()}
             disabled={sending}
           />
-          <Button
-            className="bg-(--color-primary) hover:bg-primary-dark text-(--color-on-primary)"
-            onClick={handleSend}
-            disabled={sending}
-          >
+          <Button onClick={handleSend} disabled={sending}>
             {sending ? 'Sending...' : 'Send'}
           </Button>
         </div>
 
         {/* Back button */}
         <div className="mt-6 text-center">
-          <Button
-            className="bg-(--color-primary) hover:bg-primary-dark text-(--color-on-primary)"
-            onClick={() => router.push('/dashboard/job-seeker/messages')}
-          >
+          <Button onClick={() => router.push('/dashboard/job-seeker/messages')}>
             Back to Messages
           </Button>
         </div>
