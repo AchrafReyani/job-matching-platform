@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { login, getProfile } from '@/lib/auth';
+import { login, getProfile } from '@/lib/auth/api';
 import { saveToken, getToken, clearToken } from '@/lib/api';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
