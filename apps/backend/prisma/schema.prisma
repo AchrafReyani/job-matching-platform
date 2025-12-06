@@ -1,4 +1,3 @@
-// prisma/schema.prisma
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
@@ -17,7 +16,7 @@ model User {
 
   jobSeeker JobSeeker?
   company   Company?
-  messages Message[]
+  messages  Message[]
 }
 
 enum Role {
@@ -32,8 +31,8 @@ model JobSeeker {
   portfolioUrl      String?
   experienceSummary String?
 
-  user User @relation(fields: [userId], references: [id])
-  applications  Application[]
+  user         User         @relation(fields: [userId], references: [id])
+  applications Application[]
 }
 
 model Company {
@@ -43,8 +42,8 @@ model Company {
   websiteUrl  String?
   description String?
 
-  user    User      @relation(fields: [userId], references: [id])
-  Vacancy Vacancy[]
+  user     User      @relation(fields: [userId], references: [id])
+  Vacancy  Vacancy[]
 }
 
 model Vacancy {
@@ -56,8 +55,11 @@ model Vacancy {
   jobDescription String
   createdAt      DateTime @default(now())
 
-  company Company @relation(fields: [companyId], references: [id])
-  applications  Application[]
+  company      Company      @relation(fields: [companyId], references: [id])
+  applications Application[]
+
+  // Enterprise: prevent cross-company deletes
+  @@unique([id, companyId])
 }
 
 model Application {
@@ -67,10 +69,13 @@ model Application {
   status       ApplicationStatus @default(APPLIED)
   appliedAt    DateTime   @default(now())
 
-  // Relations
-  vacancy   Vacancy   @relation(fields: [vacancyId], references: [id])
+  // Cascade delete all Applications when Vacancy is deleted
+  vacancy   Vacancy   @relation(fields: [vacancyId], references: [id], onDelete: Cascade)
+
   jobSeeker JobSeeker @relation(fields: [jobSeekerId], references: [id])
-  messages Message[]
+
+  // Application → Message cascade
+  messages  Message[]
 }
 
 enum ApplicationStatus {
@@ -80,13 +85,14 @@ enum ApplicationStatus {
 }
 
 model Message {
-  id             Int      @id @default(autoincrement())
-  applicationId  Int
-  senderId       String
-  messageText    String
-  sentAt         DateTime @default(now())
+  id            Int      @id @default(autoincrement())
+  applicationId Int
+  senderId      String
+  messageText   String
+  sentAt        DateTime @default(now())
 
-  // Relations
-  application Application @relation(fields: [applicationId], references: [id])
-  sender      User         @relation(fields: [senderId], references: [id])
+  // Cascade delete messages if application deleted
+  application Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+
+  sender      User        @relation(fields: [senderId], references: [id])
 }
