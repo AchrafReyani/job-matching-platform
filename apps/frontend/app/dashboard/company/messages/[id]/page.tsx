@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { getToken } from '@/lib/api';
+import { getMessages, sendMessage } from '@/lib/messages/api';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 
@@ -35,16 +36,18 @@ interface ApplicationInfo {
 export default function CompanyChatPage() {
   const router = useRouter();
   const { id } = useParams();
+
   const [messages, setMessages] = useState<Message[]>([]);
   const [applicationInfo, setApplicationInfo] = useState<ApplicationInfo | null>(null);
   const [newMessage, setNewMessage] = useState('');
   const [loading, setLoading] = useState(true);
   const [sending, setSending] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
   const token = getToken();
   const [currentUserId, setCurrentUserId] = useState<string | null>(null);
 
-  // Decode JWT to extract user ID (sub)
+  /* Decode JWT to get userId */
   useEffect(() => {
     if (token) {
       try {
@@ -56,7 +59,7 @@ export default function CompanyChatPage() {
     }
   }, [token]);
 
-  /** Fetch application info */
+  /* Fetch application info (still using fetch because we haven’t typed this module yet) */
   const fetchApplicationInfo = async () => {
     if (!token) {
       router.push('/login');
@@ -68,6 +71,7 @@ export default function CompanyChatPage() {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (!res.ok) throw new Error('Failed to fetch application info');
+
       const data = await res.json();
       setApplicationInfo(data);
     } catch (err) {
@@ -76,7 +80,6 @@ export default function CompanyChatPage() {
     }
   };
 
-  /** Fetch messages */
   const fetchMessages = async () => {
     if (!token) {
       router.push('/login');
@@ -84,12 +87,8 @@ export default function CompanyChatPage() {
     }
 
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/messages/${id}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      if (!res.ok) throw new Error('Failed to fetch messages');
-      const data = await res.json();
-      setMessages(data);
+      const data = await getMessages(Number(id));
+      setMessages(data as Message[]); // temporary cast until types for Application messages match
     } catch (err) {
       console.error(err);
       setError('Could not load messages.');
@@ -111,19 +110,10 @@ export default function CompanyChatPage() {
     setSending(true);
 
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/messages`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          applicationId: Number(id),
-          messageText: newMessage.trim(),
-        }),
+      await sendMessage({
+        applicationId: Number(id),
+        messageText: newMessage.trim(),
       });
-
-      if (!res.ok) throw new Error('Failed to send message');
 
       setNewMessage('');
       fetchMessages();
@@ -135,8 +125,10 @@ export default function CompanyChatPage() {
     }
   };
 
-  if (loading) return <div className="flex justify-center mt-10 text-(--color-text)">Loading...</div>;
-  if (error) return <div className="text-(--color-error-dark) text-center mt-10">{error}</div>;
+  if (loading)
+    return <div className="flex justify-center mt-10 text-(--color-text)">Loading...</div>;
+  if (error)
+    return <div className="text-(--color-error-dark) text-center mt-10">{error}</div>;
 
   const jobSeekerName = applicationInfo?.jobSeeker.fullName;
   const jobSeekerUserId = applicationInfo?.jobSeeker.userId;
@@ -150,11 +142,13 @@ export default function CompanyChatPage() {
           <h1 className="text-2xl font-bold text-center">
             {jobSeekerName ? `Chat with ${jobSeekerName}` : 'Chat'}
           </h1>
+
           {vacancyTitle && (
             <p className="text-(--color-muted) mt-1 text-center">
               Regarding position: <span className="font-medium">{vacancyTitle}</span>
             </p>
           )}
+
           {jobSeekerUserId && (
             <div className="mt-3">
               <Button
@@ -175,11 +169,9 @@ export default function CompanyChatPage() {
           ) : (
             messages.map((msg) => {
               const isSent = msg.senderId === currentUserId;
+
               return (
-                <div
-                  key={msg.id}
-                  className={`mb-3 flex ${isSent ? 'justify-end' : 'justify-start'}`}
-                >
+                <div key={msg.id} className={`mb-3 flex ${isSent ? 'justify-end' : 'justify-start'}`}>
                   <div
                     className={`max-w-[70%] p-3 rounded-2xl shadow-sm ${
                       isSent
