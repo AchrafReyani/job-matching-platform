@@ -3,7 +3,7 @@
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/Button';
 import { getToken } from '@/lib/api';
-import { getProfile } from '@/lib/auth';
+import { getProfile } from '@/lib/auth/api';
 import { logout } from '@/lib/auth/logout';
 import { useEffect, useState } from 'react';
 
