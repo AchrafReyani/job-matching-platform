@@ -3,7 +3,8 @@
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { Button } from './Button';
-import { getToken, clearToken } from '@/lib/api';
+import { getToken } from '@/lib/api';
+import { logout } from '@/lib/auth/logout';
 import { ThemeToggle } from './ThemeToggle';
 
 export function Header() {
@@ -17,11 +18,6 @@ export function Header() {
     window.addEventListener('tokenChanged', updateLoginState);
     return () => window.removeEventListener('tokenChanged', updateLoginState);
   }, []);
-
-  const handleLogout = () => {
-    clearToken();
-    router.push('/home');
-  };
 
   return (
     <header
@@ -47,7 +43,7 @@ export function Header() {
           <Button
             variant="destructive"
             className="text-sm px-3 py-1"
-            onClick={handleLogout}
+            onClick={logout}
           >
             Logout
           </Button>
