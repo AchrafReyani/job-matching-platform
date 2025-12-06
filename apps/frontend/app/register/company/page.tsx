@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { registerCompany, login } from '@/lib/auth';
+import { registerCompany, login } from '@/lib/auth/api';
 import { saveToken } from '@/lib/api';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
