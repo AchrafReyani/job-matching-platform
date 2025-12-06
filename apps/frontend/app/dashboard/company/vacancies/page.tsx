@@ -78,20 +78,22 @@ export default function CompanyVacanciesPage() {
           <p className="text-(--color-muted) text-center">You have not posted any vacancies.</p>
         ) : (
           vacancies.map((vacancy) => (
-            <Card key={vacancy.id} className="p-4 bg-(--color-secondary) text-(--color-text)">
+            <Card
+              key={vacancy.id}
+              className="p-4 bg-(--color-secondary) text-(--color-text)"
+            >
               <h2 className="font-semibold text-lg">{vacancy.title}</h2>
 
-              <p>
-                <strong>Role:</strong> {vacancy.role}
-              </p>
+              <p><strong>Role:</strong> {vacancy.role}</p>
 
               {vacancy.salaryRange && (
-                <p>
-                  <strong>Salary:</strong> {vacancy.salaryRange}
-                </p>
+                <p><strong>Salary:</strong> {vacancy.salaryRange}</p>
               )}
 
               <p>{vacancy.jobDescription}</p>
+              <p className="text-sm text-(--color-muted) mt-1">
+                Posted: {new Date(vacancy.createdAt).toLocaleDateString()}
+              </p>
 
               <div className="mt-2">
                 <Button
