@@ -2,28 +2,20 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { getToken } from '@/lib/api';
+
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 
-interface Vacancy {
-  id: number;
-  title: string;
-  role: string;
-  salaryRange?: string;
-  jobDescription: string;
-  createdAt: string;
-  companyId: number;
-}
+import { getAllVacancies } from '@/lib/vacancies/api';
+import { getAllCompanies } from '@/lib/companies/api';
+import { createApplication } from '@/lib/applications/api';
 
-interface Company {
-  id: number;
-  userId: string;
-  companyName: string;
-}
+import type { Vacancy } from '@/lib/vacancies/types';
+import type { Company } from '@/lib/companies/types';
 
 export default function JobSeekerVacanciesPage() {
   const router = useRouter();
+
   const [vacancies, setVacancies] = useState<Vacancy[]>([]);
   const [companies, setCompanies] = useState<Record<number, Company>>({});
   const [loading, setLoading] = useState(true);
@@ -31,81 +23,57 @@ export default function JobSeekerVacanciesPage() {
   const [error, setError] = useState<string | null>(null);
   const [popupMessage, setPopupMessage] = useState<string | null>(null);
 
+  /** ---------------- FETCH DATA ---------------- */
   useEffect(() => {
-    const fetchData = async () => {
-      const token = getToken();
-      if (!token) {
-        router.push('/login');
-        return;
-      }
-
+    const load = async () => {
       try {
-        const [vacRes, compRes] = await Promise.all([
-          fetch(`${process.env.NEXT_PUBLIC_API_URL}/vacancies`, {
-            headers: { Authorization: `Bearer ${token}` },
-          }),
-          fetch(`${process.env.NEXT_PUBLIC_API_URL}/companies`, {
-            headers: { Authorization: `Bearer ${token}` },
-          }),
+        const [vacancyList, companyList] = await Promise.all([
+          getAllVacancies(),
+          getAllCompanies(),
         ]);
 
-        if (!vacRes.ok) throw new Error('Failed to fetch vacancies');
-        if (!compRes.ok) throw new Error('Failed to fetch companies');
+        // convert companies to map
+        const map: Record<number, Company> = {};
+        companyList.forEach((c) => (map[c.id] = c));
 
-        const vacData: Vacancy[] = await vacRes.json();
-        const compData: Company[] = await compRes.json();
-        const compMap: Record<number, Company> = {};
-        compData.forEach((c) => (compMap[c.id] = c));
-
-        setVacancies(vacData);
-        setCompanies(compMap);
+        setVacancies(vacancyList);
+        setCompanies(map);
       } catch (err: unknown) {
         console.error(err);
-        setError(err instanceof Error ? err.message : 'Something went wrong');
+        setError(err instanceof Error ? err.message : 'Failed to load data');
       } finally {
         setLoading(false);
       }
     };
 
-    fetchData();
-  }, [router]);
+    load();
+  }, []);
 
+  /** ---------------- APPLY TO VACANCY ---------------- */
   const handleApply = async (vacancyId: number) => {
-    const token = getToken();
-    if (!token) {
-      router.push('/login');
-      return;
-    }
-
     setSubmitting(vacancyId);
     setError(null);
 
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/applications`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ vacancyId }),
-      });
+      await createApplication({ vacancyId });
 
-      if (res.status === 409 || res.status === 403) {
-        setPopupMessage('⚠️ You have already applied for this vacancy.');
-      } else if (!res.ok) {
-        throw new Error('Failed to apply to vacancy');
-      } else {
-        setPopupMessage('✅ Application submitted successfully!');
-      }
-    } catch (err) {
+      setPopupMessage('✅ Application submitted successfully!');
+    } catch (err: any) {
       console.error(err);
-      setPopupMessage('❌ An error occurred while applying.');
+
+      if (err?.status === 409 || err?.status === 403) {
+        setPopupMessage('⚠️ You have already applied for this vacancy.');
+      } else {
+        setPopupMessage('❌ An error occurred while applying.');
+      }
     } finally {
       setSubmitting(null);
     }
   };
 
   const closePopup = () => setPopupMessage(null);
+
+  /** ---------------- RENDER ---------------- */
 
   if (loading)
     return (
@@ -131,6 +99,7 @@ export default function JobSeekerVacanciesPage() {
         ) : (
           vacancies.map((vacancy) => {
             const company = companies[vacancy.companyId];
+
             return (
               <Card
                 key={vacancy.id}
@@ -146,13 +115,20 @@ export default function JobSeekerVacanciesPage() {
                   <strong>Role:</strong> {vacancy.role}
                 </p>
 
-                {vacancy.salaryRange && <p><strong>Salary:</strong> {vacancy.salaryRange}</p>}
+                {vacancy.salaryRange && (
+                  <p>
+                    <strong>Salary:</strong> {vacancy.salaryRange}
+                  </p>
+                )}
 
                 <p>{vacancy.jobDescription}</p>
 
-                <p className="text-sm text-(--color-muted) mt-1">
-                  Posted: {new Date(vacancy.createdAt).toLocaleDateString()}
-                </p>
+                {/* createdAt is optional in your backend model */}
+                {vacancy.createdAt && (
+                  <p className="text-sm text-(--color-muted) mt-1">
+                    Posted: {new Date(vacancy.createdAt).toLocaleDateString()}
+                  </p>
+                )}
 
                 <div className="mt-4 flex gap-3">
                   <Button
