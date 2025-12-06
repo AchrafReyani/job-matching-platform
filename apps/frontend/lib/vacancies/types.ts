@@ -5,6 +5,7 @@ export interface Vacancy {
   jobDescription: string;
   salaryRange?: string;
   companyId: number;
+  createdAt: string;
 
   company?: {
     id: number;
