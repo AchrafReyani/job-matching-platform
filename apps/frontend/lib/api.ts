@@ -21,6 +21,29 @@ export async function request<T>(
   return (await res.json()) as T;
 }
 
+/** Authenticated wrapper for request() */
+export async function authRequest<T>(
+  endpoint: string,
+  options: RequestInit = {}
+): Promise<T> {
+  const token = getToken();
+
+  if (!token) {
+    throw new Error('No auth token found');
+  }
+
+  return request<T>(endpoint, {
+    ...options,
+    headers: {
+      'Content-Type': 'application/json',
+      ...(options.headers || {}),
+      Authorization: `Bearer ${token}`,
+    },
+  });
+}
+
+
+
 /* ---------- TOKEN HELPERS ---------- */
 
 /**
