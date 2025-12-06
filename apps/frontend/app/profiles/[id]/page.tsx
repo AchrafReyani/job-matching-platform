@@ -2,22 +2,11 @@
 
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
+import { getProfile } from '@/lib/profiles/api';
+import type { ProfileResponse } from '@/lib/profiles/types';
 import { getToken } from '@/lib/api';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
-
-interface ProfileResponse {
-  userId: string;
-  role: 'JOB_SEEKER' | 'COMPANY';
-  profile: {
-    fullName?: string;
-    portfolioUrl?: string;
-    experienceSummary?: string;
-    companyName?: string;
-    websiteUrl?: string;
-    description?: string;
-  };
-}
 
 export default function ViewProfilePage() {
   const router = useRouter();
@@ -37,13 +26,7 @@ export default function ViewProfilePage() {
       }
 
       try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/profiles/${profileId}`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-
-        if (!res.ok) throw new Error('Failed to fetch profile');
-
-        const data: ProfileResponse = await res.json();
+        const data = await getProfile(profileId as string);
         setProfile(data);
       } catch (err) {
         console.error(err);
@@ -87,21 +70,22 @@ export default function ViewProfilePage() {
         {profile.role === 'JOB_SEEKER' && profile.profile && (
           <div className="mt-4 border-t border-(--color-muted) pt-3">
             <h2 className="font-semibold text-lg mb-2 text-(--color-text)">Job Seeker Info</h2>
-            <p className="text-(--color-text)"><strong>Name:</strong> {profile.profile.fullName}</p>
-            {profile.profile.portfolioUrl && (
+            <p className="text-(--color-text)"><strong>Name:</strong> {(profile.profile as any).fullName}</p>
+            {(profile.profile as any).portfolioUrl && (
               <p className="text-(--color-text)">
                 <strong>Portfolio:</strong>{' '}
                 <a
-                  href={profile.profile.portfolioUrl}
+                  href={(profile.profile as any).portfolioUrl}
                   target="_blank"
                   className="text-(--color-primary) underline"
+                  rel="noreferrer"
                 >
-                  {profile.profile.portfolioUrl}
+                  {(profile.profile as any).portfolioUrl}
                 </a>
               </p>
             )}
-            {profile.profile.experienceSummary && (
-              <p className="text-(--color-text)"><strong>Experience:</strong> {profile.profile.experienceSummary}</p>
+            {(profile.profile as any).experienceSummary && (
+              <p className="text-(--color-text)"><strong>Experience:</strong> {(profile.profile as any).experienceSummary}</p>
             )}
           </div>
         )}
@@ -109,21 +93,22 @@ export default function ViewProfilePage() {
         {profile.role === 'COMPANY' && profile.profile && (
           <div className="mt-4 border-t border-(--color-muted) pt-3">
             <h2 className="font-semibold text-lg mb-2 text-(--color-text)">Company Info</h2>
-            <p className="text-(--color-text)"><strong>Company Name:</strong> {profile.profile.companyName}</p>
-            {profile.profile.websiteUrl && (
+            <p className="text-(--color-text)"><strong>Company Name:</strong> {(profile.profile as any).companyName}</p>
+            {(profile.profile as any).websiteUrl && (
               <p className="text-(--color-text)">
                 <strong>Website:</strong>{' '}
                 <a
-                  href={profile.profile.websiteUrl}
+                  href={(profile.profile as any).websiteUrl}
                   target="_blank"
                   className="text-(--color-primary) underline"
+                  rel="noreferrer"
                 >
-                  {profile.profile.websiteUrl}
+                  {(profile.profile as any).websiteUrl}
                 </a>
               </p>
             )}
-            {profile.profile.description && (
-              <p className="text-(--color-text)"><strong>Description:</strong> {profile.profile.description}</p>
+            {(profile.profile as any).description && (
+              <p className="text-(--color-text)"><strong>Description:</strong> {(profile.profile as any).description}</p>
             )}
           </div>
         )}
