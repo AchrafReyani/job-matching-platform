@@ -2,23 +2,23 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter, useParams } from 'next/navigation';
-import { getToken } from '@/lib/api';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 
-interface Vacancy {
-  id: number;
-  title: string;
-  role: string;
-  jobDescription: string;
-  salaryRange?: string;
-}
+import {
+  getVacancyById,
+  updateVacancy,
+  deleteVacancy
+} from '@/lib/vacancies/api';
+
+import type { Vacancy } from '@/lib/vacancies/types';
 
 export default function EditVacancyPage() {
   const router = useRouter();
   const params = useParams();
-  const vacancyId = params.id;
+  const vacancyId = Number(params.id);
+
   const [vacancy, setVacancy] = useState<Vacancy | null>(null);
   const [title, setTitle] = useState('');
   const [role, setRole] = useState('');
@@ -27,92 +27,65 @@ export default function EditVacancyPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Fetch vacancy by ID
+  /** ---------------- FETCH VACANCY ---------------- */
   useEffect(() => {
-    const fetchVacancy = async () => {
-      const token = getToken();
-      if (!token) {
-        router.push('/login');
-        return;
-      }
-
+    const load = async () => {
       try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/vacancies/${vacancyId}`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        if (!res.ok) throw new Error('Failed to fetch vacancy');
-        const data: Vacancy = await res.json();
+        const data = await getVacancyById(vacancyId);
+
         setVacancy(data);
         setTitle(data.title);
         setRole(data.role);
         setJobDescription(data.jobDescription);
         setSalaryRange(data.salaryRange || '');
+
       } catch (err: unknown) {
         console.error(err);
-        setError(err instanceof Error ? err.message : 'Something went wrong');
+        setError(err instanceof Error ? err.message : 'Failed to load vacancy');
       } finally {
         setLoading(false);
       }
     };
 
-    fetchVacancy();
-  }, [vacancyId, router]);
+    load();
+  }, [vacancyId]);
 
+  /** ---------------- UPDATE ---------------- */
   const handleUpdate = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    setError(null);
-
-    const token = getToken();
-    if (!token) {
-      router.push('/login');
-      return;
-    }
 
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/vacancies/${vacancyId}`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ title, role, jobDescription, salaryRange }),
+      await updateVacancy(vacancyId, {
+        title,
+        role,
+        jobDescription,
+        salaryRange,
       });
-      if (!res.ok) throw new Error('Failed to update vacancy');
 
       router.push('/dashboard/company/vacancies');
     } catch (err: unknown) {
       console.error(err);
-      setError(err instanceof Error ? err.message : 'Something went wrong');
+      setError(err instanceof Error ? err.message : 'Failed to update vacancy');
     } finally {
       setLoading(false);
     }
   };
 
+  /** ---------------- DELETE ---------------- */
   const handleDelete = async () => {
-    const confirmed = confirm('Are you sure you want to delete this vacancy?');
-    if (!confirmed) return;
-
-    const token = getToken();
-    if (!token) {
-      router.push('/login');
-      return;
-    }
+    if (!confirm('Are you sure you want to delete this vacancy?')) return;
 
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/vacancies/${vacancyId}`, {
-        method: 'DELETE',
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      if (!res.ok) throw new Error('Failed to delete vacancy');
-
+      await deleteVacancy(vacancyId);
       router.push('/dashboard/company/vacancies');
     } catch (err: unknown) {
       console.error(err);
-      setError(err instanceof Error ? err.message : 'Something went wrong');
+      setError(err instanceof Error ? err.message : 'Failed to delete vacancy');
     }
   };
 
+  /** ---------------- UI ---------------- */
   if (loading) return <div className="flex justify-center mt-10">Loading...</div>;
   if (error) return <div className="text-(--color-error-dark) text-center mt-10">{error}</div>;
   if (!vacancy) return <div className="text-center mt-10">Vacancy not found</div>;
@@ -130,6 +103,7 @@ export default function EditVacancyPage() {
             onChange={(e) => setTitle(e.target.value)}
             required
           />
+
           <Input
             type="text"
             placeholder="Role"
@@ -137,6 +111,7 @@ export default function EditVacancyPage() {
             onChange={(e) => setRole(e.target.value)}
             required
           />
+
           <textarea
             placeholder="Job Description"
             value={jobDescription}
@@ -144,6 +119,7 @@ export default function EditVacancyPage() {
             className="border rounded-lg p-2 resize-none h-24 focus:outline-none focus:ring-2 focus:ring-(--color-primary) bg-(--color-bg) text-(--color-text)"
             required
           />
+
           <Input
             type="text"
             placeholder="Salary Range (optional)"
@@ -161,6 +137,7 @@ export default function EditVacancyPage() {
             >
               Back
             </Button>
+
             <div className="flex gap-2">
               <Button
                 type="submit"
@@ -169,6 +146,7 @@ export default function EditVacancyPage() {
               >
                 {loading ? 'Updating...' : 'Update'}
               </Button>
+
               <Button
                 variant="destructive"
                 className="bg-(--color-error-dark) hover:bg-(--color-error-light) text-white"
