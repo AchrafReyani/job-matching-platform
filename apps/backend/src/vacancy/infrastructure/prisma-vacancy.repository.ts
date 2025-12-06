@@ -28,7 +28,7 @@ export class PrismaVacancyRepository implements VacancyRepository {
   }
 
   async delete(id: number, companyId: number) {
-    return this.prisma.vacancy.deleteMany({
+    return this.prisma.vacancy.delete({
       where: { id, companyId },
     });
   }
