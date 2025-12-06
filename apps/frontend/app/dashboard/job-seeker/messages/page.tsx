@@ -2,94 +2,31 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { getToken } from '@/lib/api';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
-
-// Full API types
-interface Company {
-  id: number;
-  userId: string;
-  companyName: string;
-  websiteUrl: string;
-  description: string;
-}
-
-interface Vacancy {
-  id: number;
-  companyId: number;
-  title: string;
-  salaryRange: string;
-  role: string;
-  jobDescription: string;
-  createdAt: string;
-  company: Company;
-}
-
-interface Application {
-  id: number;
-  vacancyId: number;
-  jobSeekerId: number;
-  status: string; // 'ACCEPTED' | 'PENDING' | 'REJECTED'
-  appliedAt: string;
-  vacancy: Vacancy;
-}
-
-// UI-friendly type
-interface ApplicationUI {
-  id: number;
-  status: string;
-  vacancy: {
-    title: string;
-    company: { companyName: string };
-  };
-}
+import type { Application, ApplicationList } from '@/lib/applications/types';
+import { getMyApplications } from '@/lib/applications/api';
 
 export default function JobSeekerMessagesPage() {
   const router = useRouter();
-  const [applications, setApplications] = useState<ApplicationUI[]>([]);
+  const [applications, setApplications] = useState<ApplicationList>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const token = getToken();
-
-  const fetchAcceptedApplications = async () => {
-    if (!token) {
-      router.push('/login');
-      return;
-    }
-
-    try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/applications/me`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-
-      if (!res.ok) throw new Error('Failed to fetch applications');
-
-      const data: Application[] = await res.json();
-
-      const acceptedApps: ApplicationUI[] = data
-        .filter(app => app.status === 'ACCEPTED')
-        .map(app => ({
-          id: app.id,
-          status: app.status,
-          vacancy: {
-            title: app.vacancy?.title || 'Untitled Vacancy',
-            company: {
-              companyName: app.vacancy?.company?.companyName || 'Unknown Company',
-            },
-          },
-        }));
-
-      setApplications(acceptedApps);
-    } catch (err) {
-      console.error(err);
-      setError('Could not load applications.');
-    } finally {
-      setLoading(false);
-    }
-  };
 
   useEffect(() => {
+    const fetchAcceptedApplications = async () => {
+      try {
+        const data = await getMyApplications();
+        const acceptedApps = data.filter(app => app.status === 'ACCEPTED');
+        setApplications(acceptedApps);
+      } catch (err) {
+        console.error(err);
+        setError('Could not load applications.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
     fetchAcceptedApplications();
   }, []);
 
@@ -113,7 +50,7 @@ export default function JobSeekerMessagesPage() {
                 <div>
                   <p className="font-semibold">{app.vacancy.title}</p>
                   <p className="text-(--color-muted) text-sm">
-                    {app.vacancy.company.companyName}
+                    {app.vacancy.company?.companyName ?? 'Unknown Company'}
                   </p>
                 </div>
                 <Button
