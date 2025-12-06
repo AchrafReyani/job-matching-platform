@@ -3,21 +3,22 @@
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { getProfile } from '@/lib/profiles/api';
-import type { ProfileResponse } from '@/lib/profiles/types';
+import type { ProfileResponse, JobSeekerProfile, CompanyProfile } from '@/lib/profiles/types';
 import { getToken } from '@/lib/api';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 
 export default function ViewProfilePage() {
   const router = useRouter();
-  const token = getToken();
   const params = useParams();
-  const profileId = params.id;
+  const token = getToken();
+  const profileId = params.id as string;
 
   const [profile, setProfile] = useState<ProfileResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  /* ---------------- FETCH PROFILE ---------------- */
   useEffect(() => {
     const fetchProfile = async () => {
       if (!token) {
@@ -26,7 +27,7 @@ export default function ViewProfilePage() {
       }
 
       try {
-        const data = await getProfile(profileId as string);
+        const data = await getProfile(profileId);
         setProfile(data);
       } catch (err) {
         console.error(err);
@@ -39,24 +40,95 @@ export default function ViewProfilePage() {
     fetchProfile();
   }, [profileId, router, token]);
 
+  /* ---------------- RENDER STATES ---------------- */
   if (loading)
     return (
       <div className="flex justify-center items-center min-h-screen text-(--color-text)">
         Loading...
       </div>
     );
+
   if (error)
     return (
       <div className="text-(--color-destructive) text-center mt-10">
         {error}
       </div>
     );
+
   if (!profile)
     return (
       <div className="text-(--color-muted) text-center mt-10">
         Profile not found.
       </div>
     );
+
+  /* ---------------- RENDER HELPERS ---------------- */
+
+  const renderJobSeeker = (data: JobSeekerProfile) => (
+    <div className="mt-4 border-t border-(--color-muted) pt-3">
+      <h2 className="font-semibold text-lg mb-2 text-(--color-text)">Job Seeker Info</h2>
+
+      {data.fullName && (
+        <p className="text-(--color-text)">
+          <strong>Name:</strong> {data.fullName}
+        </p>
+      )}
+
+      {data.portfolioUrl && (
+        <p className="text-(--color-text)">
+          <strong>Portfolio:</strong>{' '}
+          <a
+            href={data.portfolioUrl}
+            target="_blank"
+            className="text-(--color-primary) underline"
+            rel="noreferrer"
+          >
+            {data.portfolioUrl}
+          </a>
+        </p>
+      )}
+
+      {data.experienceSummary && (
+        <p className="text-(--color-text)">
+          <strong>Experience:</strong> {data.experienceSummary}
+        </p>
+      )}
+    </div>
+  );
+
+  const renderCompany = (data: CompanyProfile) => (
+    <div className="mt-4 border-t border-(--color-muted) pt-3">
+      <h2 className="font-semibold text-lg mb-2 text-(--color-text)">Company Info</h2>
+
+      {data.companyName && (
+        <p className="text-(--color-text)">
+          <strong>Company Name:</strong> {data.companyName}
+        </p>
+      )}
+
+      {data.websiteUrl && (
+        <p className="text-(--color-text)">
+          <strong>Website:</strong>{' '}
+          <a
+            href={data.websiteUrl}
+            target="_blank"
+            className="text-(--color-primary) underline"
+            rel="noreferrer"
+          >
+            {data.websiteUrl}
+          </a>
+        </p>
+      )}
+
+      {data.description && (
+        <p className="text-(--color-text)">
+          <strong>Description:</strong> {data.description}
+        </p>
+      )}
+    </div>
+  );
+
+  /* ---------------- RENDER PAGE ---------------- */
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-(--color-bg) p-4">
@@ -65,53 +137,17 @@ export default function ViewProfilePage() {
           {profile.role === 'JOB_SEEKER' ? 'Job Seeker Profile' : 'Company Profile'}
         </h1>
 
-        <p className="text-(--color-text)"><strong>Role:</strong> {profile.role}</p>
+        <p className="text-(--color-text)">
+          <strong>Role:</strong> {profile.role}
+        </p>
 
-        {profile.role === 'JOB_SEEKER' && profile.profile && (
-          <div className="mt-4 border-t border-(--color-muted) pt-3">
-            <h2 className="font-semibold text-lg mb-2 text-(--color-text)">Job Seeker Info</h2>
-            <p className="text-(--color-text)"><strong>Name:</strong> {(profile.profile as any).fullName}</p>
-            {(profile.profile as any).portfolioUrl && (
-              <p className="text-(--color-text)">
-                <strong>Portfolio:</strong>{' '}
-                <a
-                  href={(profile.profile as any).portfolioUrl}
-                  target="_blank"
-                  className="text-(--color-primary) underline"
-                  rel="noreferrer"
-                >
-                  {(profile.profile as any).portfolioUrl}
-                </a>
-              </p>
-            )}
-            {(profile.profile as any).experienceSummary && (
-              <p className="text-(--color-text)"><strong>Experience:</strong> {(profile.profile as any).experienceSummary}</p>
-            )}
-          </div>
-        )}
+        {profile.role === 'JOB_SEEKER' &&
+          'fullName' in profile.profile &&
+          renderJobSeeker(profile.profile)}
 
-        {profile.role === 'COMPANY' && profile.profile && (
-          <div className="mt-4 border-t border-(--color-muted) pt-3">
-            <h2 className="font-semibold text-lg mb-2 text-(--color-text)">Company Info</h2>
-            <p className="text-(--color-text)"><strong>Company Name:</strong> {(profile.profile as any).companyName}</p>
-            {(profile.profile as any).websiteUrl && (
-              <p className="text-(--color-text)">
-                <strong>Website:</strong>{' '}
-                <a
-                  href={(profile.profile as any).websiteUrl}
-                  target="_blank"
-                  className="text-(--color-primary) underline"
-                  rel="noreferrer"
-                >
-                  {(profile.profile as any).websiteUrl}
-                </a>
-              </p>
-            )}
-            {(profile.profile as any).description && (
-              <p className="text-(--color-text)"><strong>Description:</strong> {(profile.profile as any).description}</p>
-            )}
-          </div>
-        )}
+        {profile.role === 'COMPANY' &&
+          'companyName' in profile.profile &&
+          renderCompany(profile.profile)}
 
         <div className="mt-6 text-center">
           <Button onClick={() => router.back()}>Back</Button>

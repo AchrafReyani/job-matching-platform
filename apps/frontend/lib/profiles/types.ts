@@ -1,23 +1,20 @@
-export type UserRole = 'JOB_SEEKER' | 'COMPANY';
-
 export interface JobSeekerProfile {
+  id: number;
   fullName?: string;
   portfolioUrl?: string;
   experienceSummary?: string;
 }
 
 export interface CompanyProfile {
+  id: number;
   companyName?: string;
   websiteUrl?: string;
   description?: string;
 }
 
-export type ProfilePayload =
-  | { role: 'JOB_SEEKER'; profile: JobSeekerProfile }
-  | { role: 'COMPANY'; profile: CompanyProfile };
-
 export interface ProfileResponse {
-  userId: string;
-  role: UserRole;
+  id: string;
+  email: string;
+  role: 'JOB_SEEKER' | 'COMPANY';
   profile: JobSeekerProfile | CompanyProfile;
 }
