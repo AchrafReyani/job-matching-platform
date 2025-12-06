@@ -2,53 +2,27 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter, useParams } from 'next/navigation';
-import { getToken } from '@/lib/api';
 import { getMessages, sendMessage } from '@/lib/messages/api';
+import type { ChatMessage } from '@/lib/messages/types';
+import type { Application } from '@/lib/applications/types';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
-
-interface Sender {
-  id: string;
-  email: string;
-  role: string;
-}
-
-interface Message {
-  id: number;
-  senderId: string;
-  messageText: string;
-  sentAt: string;
-  sender: Sender;
-}
-
-interface ApplicationInfo {
-  jobSeeker: {
-    id: string;
-    fullName: string;
-    userId: string;
-  };
-  vacancy: {
-    title: string;
-    role?: string;
-  };
-}
 
 export default function CompanyChatPage() {
   const router = useRouter();
   const { id } = useParams();
 
-  const [messages, setMessages] = useState<Message[]>([]);
-  const [applicationInfo, setApplicationInfo] = useState<ApplicationInfo | null>(null);
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [application, setApplication] = useState<Application | null>(null);
   const [newMessage, setNewMessage] = useState('');
   const [loading, setLoading] = useState(true);
   const [sending, setSending] = useState(false);
   const [error, setError] = useState<string | null>(null);
-
-  const token = getToken();
   const [currentUserId, setCurrentUserId] = useState<string | null>(null);
 
   /* Decode JWT to get userId */
   useEffect(() => {
+    const token = localStorage.getItem('token');
     if (token) {
       try {
         const payload = JSON.parse(atob(token.split('.')[1]));
@@ -57,38 +31,35 @@ export default function CompanyChatPage() {
         console.warn('Failed to decode token');
       }
     }
-  }, [token]);
+  }, []);
 
-  /* Fetch application info (still using fetch because we haven’t typed this module yet) */
-  const fetchApplicationInfo = async () => {
-    if (!token) {
-      router.push('/login');
-      return;
-    }
-
+  /* Fetch application info */
+  const fetchApplicationHandler = async () => {
     try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        router.push('/login');
+        return;
+      }
+
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/applications/details/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (!res.ok) throw new Error('Failed to fetch application info');
 
       const data = await res.json();
-      setApplicationInfo(data);
+      setApplication(data);
     } catch (err) {
       console.error(err);
       setError('Could not load application info.');
     }
   };
 
-  const fetchMessages = async () => {
-    if (!token) {
-      router.push('/login');
-      return;
-    }
-
+  /* Fetch messages */
+  const fetchMessagesHandler = async () => {
     try {
       const data = await getMessages(Number(id));
-      setMessages(data as Message[]); // temporary cast until types for Application messages match
+      setMessages(data);
     } catch (err) {
       console.error(err);
       setError('Could not load messages.');
@@ -98,13 +69,14 @@ export default function CompanyChatPage() {
   };
 
   useEffect(() => {
-    fetchApplicationInfo();
-    fetchMessages();
+    fetchApplicationHandler();
+    fetchMessagesHandler();
 
-    const interval = setInterval(fetchMessages, 5000);
+    const interval = setInterval(fetchMessagesHandler, 5000);
     return () => clearInterval(interval);
   }, [id]);
 
+  /* Send a message */
   const handleSend = async () => {
     if (!newMessage.trim()) return;
     setSending(true);
@@ -114,9 +86,8 @@ export default function CompanyChatPage() {
         applicationId: Number(id),
         messageText: newMessage.trim(),
       });
-
       setNewMessage('');
-      fetchMessages();
+      fetchMessagesHandler();
     } catch (err) {
       console.error(err);
       setError('Could not send message.');
@@ -130,13 +101,13 @@ export default function CompanyChatPage() {
   if (error)
     return <div className="text-(--color-error-dark) text-center mt-10">{error}</div>;
 
-  const jobSeekerName = applicationInfo?.jobSeeker.fullName;
-  const jobSeekerUserId = applicationInfo?.jobSeeker.userId;
-  const vacancyTitle = applicationInfo?.vacancy.title;
+  const jobSeekerName = application?.jobSeeker.fullName;
+  const jobSeekerUserId = application?.jobSeeker.userId;
+  const vacancyTitle = application?.vacancy.title;
 
   return (
     <div className="min-h-screen bg-(--color-bg) p-6 flex flex-col items-center text-(--color-text)">
-      <Card className="w-full max-w-3xl p-6 flex flex-col bg-(--color-secondary) text-(--color-text)">
+      <Card className="w-full max-w-3xl p-6 flex flex-col bg-(--color-secondary)">
         {/* Header */}
         <div className="flex flex-col items-center mb-4">
           <h1 className="text-2xl font-bold text-center">
@@ -200,7 +171,7 @@ export default function CompanyChatPage() {
         <div className="flex gap-2">
           <input
             type="text"
-            className="flex-1 border rounded-lg px-3 py-2 focus:outline-none focus:ring focus:ring-(--color-primary) bg-(--color-bg) text-(--color-text)"
+            className="flex-1 border rounded-lg px-3 py-2 focus:outline-none focus:ring focus:ring-(--color-primary) bg-(--color-bg)"
             placeholder="Type your message..."
             value={newMessage}
             onChange={(e) => setNewMessage(e.target.value)}
