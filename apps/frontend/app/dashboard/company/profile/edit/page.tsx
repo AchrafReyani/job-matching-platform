@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { getToken } from '@/lib/api';
-import { getProfile, updateProfile } from '@/lib/auth';
+import { getProfile, updateProfile } from '@/lib/auth/api';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 
