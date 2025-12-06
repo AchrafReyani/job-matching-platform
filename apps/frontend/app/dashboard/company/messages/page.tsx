@@ -2,44 +2,10 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { getToken } from '@/lib/api';
+import { getCompanyApplications } from '@/lib/applications/api';
+import type { Application } from '@/lib/applications/types';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
-
-interface JobSeeker {
-  id: number;
-  userId: string;
-  fullName: string;
-  portfolioUrl?: string;
-  experienceSummary?: string;
-}
-
-interface Company {
-  id: number;
-  userId: string;
-  companyName: string;
-}
-
-interface Vacancy {
-  id: number;
-  companyId: number;
-  title: string;
-  salaryRange?: string;
-  role: string;
-  jobDescription: string;
-  createdAt: string;
-  company?: Company;
-}
-
-interface Application {
-  id: number;
-  vacancyId: number;
-  jobSeekerId: number;
-  status: string;
-  appliedAt: string;
-  vacancy?: Vacancy;
-  jobSeeker?: JobSeeker;
-}
 
 interface ApplicationUI {
   id: number;
@@ -56,20 +22,8 @@ export default function CompanyMessagesPage() {
 
   useEffect(() => {
     const fetchApplications = async () => {
-      const token = getToken();
-      if (!token) {
-        router.push('/login');
-        return;
-      }
-
       try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/applications/company`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-
-        if (!res.ok) throw new Error('Failed to fetch applications');
-
-        const data: Application[] = await res.json();
+        const data: Application[] = await getCompanyApplications();
 
         const acceptedApps: ApplicationUI[] = data
           .filter(app => app.status === 'ACCEPTED')
@@ -90,7 +44,7 @@ export default function CompanyMessagesPage() {
     };
 
     fetchApplications();
-  }, [router]);
+  }, []);
 
   if (loading) return <div className="flex justify-center mt-10 text-(--color-text)">Loading...</div>;
   if (error) return <div className="text-(--color-error-dark) text-center mt-10">{error}</div>;
