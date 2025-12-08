@@ -12,6 +12,16 @@ import { createApplication } from '@/lib/applications/api';
 
 import type { Vacancy } from '@/lib/vacancies/types';
 import type { Company } from '@/lib/companies/types';
+import type { ApiError } from '@/lib/types';
+
+/** Type guard for ApiError */
+function isApiError(err: unknown): err is ApiError {
+  return (
+    typeof err === 'object' &&
+    err !== null &&
+    ('status' in err || 'message' in err)
+  );
+}
 
 export default function JobSeekerVacanciesPage() {
   const router = useRouter();
@@ -32,7 +42,6 @@ export default function JobSeekerVacanciesPage() {
           getAllCompanies(),
         ]);
 
-        // convert companies to map
         const map: Record<number, Company> = {};
         companyList.forEach((c) => (map[c.id] = c));
 
@@ -56,15 +65,18 @@ export default function JobSeekerVacanciesPage() {
 
     try {
       await createApplication({ vacancyId });
-
       setPopupMessage('✅ Application submitted successfully!');
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error(err);
 
-      if (err?.status === 409 || err?.status === 403) {
-        setPopupMessage('⚠️ You have already applied for this vacancy.');
+      if (isApiError(err)) {
+        if (err.status === 409 || err.status === 403) {
+          setPopupMessage('⚠️ You have already applied for this vacancy.');
+        } else {
+          setPopupMessage('❌ An error occurred while applying.');
+        }
       } else {
-        setPopupMessage('❌ An error occurred while applying.');
+        setPopupMessage('❌ An unexpected error occurred.');
       }
     } finally {
       setSubmitting(null);
@@ -123,7 +135,6 @@ export default function JobSeekerVacanciesPage() {
 
                 <p>{vacancy.jobDescription}</p>
 
-                {/* createdAt is optional in your backend model */}
                 {vacancy.createdAt && (
                   <p className="text-sm text-(--color-muted) mt-1">
                     Posted: {new Date(vacancy.createdAt).toLocaleDateString()}
