@@ -5,8 +5,19 @@ interface Props {
   textarea?: boolean;
 }
 
-export default function ProfileFieldEditable({ label, value, onChange, textarea }: Props) {
-  const Input = textarea ? 'textarea' : 'input';
+export default function ProfileFieldEditable({
+  label,
+  value,
+  onChange,
+  textarea,
+}: Props) {
+  const Input = textarea ? "textarea" : "input";
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    onChange(e.target.value);
+  };
 
   return (
     <div>
@@ -16,7 +27,7 @@ export default function ProfileFieldEditable({ label, value, onChange, textarea 
 
       <Input
         value={value}
-        onChange={(e: any) => onChange(e.target.value)}
+        onChange={handleChange}
         rows={textarea ? 4 : undefined}
         className="w-full border border-(--color-muted) rounded-md px-3 py-2 mt-1 bg-(--color-bg) text-(--color-text)"
       />
