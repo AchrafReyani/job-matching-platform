@@ -1,138 +1,85 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { getToken } from '@/lib/api';
-import { getProfile, updateProfile } from '@/lib/auth/api';
-import { Card } from '@/components/ui/Card';
-import { Button } from '@/components/ui/Button';
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import AuthGuard from "@/features/auth/components/AuthGuard";
+import ProfileCardLayout from "@/features/profile/components/ProfileCardLayout";
+import ProfileActionButtons from "@/features/profile/components/ProfileActionButtons";
+import LoadingScreen from "@/components/common/LoadingScreen";
+import { getProfile, updateProfile } from "@/lib/auth/api";
+import ProfileFormJobSeeker from "@/features/profile/components/ProfileFormJobSeeker";
+import { getToken } from "@/lib/api";
 
 export default function EditJobSeekerProfilePage() {
   const router = useRouter();
-  const [fullName, setFullName] = useState('');
-  const [portfolioUrl, setPortfolioUrl] = useState('');
-  const [experienceSummary, setExperienceSummary] = useState('');
+
+  const [fullName, setFullName] = useState("");
+  const [portfolioUrl, setPortfolioUrl] = useState("");
+  const [experienceSummary, setExperienceSummary] = useState("");
+
   const [saving, setSaving] = useState(false);
-  const [message, setMessage] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
+  const [message, setMessage] = useState<string | null>(null);
 
   useEffect(() => {
     const token = getToken();
-    if (!token) {
-      router.push('/login');
-      return;
-    }
+    if (!token) return router.push("/login");
 
-    const fetchProfile = async () => {
+    (async () => {
       try {
-        const data = await getProfile();
-        if (data.role !== 'JOB_SEEKER') {
-          router.push('/dashboard/company');
-          return;
-        }
-        setFullName(data.jobSeeker?.fullName || '');
-        setPortfolioUrl(data.jobSeeker?.portfolioUrl || '');
-        setExperienceSummary(data.jobSeeker?.experienceSummary || '');
-      } catch (err) {
-        console.error(err);
-        router.push('/login');
+        const profile = await getProfile();
+        if (profile.role !== "JOB_SEEKER") return router.push("/dashboard/company");
+
+        setFullName(profile.jobSeeker?.fullName || "");
+        setPortfolioUrl(profile.jobSeeker?.portfolioUrl || "");
+        setExperienceSummary(profile.jobSeeker?.experienceSummary || "");
+      } catch {
+        router.push("/login");
       } finally {
         setLoading(false);
       }
-    };
-
-    fetchProfile();
+    })();
   }, [router]);
 
   const handleSave = async () => {
-    const token = getToken();
-    if (!token) {
-      router.push('/login');
-      return;
-    }
-
     setSaving(true);
     setMessage(null);
+
     try {
-      await updateProfile( { fullName, portfolioUrl, experienceSummary });
-      setMessage('✅ Profile updated successfully!');
-    } catch (err) {
-      console.error(err);
-      setMessage('❌ Failed to update profile.');
+      await updateProfile({ fullName, portfolioUrl, experienceSummary });
+      setMessage("✅ Profile updated!");
+    } catch {
+      setMessage("❌ Failed to update.");
     } finally {
       setSaving(false);
     }
   };
 
-  if (loading)
-    return (
-      <div className="flex justify-center items-center min-h-screen text-(--color-text) bg-(--color-bg)">
-        Loading...
-      </div>
-    );
+  if (loading) return <LoadingScreen />;
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-(--color-bg) p-4 text-(--color-text)">
-      <Card className="w-full max-w-md p-6 space-y-4 bg-(--color-secondary) text-(--color-text)">
-        <h1 className="text-2xl font-bold text-center mb-4">Edit Profile</h1>
+    <AuthGuard allowedRole="JOB_SEEKER">
+      <ProfileCardLayout title="Edit Profile">
+        <ProfileFormJobSeeker
+          fullName={fullName}
+          setFullName={setFullName}
+          portfolioUrl={portfolioUrl}
+          setPortfolioUrl={setPortfolioUrl}
+          experienceSummary={experienceSummary}
+          setExperienceSummary={setExperienceSummary}
+        />
 
-        <div className="space-y-3">
-          <div>
-            <label className="block text-sm font-medium text-(--color-text)">
-              Full Name
-            </label>
-            <input
-              type="text"
-              value={fullName}
-              onChange={(e) => setFullName(e.target.value)}
-              className="w-full border border-(--color-muted) rounded-md px-3 py-2 mt-1 bg-(--color-bg) text-(--color-text)"
-            />
-          </div>
+        {message && <p className="text-sm text-center pt-2">{message}</p>}
 
-          <div>
-            <label className="block text-sm font-medium text-(--color-text)">
-              Portfolio URL
-            </label>
-            <input
-              type="text"
-              value={portfolioUrl}
-              onChange={(e) => setPortfolioUrl(e.target.value)}
-              className="w-full border border-(--color-muted) rounded-md px-3 py-2 mt-1 bg-(--color-bg) text-(--color-text)"
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-(--color-text)">
-              Experience Summary
-            </label>
-            <textarea
-              value={experienceSummary}
-              onChange={(e) => setExperienceSummary(e.target.value)}
-              rows={4}
-              className="w-full border border-(--color-muted) rounded-md px-3 py-2 mt-1 bg-(--color-bg) text-(--color-text)"
-            />
-          </div>
-        </div>
-
-        {message && <p className="text-center text-sm mt-2">{message}</p>}
-
-        <div className="flex justify-between mt-6">
-          <Button
-            onClick={() => router.push('/dashboard/job-seeker/profile')}
-            className="bg-(--color-primary) hover:bg-primary-dark text-(--color-on-primary)"
-          >
-            Back
-          </Button>
-
-          <Button
-            onClick={handleSave}
-            disabled={saving}
-            className="bg-(--color-accent) hover:bg-accent-dark text-(--color-on-primary)"
-          >
-            {saving ? 'Saving...' : 'Save Changes'}
-          </Button>
-        </div>
-      </Card>
-    </div>
+        <ProfileActionButtons
+          left={{ label: "Back", onClick: () => router.push("/dashboard/job-seeker/profile") }}
+          right={{
+            label: saving ? "Saving..." : "Save Changes",
+            onClick: handleSave,
+            disabled: saving,
+          }}
+        />
+      </ProfileCardLayout>
+    </AuthGuard>
   );
 }
