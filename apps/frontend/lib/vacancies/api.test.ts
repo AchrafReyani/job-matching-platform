@@ -12,18 +12,32 @@ import { server } from '../../mocks/server';
 process.env.NEXT_PUBLIC_API_URL =
   process.env.NEXT_PUBLIC_API_URL || 'http://localhost';
 
+type FakeStorage = {
+  store: Record<string, string>;
+  getItem(key: string): string | null;
+  setItem(key: string, value: string): void;
+  removeItem(key: string): void;
+  clear(): void;
+  key(index: number): string | null;
+  readonly length: number;
+};
+
 // Start MSW server for tests
 beforeAll(() => server.listen());
 beforeEach(() => {
   // Provide browser-like storage for authRequest
-  global.localStorage = {
+  const fakeStorage: FakeStorage = {
     store: {} as Record<string, string>,
     getItem(key: string) { return this.store[key] || null; },
     setItem(key: string, value: string) { this.store[key] = value; },
     removeItem(key: string) { delete this.store[key]; },
     clear() { this.store = {}; },
+    key(index: number) { return Object.keys(this.store)[index] ?? null; },
+    get length() { return Object.keys(this.store).length; },
   };
-  global.window = { dispatchEvent: jest.fn() } as any;
+  global.localStorage = fakeStorage;
+  const dispatchEventMock = jest.fn<(event: Event) => boolean>(() => true);
+  global.window = { dispatchEvent: dispatchEventMock } as unknown as Window;
   localStorage.setItem('token', 'test-token');
 });
 afterEach(() => {
