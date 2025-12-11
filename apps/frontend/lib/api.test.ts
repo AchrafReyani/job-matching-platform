@@ -11,25 +11,37 @@ import {
   clearToken,
 } from './api';
 
+type FakeStorage = {
+  store: Record<string, string>;
+  getItem(key: string): string | null;
+  setItem(key: string, value: string): void;
+  removeItem(key: string): void;
+  clear(): void;
+  key(index: number): string | null;
+  readonly length: number;
+};
+
 // Mock fetch globally but restore after this suite so MSW suites can use real fetch
-const mockFetch = jest.fn();
+const mockFetch: jest.MockedFunction<typeof fetch> = jest.fn<
+  ReturnType<typeof fetch>,
+  Parameters<typeof fetch>
+>();
 const originalFetch = global.fetch;
 
 beforeAll(() => {
-  global.fetch = mockFetch as any;
+  global.fetch = mockFetch;
 });
 
 afterAll(() => {
-  global.fetch = originalFetch as any;
+  global.fetch = originalFetch;
 });
 
 // Mock localStorage + window before each test
 beforeEach(() => {
   mockFetch.mockReset();
 
-  // @ts-ignore override
-  global.localStorage = {
-    store: {} as Record<string, string>,
+  const fakeStorage: FakeStorage = {
+    store: {},
     getItem(key: string) {
       return this.store[key] ?? null;
     },
@@ -42,21 +54,35 @@ beforeEach(() => {
     clear() {
       this.store = {};
     },
+    key(index: number) {
+      return Object.keys(this.store)[index] ?? null;
+    },
+    get length() {
+      return Object.keys(this.store).length;
+    },
   };
 
-  // @ts-ignore override
-  global.window = {
-    dispatchEvent: jest.fn(),
-  } as any;
+  global.localStorage = fakeStorage;
+
+  const dispatchEventMock = jest.fn<boolean, [Event]>(() => true);
+  const mockWindow = { dispatchEvent: dispatchEventMock } as unknown as
+    Window & typeof globalThis;
+  global.window = mockWindow;
 });
 
 // Helper to create a mock Response-like object
-const createMockResponse = (ok: boolean, data: any, status = 200) => ({
-  ok,
-  status,
-  json: async () => data,
-  text: async () => (typeof data === 'string' ? data : JSON.stringify(data)),
-});
+const createMockResponse = <T,>(
+  ok: boolean,
+  data: T,
+  status = 200
+): Response => {
+  const body =
+    typeof data === 'string' ? data : JSON.stringify(data);
+  return new Response(body, {
+    status,
+    headers: { 'Content-Type': 'application/json' },
+  });
+};
 
 describe('request()', () => {
   it('performs a successful JSON request', async () => {
@@ -68,7 +94,8 @@ describe('request()', () => {
 
     const [url, options] = mockFetch.mock.calls[0];
     expect(url).toBe('http://localhost:3001/test');
-    expect(options?.headers?.['Content-Type']).toBe('application/json');
+    const headers = new Headers(options?.headers ?? {});
+    expect(headers.get('Content-Type')).toBe('application/json');
 
     expect(result).toEqual({ success: true });
   });
@@ -100,7 +127,8 @@ describe('authRequest()', () => {
     await authRequest('/secure');
 
     const [, options] = mockFetch.mock.calls[0];
-    expect(options.headers.Authorization).toBe('Bearer test-token');
+    const headers = new Headers(options?.headers ?? {});
+    expect(headers.get('Authorization')).toBe('Bearer test-token');
   });
 });
 
