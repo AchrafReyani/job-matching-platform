@@ -4,15 +4,15 @@ process.env.NEXT_PUBLIC_API_URL =
   process.env.NEXT_PUBLIC_API_URL || 'http://localhost';
 
 // Mock fetch globally and restore after suite so other tests see real fetch
-const mockFetch = jest.fn();
+const mockFetch = jest.fn<typeof fetch>();
 const originalFetch = global.fetch;
 
 beforeAll(() => {
-  global.fetch = mockFetch as any;
+  global.fetch = mockFetch;
 });
 
 afterAll(() => {
-  global.fetch = originalFetch as any;
+  global.fetch = originalFetch;
 });
 
 beforeEach(() => {
