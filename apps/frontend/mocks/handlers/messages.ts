@@ -2,8 +2,11 @@ import { http, HttpResponse } from 'msw';
 import type { ChatMessageList, CreatedMessage } from '../../lib/messages/types';
 
 export const messagesHandlers = [
-  http.post('/messages', (req) => {
-    const body = req.body as { applicationId: number; messageText: string };
+  http.post('/messages', async (req) => {
+    const body = (await req.request.json()) as {
+      applicationId: number;
+      messageText: string;
+    };
 
     const createdMessage: CreatedMessage = {
       id: 1,
