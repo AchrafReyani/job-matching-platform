@@ -1,19 +1,39 @@
 import { http, HttpResponse } from 'msw';
-import type { LoginResponse, ProfileResponse, UpdateProfileRequest } from '../../lib/auth/types';
+import type {
+  LoginResponse,
+  ProfileResponse,
+  UpdateProfileRequest,
+} from '../../lib/auth/types';
+
+type RegisterJobSeekerPayload = {
+  email: string;
+  password: string;
+  fullName: string;
+  portfolioUrl?: string;
+  experienceSummary?: string;
+};
+
+type RegisterCompanyPayload = {
+  email: string;
+  password: string;
+  companyName: string;
+  websiteUrl?: string;
+  description?: string;
+};
 
 export const authHandlers = [
-  http.post('/auth/register/job-seeker', (req) => {
-    const body = req.json();
+  http.post('/auth/register/job-seeker', async (req) => {
+    const body = (await req.request.json()) as RegisterJobSeekerPayload;
     return HttpResponse.json({ ...body, id: 'user-1' });
   }),
 
-  http.post('/auth/register/company', (req) => {
-    const body = req.json();
+  http.post('/auth/register/company', async (req) => {
+    const body = (await req.request.json()) as RegisterCompanyPayload;
     return HttpResponse.json({ ...body, id: 'company-1' });
   }),
 
-  http.post('/auth/login', (req) => {
-    const body = req.json();
+  http.post('/auth/login', async (req) => {
+    const body = (await req.request.json()) as { email: string; password: string };
     if (body.email === 'fail@example.com') {
       return HttpResponse.text('Unauthorized', { status: 401 });
     }
@@ -32,8 +52,8 @@ export const authHandlers = [
     return HttpResponse.json(profile);
   }),
 
-  http.put('/auth/profile', (req) => {
-    const body: UpdateProfileRequest = req.json();
+  http.put('/auth/profile', async (req) => {
+    const body = (await req.request.json()) as UpdateProfileRequest;
     return HttpResponse.json({ message: 'Profile updated successfully', ...body });
   }),
 ];
