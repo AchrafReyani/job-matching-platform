@@ -9,29 +9,48 @@ import {
 process.env.NEXT_PUBLIC_API_URL =
   process.env.NEXT_PUBLIC_API_URL || 'http://localhost';
 
-const mockFetch = jest.fn();
+type FakeStorage = {
+  store: Record<string, string>;
+  getItem(key: string): string | null;
+  setItem(key: string, value: string): void;
+  removeItem(key: string): void;
+  clear(): void;
+  key(index: number): string | null;
+  readonly length: number;
+};
+
+const mockFetch: jest.MockedFunction<typeof fetch> = jest.fn<
+  ReturnType<typeof fetch>,
+  Parameters<typeof fetch>
+>();
 const originalFetch = global.fetch;
 
 beforeAll(() => {
-  global.fetch = mockFetch as any;
+  global.fetch = mockFetch;
 });
 
 afterAll(() => {
-  global.fetch = originalFetch as any;
+  global.fetch = originalFetch;
 });
 
 // Mock localStorage & window.dispatchEvent for authRequest
 beforeEach(() => {
   mockFetch.mockReset();
-  global.localStorage = {
-    store: {} as Record<string, string>,
+  const fakeStorage: FakeStorage = {
+    store: {},
     getItem(key: string) { return this.store[key] || null; },
     setItem(key: string, value: string) { this.store[key] = value; },
     removeItem(key: string) { delete this.store[key]; },
     clear() { this.store = {}; },
+    key(index: number) { return Object.keys(this.store)[index] ?? null; },
+    get length() { return Object.keys(this.store).length; },
   };
+  global.localStorage = fakeStorage;
   localStorage.setItem('token', 'test-token');
-  global.window = { dispatchEvent: jest.fn() } as any;
+  const dispatchEventMock = jest.fn<(event: Event) => boolean>(() => true);
+  const mockWindow = { dispatchEvent: dispatchEventMock } as unknown as
+    Window & typeof globalThis;
+  global.window = mockWindow;
 });
 
 describe('registerJobSeeker', () => {
