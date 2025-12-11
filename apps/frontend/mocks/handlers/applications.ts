@@ -16,8 +16,8 @@ let mockApplications: Application[] = [
 ];
 
 export const applicationsHandlers = [
-  http.post('/applications', (req) => {
-    const body: CreateApplicationPayload = req.json();
+  http.post('/applications', async (req) => {
+    const body = (await req.json()) as CreateApplicationPayload;
     const newApp: Application = {
       id: mockApplications.length + 1,
       status: 'APPLIED',
