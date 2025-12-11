@@ -17,7 +17,7 @@ let mockApplications: Application[] = [
 
 export const applicationsHandlers = [
   http.post('/applications', async (req) => {
-    const body = (await req.json()) as CreateApplicationPayload;
+    const body = (await req.request.json()) as CreateApplicationPayload;
     const newApp: Application = {
       id: mockApplications.length + 1,
       status: 'APPLIED',
@@ -37,9 +37,9 @@ export const applicationsHandlers = [
     return HttpResponse.json(mockApplications);
   }),
 
-  http.patch('/applications/:id', (req) => {
+  http.patch('/applications/:id', async (req) => {
     const id = Number(req.params.id);
-    const body: UpdateApplicationPayload = req.json();
+    const body = (await req.request.json()) as UpdateApplicationPayload;
     const app = mockApplications.find((a) => a.id === id);
     if (app) {
       Object.assign(app, body);
