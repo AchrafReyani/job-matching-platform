@@ -1,0 +1,32 @@
+name: Frontend Test
+
+on:
+  push:
+    paths:
+      - "apps/frontend/**"
+  pull_request:
+    paths:
+      - "apps/frontend/**"
+
+jobs:
+  test-frontend:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: 'npm'
+          cache-dependency-path: apps/frontend/package-lock.json
+
+      - name: Install dependencies
+        working-directory: apps/frontend
+        run: npm ci
+
+      - name: Run Tests
+        working-directory: apps/frontend
+        run: npm test
