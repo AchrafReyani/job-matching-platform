@@ -1,0 +1,32 @@
+name: Backend Build
+
+on:
+  push:
+    paths:
+      - "apps/backend/**"
+  pull_request:
+    paths:
+      - "apps/backend/**"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+          cache-dependency-path: apps/backend/package-lock.json
+
+      - name: Install backend dependencies
+        working-directory: apps/backend
+        run: npm ci
+
+      - name: Build backend
+        working-directory: apps/backend
+        run: npm run build
