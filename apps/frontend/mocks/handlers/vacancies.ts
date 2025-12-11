@@ -48,16 +48,25 @@ export const vacanciesHandlers = [
   /* --------------------------- AUTH ROUTES --------------------------- */
 
   http.post(`${API_URL}/vacancies`, async ({ request }) => {
-    const body = await request.json();
+    const body = (await request.json()) as Record<string, unknown>;
 
     const newVacancy = {
       id: mockVacancies.length + 1,
+      title: (body.title as string) ?? 'New Vacancy',
+      role: (body.role as string) ?? 'Role',
+      jobDescription: (body.jobDescription as string) ?? 'Description',
+      salaryRange: (body.salaryRange as string) ?? 'N/A',
+      companyId: (body.companyId as number) ?? 1,
       createdAt: new Date().toISOString(),
-      companyId: body.companyId ?? 1,
+      company: {
+        id: (body.companyId as number) ?? 1,
+        userId: 'user_123',
+        companyName: 'Company',
+      },
       ...body,
     };
 
-    mockVacancies.push(newVacancy);
+    mockVacancies.push(newVacancy as any);
     return HttpResponse.json(newVacancy, { status: 201 });
   }),
 
