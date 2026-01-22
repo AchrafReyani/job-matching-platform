@@ -64,7 +64,9 @@ export class ApplicationsController {
   @Get('me')
   async getMyApplications(@Request() req: AuthenticatedRequest) {
     if (req.user.role !== 'JOB_SEEKER') {
-      throw new ForbiddenException('Only job seekers can view their applications');
+      throw new ForbiddenException(
+        'Only job seekers can view their applications',
+      );
     }
     const userId = req.user.userId || req.user.sub;
     return this.getApplicationsForJobSeekerUseCase.execute(userId!);

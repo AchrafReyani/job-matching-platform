@@ -16,8 +16,14 @@ describe('UserManagementController', () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [UserManagementController],
       providers: [
-        { provide: RegisterJobSeekerUseCase, useValue: mockRegisterJobSeekerUseCase },
-        { provide: RegisterCompanyUseCase, useValue: mockRegisterCompanyUseCase },
+        {
+          provide: RegisterJobSeekerUseCase,
+          useValue: mockRegisterJobSeekerUseCase,
+        },
+        {
+          provide: RegisterCompanyUseCase,
+          useValue: mockRegisterCompanyUseCase,
+        },
         { provide: GetProfileUseCase, useValue: mockGetProfileUseCase },
         { provide: UpdateProfileUseCase, useValue: mockUpdateProfileUseCase },
       ],

@@ -23,9 +23,15 @@ export type ApplicationWithParticipants = Application & {
 };
 
 export interface MessageRepository {
-  create(applicationId: number, senderId: string, messageText: string): Promise<Message>;
+  create(
+    applicationId: number,
+    senderId: string,
+    messageText: string,
+  ): Promise<Message>;
   findByApplicationId(applicationId: number): Promise<MessageWithSender[]>;
-  findApplicationWithParticipants(applicationId: number): Promise<ApplicationWithParticipants | null>;
+  findApplicationWithParticipants(
+    applicationId: number,
+  ): Promise<ApplicationWithParticipants | null>;
 }
 
 export const MESSAGE_REPOSITORY = Symbol('MessageRepository');

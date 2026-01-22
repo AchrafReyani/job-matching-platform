@@ -87,8 +87,8 @@ describe('UpdateProfileUseCase', () => {
   });
 
   it('should throw BadRequestException for invalid role', async () => {
-    await expect(
-      useCase.execute('user-1', 'INVALID_ROLE', {}),
-    ).rejects.toThrow(BadRequestException);
+    await expect(useCase.execute('user-1', 'INVALID_ROLE', {})).rejects.toThrow(
+      BadRequestException,
+    );
   });
 });

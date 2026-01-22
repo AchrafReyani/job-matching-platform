@@ -1,5 +1,11 @@
 import { Injectable } from '@nestjs/common';
-import { Application, ApplicationStatus, Company, JobSeeker, Vacancy } from '@prisma/client';
+import {
+  Application,
+  ApplicationStatus,
+  Company,
+  JobSeeker,
+  Vacancy,
+} from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
 import {
   ApplicationRepository,
@@ -28,7 +34,9 @@ export class PrismaApplicationRepository implements ApplicationRepository {
     });
   }
 
-  async findByIdWithRelations(id: number): Promise<ApplicationWithRelations | null> {
+  async findByIdWithRelations(
+    id: number,
+  ): Promise<ApplicationWithRelations | null> {
     return this.prisma.application.findUnique({
       where: { id },
       include: {
@@ -54,7 +62,9 @@ export class PrismaApplicationRepository implements ApplicationRepository {
     });
   }
 
-  async findByJobSeekerId(jobSeekerId: number): Promise<ApplicationWithRelations[]> {
+  async findByJobSeekerId(
+    jobSeekerId: number,
+  ): Promise<ApplicationWithRelations[]> {
     return this.prisma.application.findMany({
       where: { jobSeekerId },
       include: {
@@ -81,7 +91,9 @@ export class PrismaApplicationRepository implements ApplicationRepository {
     });
   }
 
-  async findByCompanyId(companyId: number): Promise<ApplicationWithRelations[]> {
+  async findByCompanyId(
+    companyId: number,
+  ): Promise<ApplicationWithRelations[]> {
     return this.prisma.application.findMany({
       where: {
         vacancy: { companyId },
@@ -110,7 +122,10 @@ export class PrismaApplicationRepository implements ApplicationRepository {
     });
   }
 
-  async findExisting(jobSeekerId: number, vacancyId: number): Promise<Application | null> {
+  async findExisting(
+    jobSeekerId: number,
+    vacancyId: number,
+  ): Promise<Application | null> {
     return this.prisma.application.findFirst({
       where: {
         jobSeekerId,
@@ -119,7 +134,10 @@ export class PrismaApplicationRepository implements ApplicationRepository {
     });
   }
 
-  async updateStatus(id: number, status: ApplicationStatus): Promise<Application> {
+  async updateStatus(
+    id: number,
+    status: ApplicationStatus,
+  ): Promise<Application> {
     return this.prisma.application.update({
       where: { id },
       data: { status },
@@ -144,7 +162,9 @@ export class PrismaApplicationRepository implements ApplicationRepository {
     });
   }
 
-  async findApplicationWithVacancy(applicationId: number): Promise<ApplicationWithVacancy | null> {
+  async findApplicationWithVacancy(
+    applicationId: number,
+  ): Promise<ApplicationWithVacancy | null> {
     return this.prisma.application.findUnique({
       where: { id: applicationId },
       include: { vacancy: true },

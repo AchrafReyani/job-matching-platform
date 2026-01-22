@@ -22,7 +22,9 @@ export class UpdateProfileUseCase {
   async execute(
     userId: string,
     role: string,
-    data: userManagementRepository.UpdateJobSeekerProfileData | userManagementRepository.UpdateCompanyProfileData,
+    data:
+      | userManagementRepository.UpdateJobSeekerProfileData
+      | userManagementRepository.UpdateCompanyProfileData,
   ): Promise<UpdateProfileResult> {
     if (role === 'JOB_SEEKER') {
       const jobSeeker =
@@ -32,10 +34,11 @@ export class UpdateProfileUseCase {
         throw new NotFoundException('Job seeker profile not found');
       }
 
-      const updated = await this.userManagementRepository.updateJobSeekerProfile(
-        userId,
-        data as userManagementRepository.UpdateJobSeekerProfileData,
-      );
+      const updated =
+        await this.userManagementRepository.updateJobSeekerProfile(
+          userId,
+          data as userManagementRepository.UpdateJobSeekerProfileData,
+        );
 
       return { message: 'Profile updated successfully', updated };
     }

@@ -25,7 +25,9 @@ export class PrismaMessageRepository implements MessageRepository {
     });
   }
 
-  async findByApplicationId(applicationId: number): Promise<MessageWithSender[]> {
+  async findByApplicationId(
+    applicationId: number,
+  ): Promise<MessageWithSender[]> {
     return this.prisma.message.findMany({
       where: { applicationId },
       orderBy: { sentAt: 'asc' },

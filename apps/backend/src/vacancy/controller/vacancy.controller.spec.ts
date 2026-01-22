@@ -1,6 +1,7 @@
 /// <reference types="jest" />
 
 import { Test, TestingModule } from '@nestjs/testing';
+import { Request as ExpressRequest } from 'express';
 import { VacancyController } from './vacancy.controller';
 import { CreateVacancyUseCase } from '../usecase/create-vacancy.usecase';
 import { UpdateVacancyUseCase } from '../usecase/update-vacancy.usecase';
@@ -12,6 +13,15 @@ import { PrismaService } from '../../prisma/prisma.service';
 import { ForbiddenException, NotFoundException } from '@nestjs/common';
 import { CreateVacancyDto } from '../dto/create-vacancy.dto';
 import { UpdateVacancyDto } from '../dto/update-vacancy.dto';
+
+interface AuthenticatedUser {
+  userId: string;
+  role: string;
+}
+
+interface AuthenticatedRequest extends ExpressRequest {
+  user: AuthenticatedUser;
+}
 
 describe('VacancyController', () => {
   let controller: VacancyController;
@@ -60,10 +70,19 @@ describe('VacancyController', () => {
   });
 
   it('should call GetVacancyByIdUseCase with correct ID', async () => {
-    mockGetById.execute.mockResolvedValue({ id: 1, title: 'Test' });
+    const mockVacancy = {
+      id: 1,
+      title: 'Test',
+      role: '',
+      jobDescription: '',
+      salaryRange: null,
+      companyId: 1,
+      createdAt: new Date(),
+    };
+    mockGetById.execute.mockResolvedValue(mockVacancy);
     const result = await controller.getById(1);
     expect(mockGetById.execute).toHaveBeenCalledWith(1);
-    expect(result).toEqual({ id: 1, title: 'Test' });
+    expect(result).toEqual(mockVacancy);
   });
 
   it('should call GetVacanciesByCompanyUseCase with correct company ID', async () => {
@@ -83,51 +102,95 @@ describe('VacancyController', () => {
     mockPrismaService.company.findUnique.mockResolvedValue({ id: 5 });
     mockCreate.execute.mockResolvedValue({ id: 1, ...dto });
 
-    const req = { user: { role: 'COMPANY', userId: 'abc' } };
+    const req = {
+      user: { role: 'COMPANY', userId: 'abc' },
+    } as AuthenticatedRequest;
     const result = await controller.create(req, dto);
 
-    expect(mockPrismaService.company.findUnique).toHaveBeenCalledWith({ where: { userId: 'abc' } });
+    expect(mockPrismaService.company.findUnique).toHaveBeenCalledWith({
+      where: { userId: 'abc' },
+    });
     expect(mockCreate.execute).toHaveBeenCalledWith(5, dto);
     expect(result).toEqual({ id: 1, ...dto });
   });
 
   it('should throw ForbiddenException if non-company tries to create', async () => {
-    const dto: CreateVacancyDto = { title: '', role: '', jobDescription: '', salaryRange: '' };
-    const req = { user: { role: 'JOB_SEEKER', userId: 'abc' } };
+    const dto: CreateVacancyDto = {
+      title: '',
+      role: '',
+      jobDescription: '',
+      salaryRange: '',
+    };
+    const req = {
+      user: { role: 'JOB_SEEKER', userId: 'abc' },
+    } as AuthenticatedRequest;
 
-    await expect(controller.create(req, dto)).rejects.toThrow(ForbiddenException);
+    await expect(controller.create(req, dto)).rejects.toThrow(
+      ForbiddenException,
+    );
   });
 
   it('should call UpdateVacancyUseCase for a company user', async () => {
-    const dto: UpdateVacancyDto = { title: 'New', role: 'Dev', jobDescription: 'Desc', salaryRange: '0-0' };
+    const dto: UpdateVacancyDto = {
+      title: 'New',
+      role: 'Dev',
+      jobDescription: 'Desc',
+      salaryRange: '0-0',
+    };
     mockPrismaService.company.findUnique.mockResolvedValue({ id: 3 });
-    mockUpdate.execute.mockResolvedValue({ id: 1, ...dto });
+    mockUpdate.execute.mockResolvedValue({ count: 1 });
 
-    const req = { user: { role: 'COMPANY', userId: 'abc' } };
+    const req = {
+      user: { role: 'COMPANY', userId: 'abc' },
+    } as AuthenticatedRequest;
     const result = await controller.update(req, 1, dto);
 
-    expect(mockPrismaService.company.findUnique).toHaveBeenCalledWith({ where: { userId: 'abc' } });
+    expect(mockPrismaService.company.findUnique).toHaveBeenCalledWith({
+      where: { userId: 'abc' },
+    });
     expect(mockUpdate.execute).toHaveBeenCalledWith(1, 3, dto);
-    expect(result).toEqual({ id: 1, ...dto });
+    expect(result).toEqual({ count: 1 });
   });
 
   it('should call DeleteVacancyUseCase for a company user', async () => {
+    const mockVacancy = {
+      id: 1,
+      title: '',
+      role: '',
+      jobDescription: '',
+      salaryRange: null,
+      companyId: 2,
+      createdAt: new Date(),
+    };
     mockPrismaService.company.findUnique.mockResolvedValue({ id: 2 });
-    mockDelete.execute.mockResolvedValue({ success: true });
+    mockDelete.execute.mockResolvedValue(mockVacancy);
 
-    const req = { user: { role: 'COMPANY', userId: 'abc' } };
+    const req = {
+      user: { role: 'COMPANY', userId: 'abc' },
+    } as AuthenticatedRequest;
     const result = await controller.delete(req, 1);
 
-    expect(mockPrismaService.company.findUnique).toHaveBeenCalledWith({ where: { userId: 'abc' } });
+    expect(mockPrismaService.company.findUnique).toHaveBeenCalledWith({
+      where: { userId: 'abc' },
+    });
     expect(mockDelete.execute).toHaveBeenCalledWith(1, 2);
-    expect(result).toEqual({ success: true });
+    expect(result).toEqual(mockVacancy);
   });
 
   it('should throw NotFoundException if company not found', async () => {
     mockPrismaService.company.findUnique.mockResolvedValue(null);
-    const req = { user: { role: 'COMPANY', userId: 'abc' } };
-    const dto: CreateVacancyDto = { title: 'a', role: 'b', jobDescription: 'c', salaryRange: 'd' };
+    const req = {
+      user: { role: 'COMPANY', userId: 'abc' },
+    } as AuthenticatedRequest;
+    const dto: CreateVacancyDto = {
+      title: 'a',
+      role: 'b',
+      jobDescription: 'c',
+      salaryRange: 'd',
+    };
 
-    await expect(controller.create(req, dto)).rejects.toThrow(NotFoundException);
+    await expect(controller.create(req, dto)).rejects.toThrow(
+      NotFoundException,
+    );
   });
 });

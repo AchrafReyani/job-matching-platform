@@ -8,7 +8,9 @@ export class GetApplicationsForCompanyUseCase {
     private readonly applicationRepository: applicationRepository.ApplicationRepository,
   ) {}
 
-  async execute(userId: string): Promise<applicationRepository.ApplicationWithRelations[]> {
+  async execute(
+    userId: string,
+  ): Promise<applicationRepository.ApplicationWithRelations[]> {
     const company =
       await this.applicationRepository.findCompanyByUserId(userId);
     if (!company) {

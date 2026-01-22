@@ -41,7 +41,10 @@ describe('ValidateUserUseCase', () => {
     const result = await useCase.execute('test@example.com', 'password123');
 
     expect(mockRepo.findByEmail).toHaveBeenCalledWith('test@example.com');
-    expect(bcrypt.compare).toHaveBeenCalledWith('password123', 'hashed-password');
+    expect(bcrypt.compare).toHaveBeenCalledWith(
+      'password123',
+      'hashed-password',
+    );
     expect(result).toEqual(user);
   });
 

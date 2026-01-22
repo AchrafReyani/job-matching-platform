@@ -10,7 +10,10 @@ describe('ProfilesController', () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [ProfilesController],
       providers: [
-        { provide: GetPublicProfileUseCase, useValue: mockGetPublicProfileUseCase },
+        {
+          provide: GetPublicProfileUseCase,
+          useValue: mockGetPublicProfileUseCase,
+        },
       ],
     }).compile();
 
@@ -32,7 +35,9 @@ describe('ProfilesController', () => {
 
       const result = await controller.getProfile('user-1');
 
-      expect(mockGetPublicProfileUseCase.execute).toHaveBeenCalledWith('user-1');
+      expect(mockGetPublicProfileUseCase.execute).toHaveBeenCalledWith(
+        'user-1',
+      );
       expect(result).toEqual(mockProfile);
     });
   });

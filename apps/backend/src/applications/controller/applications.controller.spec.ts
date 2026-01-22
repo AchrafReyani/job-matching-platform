@@ -19,11 +19,26 @@ describe('ApplicationsController', () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [ApplicationsController],
       providers: [
-        { provide: CreateApplicationUseCase, useValue: mockCreateApplicationUseCase },
-        { provide: GetApplicationsForJobSeekerUseCase, useValue: mockGetApplicationsForJobSeekerUseCase },
-        { provide: GetApplicationsForCompanyUseCase, useValue: mockGetApplicationsForCompanyUseCase },
-        { provide: GetApplicationByIdUseCase, useValue: mockGetApplicationByIdUseCase },
-        { provide: UpdateApplicationStatusUseCase, useValue: mockUpdateApplicationStatusUseCase },
+        {
+          provide: CreateApplicationUseCase,
+          useValue: mockCreateApplicationUseCase,
+        },
+        {
+          provide: GetApplicationsForJobSeekerUseCase,
+          useValue: mockGetApplicationsForJobSeekerUseCase,
+        },
+        {
+          provide: GetApplicationsForCompanyUseCase,
+          useValue: mockGetApplicationsForCompanyUseCase,
+        },
+        {
+          provide: GetApplicationByIdUseCase,
+          useValue: mockGetApplicationByIdUseCase,
+        },
+        {
+          provide: UpdateApplicationStatusUseCase,
+          useValue: mockUpdateApplicationStatusUseCase,
+        },
       ],
     }).compile();
 
@@ -42,7 +57,10 @@ describe('ApplicationsController', () => {
       const req = { user: { userId: 'user-1', role: 'JOB_SEEKER' } };
       const result = await controller.getApplicationById(1, req as never);
 
-      expect(mockGetApplicationByIdUseCase.execute).toHaveBeenCalledWith(1, 'user-1');
+      expect(mockGetApplicationByIdUseCase.execute).toHaveBeenCalledWith(
+        1,
+        'user-1',
+      );
       expect(result).toEqual(mockApplication);
     });
   });
@@ -56,7 +74,10 @@ describe('ApplicationsController', () => {
       const dto = { vacancyId: 5 };
       const result = await controller.apply(req as never, dto);
 
-      expect(mockCreateApplicationUseCase.execute).toHaveBeenCalledWith('user-1', 5);
+      expect(mockCreateApplicationUseCase.execute).toHaveBeenCalledWith(
+        'user-1',
+        5,
+      );
       expect(result).toEqual(mockApplication);
     });
 
@@ -64,58 +85,78 @@ describe('ApplicationsController', () => {
       const req = { user: { userId: 'user-1', role: 'COMPANY' } };
       const dto = { vacancyId: 5 };
 
-      await expect(controller.apply(req as never, dto)).rejects.toThrow(ForbiddenException);
+      await expect(controller.apply(req as never, dto)).rejects.toThrow(
+        ForbiddenException,
+      );
     });
   });
 
   describe('getMyApplications', () => {
     it('should get applications for job seeker', async () => {
       const mockApplications = [{ id: 1 }, { id: 2 }];
-      mockGetApplicationsForJobSeekerUseCase.execute.mockResolvedValue(mockApplications);
+      mockGetApplicationsForJobSeekerUseCase.execute.mockResolvedValue(
+        mockApplications,
+      );
 
       const req = { user: { userId: 'user-1', role: 'JOB_SEEKER' } };
       const result = await controller.getMyApplications(req as never);
 
-      expect(mockGetApplicationsForJobSeekerUseCase.execute).toHaveBeenCalledWith('user-1');
+      expect(
+        mockGetApplicationsForJobSeekerUseCase.execute,
+      ).toHaveBeenCalledWith('user-1');
       expect(result).toEqual(mockApplications);
     });
 
     it('should throw ForbiddenException for non job seeker', async () => {
       const req = { user: { userId: 'user-1', role: 'COMPANY' } };
 
-      await expect(controller.getMyApplications(req as never)).rejects.toThrow(ForbiddenException);
+      await expect(controller.getMyApplications(req as never)).rejects.toThrow(
+        ForbiddenException,
+      );
     });
   });
 
   describe('getApplicationsForCompany', () => {
     it('should get applications for company', async () => {
       const mockApplications = [{ id: 1 }, { id: 2 }];
-      mockGetApplicationsForCompanyUseCase.execute.mockResolvedValue(mockApplications);
+      mockGetApplicationsForCompanyUseCase.execute.mockResolvedValue(
+        mockApplications,
+      );
 
       const req = { user: { userId: 'company-1', role: 'COMPANY' } };
       const result = await controller.getApplicationsForCompany(req as never);
 
-      expect(mockGetApplicationsForCompanyUseCase.execute).toHaveBeenCalledWith('company-1');
+      expect(mockGetApplicationsForCompanyUseCase.execute).toHaveBeenCalledWith(
+        'company-1',
+      );
       expect(result).toEqual(mockApplications);
     });
 
     it('should throw ForbiddenException for non company', async () => {
       const req = { user: { userId: 'user-1', role: 'JOB_SEEKER' } };
 
-      await expect(controller.getApplicationsForCompany(req as never)).rejects.toThrow(ForbiddenException);
+      await expect(
+        controller.getApplicationsForCompany(req as never),
+      ).rejects.toThrow(ForbiddenException);
     });
   });
 
   describe('updateApplication', () => {
     it('should update application status', async () => {
       const mockApplication = { id: 1, status: 'ACCEPTED' };
-      mockUpdateApplicationStatusUseCase.execute.mockResolvedValue(mockApplication);
+      mockUpdateApplicationStatusUseCase.execute.mockResolvedValue(
+        mockApplication,
+      );
 
       const req = { user: { userId: 'company-1', role: 'COMPANY' } };
       const dto = { status: 'ACCEPTED' as const };
       const result = await controller.updateApplication(req as never, 1, dto);
 
-      expect(mockUpdateApplicationStatusUseCase.execute).toHaveBeenCalledWith('company-1', 1, 'ACCEPTED');
+      expect(mockUpdateApplicationStatusUseCase.execute).toHaveBeenCalledWith(
+        'company-1',
+        1,
+        'ACCEPTED',
+      );
       expect(result).toEqual(mockApplication);
     });
 
@@ -123,7 +164,9 @@ describe('ApplicationsController', () => {
       const req = { user: { userId: 'user-1', role: 'JOB_SEEKER' } };
       const dto = { status: 'ACCEPTED' as const };
 
-      await expect(controller.updateApplication(req as never, 1, dto)).rejects.toThrow(ForbiddenException);
+      await expect(
+        controller.updateApplication(req as never, 1, dto),
+      ).rejects.toThrow(ForbiddenException);
     });
   });
 });

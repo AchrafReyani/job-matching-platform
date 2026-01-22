@@ -1,5 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { DeleteVacancyUseCase } from './delete-vacancy.usecase';
+import { Vacancy } from '@prisma/client';
 import * as vacancyRepository from '../repository/vacancy.repository';
 
 describe('DeleteVacancyUseCase', () => {
@@ -27,11 +28,20 @@ describe('DeleteVacancyUseCase', () => {
   });
 
   it('should call repository.delete with correct id and companyId', async () => {
-    mockRepo.delete.mockResolvedValue({ success: true });
+    const mockVacancy: Vacancy = {
+      id: 1,
+      companyId: 123,
+      title: 'Test',
+      role: 'Dev',
+      jobDescription: 'Desc',
+      salaryRange: null,
+      createdAt: new Date(),
+    };
+    mockRepo.delete.mockResolvedValue(mockVacancy);
 
     const result = await useCase.execute(1, 123);
 
     expect(mockRepo.delete).toHaveBeenCalledWith(1, 123);
-    expect(result).toEqual({ success: true });
+    expect(result).toEqual(mockVacancy);
   });
 });

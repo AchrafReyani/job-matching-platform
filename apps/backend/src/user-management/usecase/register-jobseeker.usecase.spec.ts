@@ -35,8 +35,14 @@ describe('RegisterJobSeekerUseCase', () => {
   it('should register a job seeker successfully', async () => {
     mockRepo.findUserByEmail.mockResolvedValue(null);
     (bcrypt.hash as jest.Mock).mockResolvedValue('hashed-password');
-    mockRepo.createUser.mockResolvedValue({ id: 'user-1', email: 'test@example.com' });
-    mockRepo.createJobSeekerProfile.mockResolvedValue({ id: 1, fullName: 'John Doe' });
+    mockRepo.createUser.mockResolvedValue({
+      id: 'user-1',
+      email: 'test@example.com',
+    });
+    mockRepo.createJobSeekerProfile.mockResolvedValue({
+      id: 1,
+      fullName: 'John Doe',
+    });
 
     const dto = {
       email: 'test@example.com',

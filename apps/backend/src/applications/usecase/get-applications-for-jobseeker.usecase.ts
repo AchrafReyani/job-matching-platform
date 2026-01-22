@@ -8,7 +8,9 @@ export class GetApplicationsForJobSeekerUseCase {
     private readonly applicationRepository: applicationRepository.ApplicationRepository,
   ) {}
 
-  async execute(userId: string): Promise<applicationRepository.ApplicationWithRelations[]> {
+  async execute(
+    userId: string,
+  ): Promise<applicationRepository.ApplicationWithRelations[]> {
     const jobSeeker =
       await this.applicationRepository.findJobSeekerByUserId(userId);
     if (!jobSeeker) {

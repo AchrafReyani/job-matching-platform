@@ -18,7 +18,9 @@ export class GetMessagesUseCase {
     userId: string,
   ): Promise<messageRepository.MessageWithSender[]> {
     const application =
-      await this.messageRepository.findApplicationWithParticipants(applicationId);
+      await this.messageRepository.findApplicationWithParticipants(
+        applicationId,
+      );
 
     if (!application) {
       throw new NotFoundException('Application not found');

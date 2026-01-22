@@ -13,7 +13,10 @@ describe('CompaniesController', () => {
       controllers: [CompaniesController],
       providers: [
         { provide: GetCompanyByIdUseCase, useValue: mockGetCompanyByIdUseCase },
-        { provide: GetAllCompaniesUseCase, useValue: mockGetAllCompaniesUseCase },
+        {
+          provide: GetAllCompaniesUseCase,
+          useValue: mockGetAllCompaniesUseCase,
+        },
       ],
     }).compile();
 

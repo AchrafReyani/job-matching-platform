@@ -12,6 +12,7 @@ import {
   ForbiddenException,
   NotFoundException,
 } from '@nestjs/common';
+import { Request as ExpressRequest } from 'express';
 import { JwtAuthGuard } from '../../auth/jwt-auth.guard';
 import { CreateVacancyDto } from '../dto/create-vacancy.dto';
 import { UpdateVacancyDto } from '../dto/update-vacancy.dto';
@@ -23,6 +24,15 @@ import { GetVacanciesUseCase } from '../usecase/get-vacancies.usecase';
 import { GetVacancyByIdUseCase } from '../usecase/get-vacancy-by-id.usecase';
 import { GetVacanciesByCompanyUseCase } from '../usecase/get-vacancies-by-company.usecase';
 import { PrismaService } from '../../prisma/prisma.service';
+
+interface AuthenticatedUser {
+  userId: string;
+  role: string;
+}
+
+interface AuthenticatedRequest extends ExpressRequest {
+  user: AuthenticatedUser;
+}
 
 @Controller('vacancies')
 export class VacancyController {
@@ -53,7 +63,10 @@ export class VacancyController {
 
   @UseGuards(JwtAuthGuard)
   @Post()
-  async create(@Request() req, @Body() data: CreateVacancyDto) {
+  async create(
+    @Request() req: AuthenticatedRequest,
+    @Body() data: CreateVacancyDto,
+  ) {
     if (req.user.role !== 'COMPANY') {
       throw new ForbiddenException('Only companies can create vacancies');
     }
@@ -69,7 +82,7 @@ export class VacancyController {
   @UseGuards(JwtAuthGuard)
   @Patch(':id')
   async update(
-    @Request() req,
+    @Request() req: AuthenticatedRequest,
     @Param('id', ParseIntPipe) id: number,
     @Body() data: UpdateVacancyDto,
   ) {
@@ -87,7 +100,10 @@ export class VacancyController {
 
   @UseGuards(JwtAuthGuard)
   @Delete(':id')
-  async delete(@Request() req, @Param('id', ParseIntPipe) id: number) {
+  async delete(
+    @Request() req: AuthenticatedRequest,
+    @Param('id', ParseIntPipe) id: number,
+  ) {
     if (req.user.role !== 'COMPANY') {
       throw new ForbiddenException('Only companies can delete vacancies');
     }

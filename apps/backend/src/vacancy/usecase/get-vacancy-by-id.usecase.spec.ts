@@ -1,5 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { GetVacancyByIdUseCase } from './get-vacancy-by-id.usecase';
+import { Vacancy } from '@prisma/client';
 import * as vacancyRepository from '../repository/vacancy.repository';
 import { NotFoundException } from '@nestjs/common';
 
@@ -29,7 +30,15 @@ describe('GetVacancyByIdUseCase', () => {
   });
 
   it('should return the vacancy if found', async () => {
-    const mockVacancy = { id: 1, title: 'Frontend Dev' };
+    const mockVacancy: Vacancy = {
+      id: 1,
+      companyId: 1,
+      title: 'Frontend Dev',
+      role: 'Developer',
+      jobDescription: 'Build UIs',
+      salaryRange: null,
+      createdAt: new Date(),
+    };
     mockRepo.findById.mockResolvedValue(mockVacancy);
 
     const result = await useCase.execute(1);

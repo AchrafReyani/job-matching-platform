@@ -19,7 +19,9 @@ export class CreateMessageUseCase {
     const { applicationId, messageText } = dto;
 
     const application =
-      await this.messageRepository.findApplicationWithParticipants(applicationId);
+      await this.messageRepository.findApplicationWithParticipants(
+        applicationId,
+      );
 
     if (!application) {
       throw new NotFoundException('Application not found');

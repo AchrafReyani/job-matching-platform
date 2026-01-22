@@ -35,8 +35,14 @@ describe('RegisterCompanyUseCase', () => {
   it('should register a company successfully', async () => {
     mockRepo.findUserByEmail.mockResolvedValue(null);
     (bcrypt.hash as jest.Mock).mockResolvedValue('hashed-password');
-    mockRepo.createUser.mockResolvedValue({ id: 'user-1', email: 'company@example.com' });
-    mockRepo.createCompanyProfile.mockResolvedValue({ id: 1, companyName: 'Acme Corp' });
+    mockRepo.createUser.mockResolvedValue({
+      id: 'user-1',
+      email: 'company@example.com',
+    });
+    mockRepo.createCompanyProfile.mockResolvedValue({
+      id: 1,
+      companyName: 'Acme Corp',
+    });
 
     const dto = {
       email: 'company@example.com',
@@ -46,7 +52,9 @@ describe('RegisterCompanyUseCase', () => {
     };
     const result = await useCase.execute(dto);
 
-    expect(mockRepo.findUserByEmail).toHaveBeenCalledWith('company@example.com');
+    expect(mockRepo.findUserByEmail).toHaveBeenCalledWith(
+      'company@example.com',
+    );
     expect(bcrypt.hash).toHaveBeenCalledWith('password123', 10);
     expect(mockRepo.createUser).toHaveBeenCalledWith(
       'company@example.com',

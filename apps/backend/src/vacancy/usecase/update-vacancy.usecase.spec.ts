@@ -1,5 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { UpdateVacancyUseCase } from './update-vacancy.usecase';
+import { Prisma } from '@prisma/client';
 import * as vacancyRepository from '../repository/vacancy.repository';
 import { UpdateVacancyDto } from '../dto/update-vacancy.dto';
 
@@ -38,11 +39,12 @@ describe('UpdateVacancyUseCase', () => {
     const companyId = 5;
     const vacancyId = 1;
 
-    mockRepo.update.mockResolvedValue({ id: vacancyId, ...dto });
+    const mockResult: Prisma.BatchPayload = { count: 1 };
+    mockRepo.update.mockResolvedValue(mockResult);
 
     const result = await useCase.execute(vacancyId, companyId, dto);
 
     expect(mockRepo.update).toHaveBeenCalledWith(vacancyId, companyId, dto);
-    expect(result).toEqual({ id: vacancyId, ...dto });
+    expect(result).toEqual(mockResult);
   });
 });

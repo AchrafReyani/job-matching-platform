@@ -30,4 +30,4 @@ async function bootstrap() {
   await app.listen(port);
   console.log(`Nest app listening on port ${port}`);
 }
-bootstrap();
+void bootstrap();

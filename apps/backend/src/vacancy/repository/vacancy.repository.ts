@@ -1,13 +1,18 @@
-import { CreateVacancyDto } from "../dto/create-vacancy.dto";
-import { UpdateVacancyDto } from "../dto/update-vacancy.dto";
+import { Vacancy, Prisma } from '@prisma/client';
+import { CreateVacancyDto } from '../dto/create-vacancy.dto';
+import { UpdateVacancyDto } from '../dto/update-vacancy.dto';
 
 export interface VacancyRepository {
-  create(companyId: number, data: CreateVacancyDto): Promise<any>;
-  update(id: number, companyId: number, data: UpdateVacancyDto): Promise<any>;
-  delete(id: number, companyId: number): Promise<any>;
-  findAll(): Promise<any[]>;
-  findById(id: number): Promise<any | null>;
-  findByCompany(companyId: number): Promise<any[]>;
+  create(companyId: number, data: CreateVacancyDto): Promise<Vacancy>;
+  update(
+    id: number,
+    companyId: number,
+    data: UpdateVacancyDto,
+  ): Promise<Prisma.BatchPayload>;
+  delete(id: number, companyId: number): Promise<Vacancy>;
+  findAll(): Promise<Vacancy[]>;
+  findById(id: number): Promise<Vacancy | null>;
+  findByCompany(companyId: number): Promise<Vacancy[]>;
 }
 
 export const VACANCY_REPOSITORY = Symbol('VacancyRepository');

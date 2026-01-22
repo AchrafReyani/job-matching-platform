@@ -1,4 +1,5 @@
 import { Injectable, Inject, BadRequestException } from '@nestjs/common';
+import { Vacancy } from '@prisma/client';
 import * as vacancyRepository from '../repository/vacancy.repository';
 import { CreateVacancyDto } from '../dto/create-vacancy.dto';
 
@@ -9,7 +10,7 @@ export class CreateVacancyUseCase {
     private readonly vacancyRepository: vacancyRepository.VacancyRepository,
   ) {}
 
-  async execute(companyId: number, data: CreateVacancyDto) {
+  async execute(companyId: number, data: CreateVacancyDto): Promise<Vacancy> {
     const { title, role, jobDescription } = data;
 
     if (!title || !role || !jobDescription) {

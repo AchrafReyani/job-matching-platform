@@ -53,7 +53,10 @@ describe('LoginUseCase', () => {
     const result = await useCase.execute(dto);
 
     expect(mockRepo.findUserByEmail).toHaveBeenCalledWith('test@example.com');
-    expect(bcrypt.compare).toHaveBeenCalledWith('password123', 'hashed-password');
+    expect(bcrypt.compare).toHaveBeenCalledWith(
+      'password123',
+      'hashed-password',
+    );
     expect(mockJwtService.sign).toHaveBeenCalledWith({
       sub: 'user-1',
       role: 'JOB_SEEKER',

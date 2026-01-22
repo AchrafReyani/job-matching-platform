@@ -1,7 +1,10 @@
 import { Injectable, Inject } from '@nestjs/common';
 import * as userManagementRepository from '../repository/user-management.repository';
 
-export type ProfileResult = Omit<userManagementRepository.UserWithProfiles, 'passwordHash'>;
+export type ProfileResult = Omit<
+  userManagementRepository.UserWithProfiles,
+  'passwordHash'
+>;
 
 @Injectable()
 export class GetProfileUseCase {
@@ -17,6 +20,7 @@ export class GetProfileUseCase {
       return null;
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { passwordHash, ...userWithoutPassword } = user;
     return userWithoutPassword;
   }

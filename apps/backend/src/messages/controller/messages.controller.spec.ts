@@ -33,7 +33,10 @@ describe('MessagesController', () => {
       const dto = { applicationId: 1, messageText: 'Hello!' };
       const result = await controller.create(req as never, dto);
 
-      expect(mockCreateMessageUseCase.execute).toHaveBeenCalledWith('user-1', dto);
+      expect(mockCreateMessageUseCase.execute).toHaveBeenCalledWith(
+        'user-1',
+        dto,
+      );
       expect(result).toEqual(mockMessage);
     });
   });

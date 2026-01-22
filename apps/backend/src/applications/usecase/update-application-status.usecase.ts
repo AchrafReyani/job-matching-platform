@@ -26,7 +26,9 @@ export class UpdateApplicationStatusUseCase {
     }
 
     const application =
-      await this.applicationRepository.findApplicationWithVacancy(applicationId);
+      await this.applicationRepository.findApplicationWithVacancy(
+        applicationId,
+      );
     if (!application) {
       throw new NotFoundException('Application not found');
     }

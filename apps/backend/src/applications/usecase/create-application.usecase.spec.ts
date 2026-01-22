@@ -32,7 +32,10 @@ describe('CreateApplicationUseCase', () => {
 
   it('should create an application successfully', async () => {
     mockRepo.findVacancyById.mockResolvedValue({ id: 1, title: 'Developer' });
-    mockRepo.findJobSeekerByUserId.mockResolvedValue({ id: 10, userId: 'user-1' });
+    mockRepo.findJobSeekerByUserId.mockResolvedValue({
+      id: 10,
+      userId: 'user-1',
+    });
     mockRepo.findExisting.mockResolvedValue(null);
     mockRepo.create.mockResolvedValue({
       id: 100,

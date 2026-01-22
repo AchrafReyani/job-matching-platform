@@ -11,10 +11,16 @@ import {
 } from '../repository/user-management.repository';
 
 @Injectable()
-export class PrismaUserManagementRepository implements UserManagementRepository {
+export class PrismaUserManagementRepository
+  implements UserManagementRepository
+{
   constructor(private readonly prisma: PrismaService) {}
 
-  async createUser(email: string, passwordHash: string, role: Role): Promise<User> {
+  async createUser(
+    email: string,
+    passwordHash: string,
+    role: Role,
+  ): Promise<User> {
     return this.prisma.user.create({
       data: {
         email,

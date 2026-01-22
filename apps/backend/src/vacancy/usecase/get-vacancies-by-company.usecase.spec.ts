@@ -20,7 +20,9 @@ describe('GetVacanciesByCompanyUseCase', () => {
       ],
     }).compile();
 
-    useCase = module.get<GetVacanciesByCompanyUseCase>(GetVacanciesByCompanyUseCase);
+    useCase = module.get<GetVacanciesByCompanyUseCase>(
+      GetVacanciesByCompanyUseCase,
+    );
   });
 
   afterEach(() => {
