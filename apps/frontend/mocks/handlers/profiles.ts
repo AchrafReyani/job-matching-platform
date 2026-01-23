@@ -1,5 +1,5 @@
 import { http, HttpResponse } from 'msw';
-import type { ProfileResponse, JobSeekerProfile, CompanyProfile } from '../../lib/profiles/types';
+import type { ProfileResponse, JobSeekerProfile } from '../../lib/profiles/types';
 
 export const profilesHandlers = [
   http.get('/profiles/:userId', (req) => {

@@ -66,7 +66,7 @@ export const vacanciesHandlers = [
       ...body,
     };
 
-    mockVacancies.push(newVacancy as any);
+    mockVacancies.push(newVacancy as typeof mockVacancies[number]);
     return HttpResponse.json(newVacancy, { status: 201 });
   }),
 
