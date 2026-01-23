@@ -1,80 +1,82 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
-import type { Application, ApplicationList } from '@/lib/applications/types';
-import { getMyApplications } from '@/lib/applications/api';
+import type { ConversationSummary } from '@/lib/messages/types';
+import {
+  ConversationList,
+  ChatPanel,
+  useCurrentUser,
+  useConversations,
+  useChat,
+} from '@/features/messages';
 
 export default function JobSeekerMessagesPage() {
   const router = useRouter();
-  const [applications, setApplications] = useState<ApplicationList>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const user = useCurrentUser();
+  const { conversations, loading: conversationsLoading, error: conversationsError, refetch: refetchConversations } = useConversations();
+  const [activeConversation, setActiveConversation] = useState<ConversationSummary | null>(null);
 
-  useEffect(() => {
-    const fetchAcceptedApplications = async () => {
-      try {
-        const data = await getMyApplications();
-        const acceptedApps = data.filter(app => app.status === 'ACCEPTED');
-        setApplications(acceptedApps);
-      } catch (err) {
-        console.error(err);
-        setError('Could not load applications.');
-      } finally {
-        setLoading(false);
-      }
-    };
+  const {
+    messages,
+    loading: messagesLoading,
+    error: messagesError,
+    sendMessage,
+  } = useChat(activeConversation?.applicationId ?? null);
 
-    fetchAcceptedApplications();
-  }, []);
+  const handleSelectConversation = (conversation: ConversationSummary) => {
+    setActiveConversation(conversation);
+    // Refetch conversations to update unread counts
+    refetchConversations();
+  };
 
-  if (loading) return <div className="flex justify-center mt-10">Loading...</div>;
-  if (error) return <div className="text-(--color-error-dark) text-center mt-10">{error}</div>;
+  const handleSendMessage = async (messageText: string) => {
+    await sendMessage(messageText);
+    refetchConversations();
+  };
 
   return (
-    <div className="min-h-screen bg-(--color-bg) flex flex-col items-center p-6 text-(--color-text)">
-      <Card className="w-full max-w-3xl p-6 bg-(--color-secondary) text-(--color-text)">
-        <h1 className="text-2xl font-bold mb-4 text-center">Your Chats</h1>
-
-        {applications.length === 0 ? (
-          <p className="text-(--color-muted) text-center">No accepted applications yet.</p>
-        ) : (
-          <div className="space-y-3">
-            {applications.map(app => (
-              <div
-                key={app.id}
-                className="border border-(--color-muted) rounded-lg p-4 flex justify-between items-center hover:bg-secondary-dark transition"
-              >
-                <div>
-                  <p className="font-semibold">{app.vacancy.title}</p>
-                  <p className="text-(--color-muted) text-sm">
-                    {app.vacancy.company?.companyName ?? 'Unknown Company'}
-                  </p>
-                </div>
-                <Button
-                  className="bg-(--color-primary) hover:bg-primary-dark text-(--color-on-primary)"
-                  onClick={() =>
-                    router.push(`/dashboard/job-seeker/messages/${app.id}`)
-                  }
-                >
-                  Open Chat
-                </Button>
-              </div>
-            ))}
-          </div>
-        )}
-
-        <div className="mt-6 text-center">
+    <div className="h-screen bg-(--color-bg) flex flex-col">
+      {/* Header */}
+      <div className="p-4 border-b border-(--color-muted) bg-(--color-secondary)">
+        <div className="flex items-center justify-between max-w-7xl mx-auto">
+          <h1 className="text-2xl font-bold text-(--color-text)">Messages</h1>
           <Button
-            className="bg-(--color-primary) hover:bg-primary-dark text-(--color-on-primary)"
+            variant="outline"
             onClick={() => router.push('/dashboard/job-seeker')}
           >
             Back to Dashboard
           </Button>
         </div>
-      </Card>
+      </div>
+
+      {/* Main content */}
+      <div className="flex-1 flex overflow-hidden max-w-7xl mx-auto w-full">
+        {/* Left panel - Conversation list */}
+        <div className="w-1/3 border-r border-(--color-muted) bg-(--color-secondary)">
+          <ConversationList
+            conversations={conversations}
+            activeApplicationId={activeConversation?.applicationId ?? null}
+            onSelectConversation={handleSelectConversation}
+            loading={conversationsLoading}
+            error={conversationsError}
+          />
+        </div>
+
+        {/* Right panel - Active chat */}
+        <div className="w-2/3 p-4">
+          <ChatPanel
+            conversation={activeConversation}
+            messages={messages}
+            currentUserId={user?.userId ?? null}
+            loading={messagesLoading}
+            error={messagesError}
+            onSendMessage={handleSendMessage}
+            userRole="JOB_SEEKER"
+          />
+        </div>
+      </div>
     </div>
   );
 }

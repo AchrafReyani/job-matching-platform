@@ -28,8 +28,25 @@ export interface ChatMessage {
   senderId: string;
   messageText: string;
   sentAt: string; // ISO date
+  readAt: string | null; // ISO date or null if unread
   sender: MessageSender;
 }
 
 /** Full array returned by GET */
 export type ChatMessageList = ChatMessage[];
+
+/** Conversation summary with unread count */
+export interface ConversationSummary {
+  applicationId: number;
+  vacancyTitle: string;
+  otherPartyName: string;
+  otherPartyUserId: string;
+  lastMessageText: string | null;
+  lastMessageAt: string | null; // ISO date
+  unreadCount: number;
+}
+
+/** Response from marking messages as read */
+export interface MarkAsReadResponse {
+  markedAsRead: number;
+}

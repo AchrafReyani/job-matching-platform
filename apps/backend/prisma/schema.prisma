@@ -85,11 +85,12 @@ enum ApplicationStatus {
 }
 
 model Message {
-  id            Int      @id @default(autoincrement())
+  id            Int       @id @default(autoincrement())
   applicationId Int
   senderId      String
   messageText   String
-  sentAt        DateTime @default(now())
+  sentAt        DateTime  @default(now())
+  readAt        DateTime?
 
   // Cascade delete messages if application deleted
   application Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)

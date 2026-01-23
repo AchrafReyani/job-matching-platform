@@ -36,7 +36,7 @@ export default function AddVacancyPage() {
       await createVacancy(form);
       router.push('/dashboard/company/vacancies');
     } catch {
-      'Something went wrong';
+      setError('Something went wrong');
     } finally {
       setLoading(false);
     }

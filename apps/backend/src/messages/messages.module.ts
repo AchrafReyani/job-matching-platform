@@ -5,6 +5,8 @@ import { PrismaService } from '../prisma/prisma.service';
 import { MESSAGE_REPOSITORY } from './repository/message.repository';
 import { CreateMessageUseCase } from './usecase/create-message.usecase';
 import { GetMessagesUseCase } from './usecase/get-messages.usecase';
+import { GetConversationsUseCase } from './usecase/get-conversations.usecase';
+import { MarkMessagesReadUseCase } from './usecase/mark-messages-read.usecase';
 
 @Module({
   controllers: [MessagesController],
@@ -16,6 +18,8 @@ import { GetMessagesUseCase } from './usecase/get-messages.usecase';
     },
     CreateMessageUseCase,
     GetMessagesUseCase,
+    GetConversationsUseCase,
+    MarkMessagesReadUseCase,
   ],
 })
 export class MessagesModule {}

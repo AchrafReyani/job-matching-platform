@@ -4,6 +4,7 @@ import {
   Body,
   Get,
   Param,
+  Patch,
   UseGuards,
   Request,
   ParseIntPipe,
@@ -12,6 +13,8 @@ import { JwtAuthGuard } from '../../auth/jwt-auth.guard';
 import { CreateMessageDto } from '../dto/create-message.dto';
 import { CreateMessageUseCase } from '../usecase/create-message.usecase';
 import { GetMessagesUseCase } from '../usecase/get-messages.usecase';
+import { GetConversationsUseCase } from '../usecase/get-conversations.usecase';
+import { MarkMessagesReadUseCase } from '../usecase/mark-messages-read.usecase';
 
 interface AuthenticatedRequest extends Request {
   user: {
@@ -26,6 +29,8 @@ export class MessagesController {
   constructor(
     private readonly createMessageUseCase: CreateMessageUseCase,
     private readonly getMessagesUseCase: GetMessagesUseCase,
+    private readonly getConversationsUseCase: GetConversationsUseCase,
+    private readonly markMessagesReadUseCase: MarkMessagesReadUseCase,
   ) {}
 
   @Post()
@@ -36,11 +41,28 @@ export class MessagesController {
     return this.createMessageUseCase.execute(req.user.userId, dto);
   }
 
+  @Get('conversations')
+  async getConversations(@Request() req: AuthenticatedRequest) {
+    return this.getConversationsUseCase.execute(req.user.userId);
+  }
+
   @Get(':applicationId')
   async getMessages(
     @Request() req: AuthenticatedRequest,
     @Param('applicationId', ParseIntPipe) applicationId: number,
   ) {
     return this.getMessagesUseCase.execute(applicationId, req.user.userId);
+  }
+
+  @Patch(':applicationId/read')
+  async markMessagesAsRead(
+    @Request() req: AuthenticatedRequest,
+    @Param('applicationId', ParseIntPipe) applicationId: number,
+  ) {
+    const count = await this.markMessagesReadUseCase.execute(
+      applicationId,
+      req.user.userId,
+    );
+    return { markedAsRead: count };
   }
 }

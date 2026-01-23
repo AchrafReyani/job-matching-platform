@@ -2,11 +2,15 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { MessagesController } from './messages.controller';
 import { CreateMessageUseCase } from '../usecase/create-message.usecase';
 import { GetMessagesUseCase } from '../usecase/get-messages.usecase';
+import { GetConversationsUseCase } from '../usecase/get-conversations.usecase';
+import { MarkMessagesReadUseCase } from '../usecase/mark-messages-read.usecase';
 
 describe('MessagesController', () => {
   let controller: MessagesController;
   const mockCreateMessageUseCase = { execute: jest.fn() };
   const mockGetMessagesUseCase = { execute: jest.fn() };
+  const mockGetConversationsUseCase = { execute: jest.fn() };
+  const mockMarkMessagesReadUseCase = { execute: jest.fn() };
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -14,6 +18,8 @@ describe('MessagesController', () => {
       providers: [
         { provide: CreateMessageUseCase, useValue: mockCreateMessageUseCase },
         { provide: GetMessagesUseCase, useValue: mockGetMessagesUseCase },
+        { provide: GetConversationsUseCase, useValue: mockGetConversationsUseCase },
+        { provide: MarkMessagesReadUseCase, useValue: mockMarkMessagesReadUseCase },
       ],
     }).compile();
 
