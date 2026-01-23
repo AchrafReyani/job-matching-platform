@@ -1,86 +1,81 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { getCompanyApplications } from '@/lib/applications/api';
-import type { Application } from '@/lib/applications/types';
-import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
-
-interface ApplicationUI {
-  id: number;
-  vacancyTitle: string;
-  jobSeekerName: string;
-  status: string;
-}
+import type { ConversationSummary } from '@/lib/messages/types';
+import {
+  ConversationList,
+  ChatPanel,
+  useCurrentUser,
+  useConversations,
+  useChat,
+} from '@/features/messages';
 
 export default function CompanyMessagesPage() {
   const router = useRouter();
-  const [applications, setApplications] = useState<ApplicationUI[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const user = useCurrentUser();
+  const { conversations, loading: conversationsLoading, error: conversationsError, refetch: refetchConversations } = useConversations();
+  const [activeConversation, setActiveConversation] = useState<ConversationSummary | null>(null);
 
-  useEffect(() => {
-    const fetchApplications = async () => {
-      try {
-        const data: Application[] = await getCompanyApplications();
+  const {
+    messages,
+    loading: messagesLoading,
+    error: messagesError,
+    sendMessage,
+  } = useChat(activeConversation?.applicationId ?? null);
 
-        const acceptedApps: ApplicationUI[] = data
-          .filter(app => app.status === 'ACCEPTED')
-          .map(app => ({
-            id: app.id,
-            vacancyTitle: app.vacancy?.title || 'Untitled Vacancy',
-            jobSeekerName: app.jobSeeker?.fullName || 'Unknown Applicant',
-            status: app.status,
-          }));
+  const handleSelectConversation = (conversation: ConversationSummary) => {
+    setActiveConversation(conversation);
+    // Refetch conversations to update unread counts
+    refetchConversations();
+  };
 
-        setApplications(acceptedApps);
-      } catch (err) {
-        console.error(err);
-        setError('Failed to load messages list.');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchApplications();
-  }, []);
-
-  if (loading) return <div className="flex justify-center mt-10 text-(--color-text)">Loading...</div>;
-  if (error) return <div className="text-(--color-error-dark) text-center mt-10">{error}</div>;
+  const handleSendMessage = async (messageText: string) => {
+    await sendMessage(messageText);
+    refetchConversations();
+  };
 
   return (
-    <div className="min-h-screen bg-(--color-bg) p-6 flex flex-col items-center text-(--color-text)">
-      <h1 className="text-2xl font-bold mb-6">Your Chats</h1>
-
-      {applications.length === 0 ? (
-        <p className="text-(--color-muted) text-center">No accepted applications yet.</p>
-      ) : (
-        <div className="flex flex-col gap-4 w-full max-w-3xl">
-          {applications.map(app => (
-            <Card key={app.id} className="p-4 bg-(--color-secondary) text-(--color-text)">
-              <h2 className="font-semibold text-lg">{app.jobSeekerName}</h2>
-              <p className="text-(--color-text)">
-                <strong>Vacancy:</strong> {app.vacancyTitle}
-              </p>
-              <p className="text-(--color-muted) text-sm mt-1">Status: {app.status}</p>
-
-              <div className="mt-3 flex gap-2">
-                <Button
-                  onClick={() => router.push(`/dashboard/company/messages/${app.id}`)}
-                >
-                  Open Chat
-                </Button>
-              </div>
-            </Card>
-          ))}
+    <div className="h-screen bg-(--color-bg) flex flex-col">
+      {/* Header */}
+      <div className="p-4 border-b border-(--color-muted) bg-(--color-secondary)">
+        <div className="flex items-center justify-between max-w-7xl mx-auto">
+          <h1 className="text-2xl font-bold text-(--color-text)">Messages</h1>
+          <Button
+            variant="outline"
+            onClick={() => router.push('/dashboard/company')}
+          >
+            Back to Dashboard
+          </Button>
         </div>
-      )}
+      </div>
 
-      <div className="mt-6">
-        <Button onClick={() => router.push('/dashboard/company')}>
-          Back to Dashboard
-        </Button>
+      {/* Main content */}
+      <div className="flex-1 flex overflow-hidden max-w-7xl mx-auto w-full">
+        {/* Left panel - Conversation list */}
+        <div className="w-1/3 border-r border-(--color-muted) bg-(--color-secondary)">
+          <ConversationList
+            conversations={conversations}
+            activeApplicationId={activeConversation?.applicationId ?? null}
+            onSelectConversation={handleSelectConversation}
+            loading={conversationsLoading}
+            error={conversationsError}
+          />
+        </div>
+
+        {/* Right panel - Active chat */}
+        <div className="w-2/3 p-4">
+          <ChatPanel
+            conversation={activeConversation}
+            messages={messages}
+            currentUserId={user?.userId ?? null}
+            loading={messagesLoading}
+            error={messagesError}
+            onSendMessage={handleSendMessage}
+            userRole="COMPANY"
+          />
+        </div>
       </div>
     </div>
   );

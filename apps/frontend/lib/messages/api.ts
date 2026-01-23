@@ -3,6 +3,8 @@ import type {
   CreateMessagePayload,
   CreatedMessage,
   ChatMessageList,
+  ConversationSummary,
+  MarkAsReadResponse,
 } from './types';
 
 /**
@@ -18,6 +20,15 @@ export async function sendMessage(
 }
 
 /**
+ * GET /messages/conversations
+ */
+export async function getConversations(): Promise<ConversationSummary[]> {
+  return authRequest<ConversationSummary[]>('/messages/conversations', {
+    method: 'GET',
+  });
+}
+
+/**
  * GET /messages/:applicationId
  */
 export async function getMessages(
@@ -25,5 +36,16 @@ export async function getMessages(
 ): Promise<ChatMessageList> {
   return authRequest<ChatMessageList>(`/messages/${applicationId}`, {
     method: 'GET',
+  });
+}
+
+/**
+ * PATCH /messages/:applicationId/read
+ */
+export async function markMessagesAsRead(
+  applicationId: number
+): Promise<MarkAsReadResponse> {
+  return authRequest<MarkAsReadResponse>(`/messages/${applicationId}/read`, {
+    method: 'PATCH',
   });
 }
