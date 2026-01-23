@@ -1,104 +1,196 @@
-# Prisma Migration Guide – Local Development
+# Prisma Migration Guide
 
-This guide explains how to properly create, test, and manage **Prisma migrations** for your project in a professional, repeatable way. It is intended as a general Prisma workflow guide for local development.
-
----
-
-## 1. Edit Your Prisma Schema
-
-- Open the `schema.prisma` file in your `backend/prisma` folder.  
-- **Do not directly edit your database** in production services like Supabase; always make changes through the Prisma schema.  
-- Make the necessary changes to models, fields, or relationships.
+This guide explains how to create, manage, and troubleshoot **Prisma migrations** for the Job Matching Platform.
 
 ---
 
-## 2. Create a Migration
+## Overview
 
-From the `backend` folder, run:
+Prisma migrations track changes to your database schema over time. All schema changes should be made in `apps/backend/prisma/schema.prisma`, then applied via migrations.
+
+---
+
+## Creating a Migration
+
+### 1. Edit the Prisma Schema
+
+Open `apps/backend/prisma/schema.prisma` and make your changes (add models, fields, relations, etc.).
+
+### 2. Create and Apply the Migration
 
 ```bash
-npx prisma migrate dev --name <your_migration_name>
+docker exec job_matching_backend npx prisma migrate dev --name <migration_name>
 ```
 
-- Replace `<your_migration_name>` with a descriptive name for your migration (e.g., `add_user_profile`).  
-- This command will generate SQL migration files under `prisma/migrations` and apply them to your **local database**.  
-- Review the generated `migration.sql` file to ensure it matches your intended changes.
+Replace `<migration_name>` with a descriptive name (e.g., `add_user_avatar`, `create_notifications_table`).
+
+This command will:
+- Generate SQL migration files in `prisma/migrations/`
+- Apply the migration to your local database
+- Regenerate the Prisma Client
+
+### 3. Review the Generated Migration
+
+Check the generated `migration.sql` file in `prisma/migrations/<timestamp>_<name>/` to ensure it matches your intended changes.
 
 ---
 
-## 3. Start Your Local Database
+## Common Migration Commands
 
-If your local PostgreSQL container is not running, start it first:
-
-```bash
-docker start job_matching_db
-```
-
-Then apply the migration (if not already applied during migration creation):
+### Apply Pending Migrations
 
 ```bash
-npx prisma migrate dev
+docker exec job_matching_backend npx prisma migrate deploy
 ```
+
+Use this to apply migrations that haven't been run yet (e.g., after pulling new code).
+
+### Check Migration Status
+
+```bash
+docker exec job_matching_backend npx prisma migrate status
+```
+
+Shows which migrations have been applied and which are pending.
+
+### Reset Database
+
+```bash
+docker exec job_matching_backend npx prisma migrate reset --force
+```
+
+This will:
+- Drop all tables
+- Re-run all migrations from scratch
+- Run the seed script
+
+**Warning:** This deletes all data. Only use in development.
+
+### Regenerate Prisma Client
+
+```bash
+docker exec job_matching_backend npx prisma generate
+```
+
+Run this after pulling changes to `schema.prisma` if you're not running a migration.
 
 ---
 
-## 4. Verify Changes in Prisma Studio
+## Viewing the Database
 
-- Open Prisma Studio to visually inspect your database:
+### Prisma Studio (GUI)
 
 ```bash
+docker exec -it job_matching_backend npx prisma studio
+```
+
+Opens a web-based database browser at http://localhost:5555.
+
+**Note:** You may need to access it via the container's IP if running in Docker. Alternatively, run Prisma Studio locally if you have Node.js installed:
+
+```bash
+cd apps/backend
 npx prisma studio
 ```
 
-- Check tables, fields, relationships, and test inserting/updating sample data to ensure the schema works as expected.
-
----
-
-## 5. Testing Locally
-
-- Test your backend functionality locally against the updated schema.  
-- Ensure any queries, mutations, or relations work correctly.  
-
----
-
-## 6. Committing Changes
-
-- Once satisfied with the migration and local testing, commit your schema and migration files to version control:
-
-> You can commit after verifying everything works locally.
-
----
-
-## 7. Reverting or Rolling Back Migrations
-
-### Rollback Last Migration
-
-To revert the last migration, you can use:
+### Direct Database Access
 
 ```bash
-npx prisma migrate reset
+docker exec -it job_matching_db psql -U dev -d jobmatching
 ```
 
-- This will **reset your local database**, apply all migrations from scratch, and is useful during development.  
-- Alternatively, if you just want to go **back one migration manually**, you can delete the last folder in `prisma/migrations` and run:
+This opens a PostgreSQL shell where you can run SQL queries directly.
+
+---
+
+## Seeding the Database
+
+The seed script (`apps/backend/prisma/seed.ts`) populates the database with demo data.
+
+### Run Seed
 
 ```bash
-npx prisma migrate dev
+docker exec job_matching_backend npx prisma db seed
 ```
 
-> Only do this on local or development databases. Never manually delete migrations on production.
+### Reset and Re-seed
+
+```bash
+docker exec job_matching_backend npx prisma migrate reset --force
+```
+
+This automatically runs the seed script after resetting.
 
 ---
 
-## 8. Notes and Best Practices
+## Best Practices
 
-- Always make schema changes in `schema.prisma`, never directly in the database.  
-- Use descriptive migration names for clarity.  
-- Review `migration.sql` files to ensure correctness before applying.  
-- Test migrations with Prisma Studio and backend code before committing.  
-- Treat local database resets carefully—ensure you are **not affecting production data**.
+1. **Always use migrations** – Never modify the database directly in production.
+
+2. **Use descriptive names** – Migration names should describe what changed:
+   - Good: `add_user_avatar_field`, `create_notifications_table`
+   - Bad: `update`, `fix`, `changes`
+
+3. **Review generated SQL** – Always check the `migration.sql` file before committing.
+
+4. **Test locally first** – Apply and test migrations on your local database before pushing.
+
+5. **Commit migration files** – Migration files in `prisma/migrations/` should be committed to version control.
+
+6. **Don't edit applied migrations** – Once a migration is applied (especially in production), don't modify it. Create a new migration instead.
 
 ---
 
-This guide provides a repeatable workflow for Prisma migrations in local development, making schema changes safe, testable, and version-controlled.
+## Troubleshooting
 
+### Migration Failed
+
+If a migration fails partway through:
+
+1. Check the error message in the logs
+2. Fix the issue in your schema
+3. Reset the database if needed: `docker exec job_matching_backend npx prisma migrate reset --force`
+
+### Schema Drift
+
+If your database schema doesn't match the Prisma schema:
+
+```bash
+docker exec job_matching_backend npx prisma db push --force-reset
+```
+
+**Warning:** This resets the database. Only use in development.
+
+### Prisma Client Out of Sync
+
+If you get type errors after schema changes:
+
+```bash
+docker exec job_matching_backend npx prisma generate
+```
+
+Then restart the backend container:
+
+```bash
+docker-compose restart backend
+```
+
+---
+
+## Migration Files Structure
+
+```
+apps/backend/prisma/
+├── schema.prisma          # Database schema definition
+├── seed.ts                # Seed data script
+└── migrations/
+    ├── 20231001_init/
+    │   └── migration.sql
+    ├── 20231015_add_user_profile/
+    │   └── migration.sql
+    └── migration_lock.toml
+```
+
+Each migration folder contains:
+- `migration.sql` – The SQL commands that were executed
+- Timestamp prefix for ordering

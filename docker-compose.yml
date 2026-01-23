@@ -12,5 +12,60 @@ services:
       - "5432:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U dev -d jobmatching"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ./apps/backend
+      dockerfile: Dockerfile.dev
+    container_name: job_matching_backend
+    restart: always
+    ports:
+      - "3001:3001"
+    environment:
+      DATABASE_URL: postgresql://dev:devpass@db:5432/jobmatching
+      JWT_SECRET: your-super-secret-jwt-key-change-in-production
+      PORT: 3001
+      FRONTEND_URL: http://localhost:3000
+    volumes:
+      # Mount source code for hot-reload
+      - ./apps/backend/src:/app/src
+      - ./apps/backend/prisma:/app/prisma
+      # Prevent overwriting node_modules from container
+      - /app/node_modules
+    depends_on:
+      db:
+        condition: service_healthy
+
+  frontend:
+    build:
+      context: ./apps/frontend
+      dockerfile: Dockerfile.dev
+    container_name: job_matching_frontend
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      NEXT_PUBLIC_API_URL: http://localhost:3001
+      # Next.js needs this to accept connections from outside container
+      HOSTNAME: 0.0.0.0
+    volumes:
+      # Mount source code for hot-reload
+      - ./apps/frontend/app:/app/app
+      - ./apps/frontend/components:/app/components
+      - ./apps/frontend/features:/app/features
+      - ./apps/frontend/lib:/app/lib
+      - ./apps/frontend/public:/app/public
+      - ./apps/frontend/mocks:/app/mocks
+      # Prevent overwriting node_modules from container
+      - /app/node_modules
+      - /app/.next
+    depends_on:
+      - backend
+
 volumes:
   pgdata:

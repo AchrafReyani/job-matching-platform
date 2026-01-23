@@ -1,0 +1,19 @@
+FROM node:20-alpine
+
+WORKDIR /app
+
+# Install dependencies first (cached layer)
+COPY package*.json ./
+RUN npm install
+
+# Copy configuration files
+COPY tsconfig*.json ./
+COPY nest-cli.json ./
+
+# Copy prisma schema for generation
+COPY prisma ./prisma/
+RUN npx prisma generate
+
+# Source code will be mounted as volume for hot-reload
+# CMD will run the dev server with watch mode
+CMD ["npm", "run", "start:dev"]

@@ -1,0 +1,18 @@
+FROM node:20-alpine
+
+WORKDIR /app
+
+# Install dependencies first (cached layer)
+COPY package*.json ./
+RUN npm install
+
+# Copy configuration files
+COPY next.config.ts ./
+COPY tsconfig.json ./
+COPY postcss.config.mjs ./
+COPY eslint.config.mjs ./
+COPY next-env.d.ts ./
+
+# Source code directories will be mounted as volumes for hot-reload
+# CMD will run the dev server
+CMD ["npm", "run", "dev"]
