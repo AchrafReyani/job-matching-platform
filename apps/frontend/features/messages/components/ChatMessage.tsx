@@ -16,7 +16,7 @@ export function ChatMessage({ message, isOwnMessage }: ChatMessageProps) {
         className={`max-w-[70%] p-3 rounded-2xl shadow-sm ${
           isOwnMessage
             ? 'bg-(--color-primary) text-(--color-on-primary) rounded-br-none'
-            : 'bg-(--color-secondary) text-(--color-text) rounded-bl-none'
+            : 'bg-muted-light text-(--color-text) rounded-bl-none'
         }`}
       >
         <p className="whitespace-pre-wrap break-words">{message.messageText}</p>
