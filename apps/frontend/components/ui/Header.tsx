@@ -2,13 +2,16 @@
 
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import { useTranslations } from 'next-intl';
 import { Button } from './Button';
 import { getToken } from '@/lib/api';
 import { logout } from '@/lib/auth/logout';
 import { ThemeToggle } from './ThemeToggle';
+import { LanguageSwitcher } from './LanguageSwitcher';
 
 export function Header() {
   const router = useRouter();
+  const t = useTranslations('Header');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
@@ -34,7 +37,7 @@ export function Header() {
         className="text-lg font-semibold cursor-pointer text-(--color-primary)"
         onClick={() => router.push('/')}
       >
-        JobMatch
+        {t('title')}
       </h1>
 
       {/* Right-side nav */}
@@ -45,10 +48,11 @@ export function Header() {
             className="text-sm px-3 py-1"
             onClick={logout}
           >
-            Logout
+            {t('logout')}
           </Button>
         )}
 
+        <LanguageSwitcher />
         <ThemeToggle />
       </nav>
     </header>

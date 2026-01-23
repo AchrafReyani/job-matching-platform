@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/Button';
 import type { ChatMessage as ChatMessageType } from '@/lib/messages/types';
 import type { ConversationSummary } from '@/lib/messages/types';
@@ -29,6 +30,7 @@ export function ChatPanel({
   userRole,
 }: ChatPanelProps) {
   const router = useRouter();
+  const t = useTranslations('Messages');
   const messagesContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -42,8 +44,8 @@ export function ChatPanel({
     return (
       <div className="h-full bg-(--color-secondary) rounded-lg">
         <EmptyState
-          title="Select a conversation"
-          description="Choose a conversation from the list to start chatting"
+          title={t('selectConversation')}
+          description={t('selectConversationDesc')}
         />
       </div>
     );
@@ -52,7 +54,7 @@ export function ChatPanel({
   if (loading) {
     return (
       <div className="flex items-center justify-center h-full bg-(--color-secondary) rounded-lg">
-        <p className="text-(--color-muted)">Loading messages...</p>
+        <p className="text-(--color-muted)">{t('loadingMessages')}</p>
       </div>
     );
   }
@@ -65,7 +67,7 @@ export function ChatPanel({
     );
   }
 
-  const profileLabel = userRole === 'COMPANY' ? 'View Job Seeker Profile' : 'View Company Profile';
+  const profileLabel = userRole === 'COMPANY' ? t('viewJobSeekerProfile') : t('viewCompanyProfile');
 
   return (
     <div className="flex flex-col h-full bg-(--color-secondary) rounded-lg">
@@ -94,7 +96,7 @@ export function ChatPanel({
       <div ref={messagesContainerRef} className="flex-1 overflow-y-auto p-4 bg-(--color-bg)">
         {messages.length === 0 ? (
           <p className="text-(--color-muted) text-center mt-4">
-            No messages yet. Start the conversation!
+            {t('noMessages')}
           </p>
         ) : (
           messages.map((msg) => (

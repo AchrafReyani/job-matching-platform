@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import { login, getProfile } from '@/lib/auth/api';
 import { saveToken, getToken, clearToken } from '@/lib/api';
 import { Card } from '@/components/ui/Card';
@@ -10,12 +11,12 @@ import { Input } from '@/components/ui/Input';
 
 export default function LoginPage() {
   const router = useRouter();
+  const t = useTranslations('Auth');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
-  // 🔐 If already logged in, send to the right dashboard
   useEffect(() => {
     const checkExistingSession = async () => {
       const token = getToken();
@@ -42,14 +43,11 @@ export default function LoginPage() {
     setError(null);
 
     try {
-      // 1️⃣ Login and get token
       const { access_token } = await login(email, password);
       saveToken(access_token);
 
-      // 2️⃣ Get user profile to determine role
       const profile = await getProfile();
 
-      // 3️⃣ Redirect based on role
       if (profile.role === 'JOB_SEEKER') {
         router.push('/dashboard/job-seeker');
       } else if (profile.role === 'COMPANY') {
@@ -62,7 +60,7 @@ export default function LoginPage() {
       if (err instanceof Error) {
         setError(err.message);
       } else {
-        setError('Invalid email or password');
+        setError(t('invalidCredentials'));
       }
     } finally {
       setLoading(false);
@@ -73,13 +71,13 @@ export default function LoginPage() {
     <div className="min-h-screen flex items-center justify-center bg-(--color-bg)">
       <Card className="w-full max-w-md p-6">
         <h1 className="text-2xl font-bold mb-6 text-center text-(--color-text)">
-          Login
+          {t('login')}
         </h1>
 
         <form onSubmit={handleLogin} className="flex flex-col gap-4">
           <Input
             type="email"
-            placeholder="Email"
+            placeholder={t('email')}
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
@@ -87,7 +85,7 @@ export default function LoginPage() {
 
           <Input
             type="password"
-            placeholder="Password"
+            placeholder={t('password')}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
@@ -100,18 +98,18 @@ export default function LoginPage() {
           )}
 
           <Button type="submit" disabled={loading}>
-            {loading ? 'Logging in...' : 'Login'}
+            {loading ? t('loggingIn') : t('login')}
           </Button>
         </form>
 
         <div className="mt-6 text-center text-sm text-(--color-text)">
           <p>
-            Don’t have an account?{' '}
+            {t('noAccount')}{' '}
             <a
               href="/home"
               className="text-(--color-primary) hover:underline font-medium"
             >
-              Go back
+              {t('goBack')}
             </a>
           </p>
         </div>

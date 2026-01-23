@@ -1,27 +1,31 @@
+'use client';
+
+import { useTranslations } from 'next-intl';
 import ProfileField from '@/components/common/ProfileField';
 import type { ProfileResponse } from '@/lib/auth/types';
 
 export default function ProfileDetailsCompany({ profile }: { profile: ProfileResponse }) {
+  const t = useTranslations('Profile.details');
   const company = profile.company;
 
-  if (!company) return <p>No company profile found.</p>;
+  if (!company) return <p>{t('noCompanyProfile')}</p>;
 
   return (
     <div className="space-y-3">
-      <ProfileField label="Email" value={profile.email} />
+      <ProfileField label={t('email')} value={profile.email} />
       <ProfileField
-        label="Created At"
+        label={t('createdAt')}
         value={new Date(profile.createdAt).toLocaleString()}
       />
 
       <div className="mt-4 border-t border-(--color-muted) pt-3">
-        <h2 className="font-semibold text-lg mb-2">Company Info</h2>
+        <h2 className="font-semibold text-lg mb-2">{t('companyInfo')}</h2>
 
-        <ProfileField label="Company Name" value={company.companyName} />
+        <ProfileField label={t('companyName')} value={company.companyName} />
 
         {company.websiteUrl && (
           <p>
-            <strong>Website:</strong>{' '}
+            <strong>{t('website')}:</strong>{' '}
             <a
               href={company.websiteUrl}
               target="_blank"
@@ -34,7 +38,7 @@ export default function ProfileDetailsCompany({ profile }: { profile: ProfileRes
         )}
 
         {company.description && (
-          <ProfileField label="Description" value={company.description} />
+          <ProfileField label={t('description')} value={company.description} />
         )}
       </div>
     </div>

@@ -1,27 +1,31 @@
+'use client';
+
+import { useTranslations } from 'next-intl';
 import ProfileField from "@/components/common/ProfileField";
 import type { ProfileResponse } from "@/lib/auth/types";
 
 export default function ProfileDetailsJobSeeker({ profile }: { profile: ProfileResponse }) {
+  const t = useTranslations('Profile.details');
   const js = profile.jobSeeker;
 
-  if (!js) return <p className="text-(--color-muted)">No job seeker profile found.</p>;
+  if (!js) return <p className="text-(--color-muted)">{t('noJobSeekerProfile')}</p>;
 
   return (
     <div className="space-y-3">
-      <ProfileField label="Email" value={profile.email} />
+      <ProfileField label={t('email')} value={profile.email} />
       <ProfileField
-        label="Created At"
+        label={t('createdAt')}
         value={new Date(profile.createdAt).toLocaleString()}
       />
 
       <div className="mt-4 border-t border-(--color-muted) pt-3">
-        <h2 className="font-semibold text-lg mb-2">Job Seeker Info</h2>
+        <h2 className="font-semibold text-lg mb-2">{t('jobSeekerInfo')}</h2>
 
-        <ProfileField label="Name" value={js.fullName} />
+        <ProfileField label={t('name')} value={js.fullName} />
 
         {js.portfolioUrl && (
           <p>
-            <strong>Portfolio:</strong>{" "}
+            <strong>{t('portfolio')}:</strong>{" "}
             <a
               href={js.portfolioUrl}
               target="_blank"
@@ -33,7 +37,7 @@ export default function ProfileDetailsJobSeeker({ profile }: { profile: ProfileR
         )}
 
         {js.experienceSummary && (
-          <ProfileField label="Experience" value={js.experienceSummary} />
+          <ProfileField label={t('experience')} value={js.experienceSummary} />
         )}
       </div>
     </div>

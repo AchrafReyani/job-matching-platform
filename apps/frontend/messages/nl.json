@@ -1,0 +1,239 @@
+{
+  "Common": {
+    "loading": "Laden...",
+    "error": "Er is een fout opgetreden",
+    "back": "Terug",
+    "save": "Opslaan",
+    "cancel": "Annuleren",
+    "edit": "Bewerken",
+    "delete": "Verwijderen",
+    "ok": "OK",
+    "yes": "Ja",
+    "no": "Nee",
+    "submit": "Verzenden",
+    "sending": "Verzenden...",
+    "send": "Verstuur",
+    "saving": "Opslaan...",
+    "saveChanges": "Wijzigingen Opslaan",
+    "backToDashboard": "Terug naar Dashboard",
+    "viewProfile": "Bekijk Profiel",
+    "unknown": "Onbekend",
+    "unknownCompany": "Onbekend Bedrijf"
+  },
+  "Header": {
+    "title": "JobMatch",
+    "logout": "Uitloggen"
+  },
+  "Footer": {
+    "copyright": "© {year} JobMatch. Alle rechten voorbehouden.",
+    "github": "GitHub"
+  },
+  "Home": {
+    "title": "Welkom bij JobMatch",
+    "subtitle": "Kies hoe je wilt beginnen:",
+    "login": "Inloggen",
+    "registerCompany": "Registreren als Bedrijf",
+    "registerJobSeeker": "Registreren als Werkzoekende"
+  },
+  "Auth": {
+    "login": "Inloggen",
+    "loggingIn": "Inloggen...",
+    "email": "E-mail",
+    "password": "Wachtwoord",
+    "noAccount": "Nog geen account?",
+    "goBack": "Ga terug",
+    "invalidCredentials": "Ongeldige e-mail of wachtwoord",
+    "alreadyHaveAccount": "Heb je al een account?",
+    "loginHere": "Log hier in"
+  },
+  "Register": {
+    "jobSeeker": {
+      "title": "Registreren als Werkzoekende",
+      "fullName": "Volledige Naam",
+      "portfolioUrl": "Portfolio URL (optioneel)",
+      "experienceSummary": "Ervaring Samenvatting (optioneel)",
+      "register": "Registreren",
+      "registering": "Registreren...",
+      "error": "Registratie mislukt. Controleer je invoer."
+    },
+    "company": {
+      "title": "Registreren als Bedrijf",
+      "companyName": "Bedrijfsnaam",
+      "websiteUrl": "Website URL (optioneel)",
+      "description": "Bedrijfsomschrijving (optioneel)",
+      "register": "Registreren",
+      "registering": "Registreren...",
+      "error": "Registratie mislukt. Controleer je invoer."
+    }
+  },
+  "Dashboard": {
+    "company": {
+      "welcome": "Welkom, {name}",
+      "profile": "Bedrijfsprofiel",
+      "vacancies": "Vacatures Beheren",
+      "applications": "Sollicitaties Bekijken",
+      "messages": "Berichten"
+    },
+    "jobSeeker": {
+      "welcome": "Welkom, {name}",
+      "profile": "Bekijk Profiel",
+      "vacancies": "Vacatures Bekijken",
+      "applications": "Sollicitaties Bekijken",
+      "messages": "Berichten"
+    }
+  },
+  "Profile": {
+    "company": {
+      "title": "Bedrijfsprofiel",
+      "editTitle": "Bedrijfsprofiel Bewerken",
+      "editProfile": "Profiel Bewerken",
+      "updateSuccess": "Profiel bijgewerkt!",
+      "updateError": "Bijwerken mislukt."
+    },
+    "jobSeeker": {
+      "title": "Jouw Profiel",
+      "editTitle": "Profiel Bewerken",
+      "editProfile": "Profiel Bewerken",
+      "updateSuccess": "Profiel bijgewerkt!",
+      "updateError": "Bijwerken mislukt."
+    },
+    "view": {
+      "jobSeekerProfile": "Werkzoekende Profiel",
+      "companyProfile": "Bedrijfsprofiel",
+      "jobSeekerInfo": "Werkzoekende Info",
+      "companyInfo": "Bedrijfs Info",
+      "role": "Rol",
+      "name": "Naam",
+      "portfolio": "Portfolio",
+      "experience": "Ervaring",
+      "companyName": "Bedrijfsnaam",
+      "website": "Website",
+      "description": "Omschrijving",
+      "notFound": "Profiel niet gevonden.",
+      "error": "Profiel laden mislukt."
+    },
+    "details": {
+      "noCompanyProfile": "Geen bedrijfsprofiel gevonden.",
+      "noJobSeekerProfile": "Geen werkzoekende profiel gevonden.",
+      "email": "E-mail",
+      "createdAt": "Aangemaakt Op",
+      "companyInfo": "Bedrijfs Info",
+      "jobSeekerInfo": "Werkzoekende Info",
+      "companyName": "Bedrijfsnaam",
+      "website": "Website",
+      "description": "Omschrijving",
+      "name": "Naam",
+      "portfolio": "Portfolio",
+      "experience": "Ervaring"
+    },
+    "form": {
+      "companyName": "Bedrijfsnaam",
+      "websiteUrl": "Website URL",
+      "description": "Omschrijving",
+      "fullName": "Volledige Naam",
+      "portfolioUrl": "Portfolio URL",
+      "experienceSummary": "Ervaring Samenvatting"
+    }
+  },
+  "Vacancies": {
+    "list": {
+      "title": "Mijn Vacatures",
+      "addNew": "Nieuwe Vacature Toevoegen",
+      "noVacancies": "Je hebt nog geen vacatures geplaatst.",
+      "role": "Rol",
+      "salary": "Salaris",
+      "posted": "Geplaatst",
+      "error": "Vacatures laden mislukt"
+    },
+    "browse": {
+      "title": "Alle Vacatures",
+      "noVacancies": "Geen vacatures beschikbaar.",
+      "company": "Bedrijf",
+      "role": "Rol",
+      "salary": "Salaris",
+      "posted": "Geplaatst",
+      "apply": "Solliciteren",
+      "applying": "Solliciteren...",
+      "viewProfile": "Bekijk Profiel",
+      "unknown": "Onbekend",
+      "error": "Gegevens laden mislukt",
+      "applySuccess": "Sollicitatie succesvol verzonden!",
+      "alreadyApplied": "Je hebt al gesolliciteerd op deze vacature.",
+      "applyError": "Er is een fout opgetreden bij het solliciteren."
+    },
+    "add": {
+      "title": "Nieuwe Vacature Toevoegen",
+      "jobTitle": "Functietitel",
+      "role": "Rol",
+      "jobDescription": "Functiebeschrijving",
+      "salaryRange": "Salarisschaal (optioneel)",
+      "adding": "Toevoegen...",
+      "addVacancy": "Vacature Toevoegen",
+      "error": "Er ging iets mis"
+    },
+    "edit": {
+      "title": "Vacature Bewerken",
+      "saving": "Opslaan...",
+      "saveChanges": "Wijzigingen Opslaan",
+      "error": "Bijwerken mislukt.",
+      "deleteError": "Verwijderen mislukt.",
+      "notFound": "Vacature niet gevonden.",
+      "confirmDelete": "Weet je zeker dat je deze vacature wilt verwijderen? Dit kan niet ongedaan worden gemaakt."
+    }
+  },
+  "Applications": {
+    "company": {
+      "title": "Ontvangen Sollicitaties",
+      "noApplications": "Nog niemand heeft gesolliciteerd op je vacatures.",
+      "applicant": "Sollicitant",
+      "viewProfile": "Bekijk Profiel",
+      "appliedOn": "Gesolliciteerd op",
+      "accept": "Accepteren",
+      "reject": "Afwijzen",
+      "error": "Bedrijfssollicitaties laden mislukt",
+      "confirmAccept": "Weet je zeker dat je deze sollicitatie wilt ACCEPTEREN? Deze actie kan niet ongedaan worden gemaakt.",
+      "confirmReject": "Weet je zeker dat je deze sollicitatie wilt AFWIJZEN? Deze actie kan niet ongedaan worden gemaakt.",
+      "updateError": "Status bijwerken mislukt",
+      "status": {
+        "applied": "Gesolliciteerd",
+        "accepted": "Geaccepteerd",
+        "rejected": "Afgewezen"
+      }
+    },
+    "jobSeeker": {
+      "title": "Mijn Sollicitaties",
+      "noApplications": "Je hebt nog niet gesolliciteerd op vacatures.",
+      "unknownCompany": "Onbekend Bedrijf",
+      "appliedOn": "Gesolliciteerd op",
+      "error": "Sollicitaties ophalen mislukt",
+      "status": {
+        "applied": "Gesolliciteerd",
+        "accepted": "Geaccepteerd",
+        "rejected": "Afgewezen"
+      }
+    }
+  },
+  "Messages": {
+    "title": "Berichten",
+    "loadingConversations": "Gesprekken laden...",
+    "loadingMessages": "Berichten laden...",
+    "noConversations": "Nog geen gesprekken. Accepteer een sollicitatie om te chatten.",
+    "noMessages": "Nog geen berichten. Start het gesprek!",
+    "selectConversation": "Selecteer een gesprek",
+    "selectConversationDesc": "Kies een gesprek uit de lijst om te chatten",
+    "typeMessage": "Typ je bericht...",
+    "viewJobSeekerProfile": "Bekijk Werkzoekende Profiel",
+    "viewCompanyProfile": "Bekijk Bedrijfsprofiel"
+  },
+  "NotFound": {
+    "title": "404",
+    "heading": "Pagina Niet Gevonden",
+    "description": "De pagina die je zoekt bestaat niet of je hebt geen toegang.",
+    "goBack": "Ga Terug"
+  },
+  "LanguageSwitcher": {
+    "language": "Taal",
+    "en": "English",
+    "nl": "Nederlands"
+  }
+}

@@ -1,3 +1,6 @@
+'use client';
+
+import { useTranslations } from 'next-intl';
 import ProfileFieldEditable from "@/components/common/ProfileFieldEditable";
 
 interface Props {
@@ -17,22 +20,24 @@ export default function ProfileFormCompany({
   description,
   setDescription,
 }: Props) {
+  const t = useTranslations('Profile.form');
+
   return (
     <div className="space-y-3">
       <ProfileFieldEditable
-        label="Company Name"
+        label={t('companyName')}
         value={companyName}
         onChange={setCompanyName}
       />
 
       <ProfileFieldEditable
-        label="Website URL"
+        label={t('websiteUrl')}
         value={websiteUrl}
         onChange={setWebsiteUrl}
       />
 
       <ProfileFieldEditable
-        label="Description"
+        label={t('description')}
         value={description}
         onChange={setDescription}
         textarea

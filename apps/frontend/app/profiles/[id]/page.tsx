@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import { getProfile } from '@/lib/profiles/api';
 import type { ProfileResponse, JobSeekerProfile, CompanyProfile } from '@/lib/profiles/types';
 import { getToken } from '@/lib/api';
@@ -11,6 +12,8 @@ import { Button } from '@/components/ui/Button';
 export default function ViewProfilePage() {
   const router = useRouter();
   const params = useParams();
+  const t = useTranslations('Profile.view');
+  const tCommon = useTranslations('Common');
   const token = getToken();
   const profileId = params.id as string;
 
@@ -31,20 +34,20 @@ export default function ViewProfilePage() {
         setProfile(data);
       } catch (err) {
         console.error(err);
-        setError('Failed to load profile.');
+        setError(t('error'));
       } finally {
         setLoading(false);
       }
     };
 
     fetchProfile();
-  }, [profileId, router, token]);
+  }, [profileId, router, token, t]);
 
   /* ---------------- RENDER STATES ---------------- */
   if (loading)
     return (
       <div className="flex justify-center items-center min-h-screen text-(--color-text)">
-        Loading...
+        {tCommon('loading')}
       </div>
     );
 
@@ -58,7 +61,7 @@ export default function ViewProfilePage() {
   if (!profile)
     return (
       <div className="text-(--color-muted) text-center mt-10">
-        Profile not found.
+        {t('notFound')}
       </div>
     );
 
@@ -66,17 +69,17 @@ export default function ViewProfilePage() {
 
   const renderJobSeeker = (data: JobSeekerProfile) => (
     <div className="mt-4 border-t border-(--color-muted) pt-3">
-      <h2 className="font-semibold text-lg mb-2 text-(--color-text)">Job Seeker Info</h2>
+      <h2 className="font-semibold text-lg mb-2 text-(--color-text)">{t('jobSeekerInfo')}</h2>
 
       {data.fullName && (
         <p className="text-(--color-text)">
-          <strong>Name:</strong> {data.fullName}
+          <strong>{t('name')}:</strong> {data.fullName}
         </p>
       )}
 
       {data.portfolioUrl && (
         <p className="text-(--color-text)">
-          <strong>Portfolio:</strong>{' '}
+          <strong>{t('portfolio')}:</strong>{' '}
           <a
             href={data.portfolioUrl}
             target="_blank"
@@ -90,7 +93,7 @@ export default function ViewProfilePage() {
 
       {data.experienceSummary && (
         <p className="text-(--color-text)">
-          <strong>Experience:</strong> {data.experienceSummary}
+          <strong>{t('experience')}:</strong> {data.experienceSummary}
         </p>
       )}
     </div>
@@ -98,17 +101,17 @@ export default function ViewProfilePage() {
 
   const renderCompany = (data: CompanyProfile) => (
     <div className="mt-4 border-t border-(--color-muted) pt-3">
-      <h2 className="font-semibold text-lg mb-2 text-(--color-text)">Company Info</h2>
+      <h2 className="font-semibold text-lg mb-2 text-(--color-text)">{t('companyInfo')}</h2>
 
       {data.companyName && (
         <p className="text-(--color-text)">
-          <strong>Company Name:</strong> {data.companyName}
+          <strong>{t('companyName')}:</strong> {data.companyName}
         </p>
       )}
 
       {data.websiteUrl && (
         <p className="text-(--color-text)">
-          <strong>Website:</strong>{' '}
+          <strong>{t('website')}:</strong>{' '}
           <a
             href={data.websiteUrl}
             target="_blank"
@@ -122,7 +125,7 @@ export default function ViewProfilePage() {
 
       {data.description && (
         <p className="text-(--color-text)">
-          <strong>Description:</strong> {data.description}
+          <strong>{t('description')}:</strong> {data.description}
         </p>
       )}
     </div>
@@ -134,11 +137,11 @@ export default function ViewProfilePage() {
     <div className="min-h-screen flex items-center justify-center bg-(--color-bg) p-4">
       <Card className="w-full max-w-md p-6">
         <h1 className="text-2xl font-bold mb-4 text-center text-(--color-text)">
-          {profile.role === 'JOB_SEEKER' ? 'Job Seeker Profile' : 'Company Profile'}
+          {profile.role === 'JOB_SEEKER' ? t('jobSeekerProfile') : t('companyProfile')}
         </h1>
 
         <p className="text-(--color-text)">
-          <strong>Role:</strong> {profile.role}
+          <strong>{t('role')}:</strong> {profile.role}
         </p>
 
         {profile.role === 'JOB_SEEKER' &&
@@ -150,7 +153,7 @@ export default function ViewProfilePage() {
           renderCompany(profile.profile)}
 
         <div className="mt-6 text-center">
-          <Button onClick={() => router.back()}>Back</Button>
+          <Button onClick={() => router.back()}>{tCommon('back')}</Button>
         </div>
       </Card>
     </div>

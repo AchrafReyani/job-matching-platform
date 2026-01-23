@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/Button';
 import type { ConversationSummary } from '@/lib/messages/types';
 import {
@@ -14,6 +15,8 @@ import {
 
 export default function CompanyMessagesPage() {
   const router = useRouter();
+  const t = useTranslations('Messages');
+  const tCommon = useTranslations('Common');
   const user = useCurrentUser();
   const { conversations, loading: conversationsLoading, error: conversationsError, refetch: refetchConversations } = useConversations();
   const [activeConversation, setActiveConversation] = useState<ConversationSummary | null>(null);
@@ -41,12 +44,12 @@ export default function CompanyMessagesPage() {
       {/* Header */}
       <div className="p-4 border-b border-(--color-muted) bg-(--color-secondary)">
         <div className="flex items-center justify-between max-w-7xl mx-auto">
-          <h1 className="text-2xl font-bold text-(--color-text)">Messages</h1>
+          <h1 className="text-2xl font-bold text-(--color-text)">{t('title')}</h1>
           <Button
             variant="outline"
             onClick={() => router.push('/dashboard/company')}
           >
-            Back to Dashboard
+            {tCommon('backToDashboard')}
           </Button>
         </div>
       </div>
