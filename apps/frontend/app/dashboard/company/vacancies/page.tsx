@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 
 import { getToken } from '@/lib/api';
 import { getProfile } from '@/lib/auth/api';
@@ -15,6 +16,8 @@ import { Button } from '@/components/ui/Button';
 
 export default function CompanyVacanciesPage() {
   const router = useRouter();
+  const t = useTranslations('Vacancies.list');
+  const tCommon = useTranslations('Common');
 
   const [vacancies, setVacancies] = useState<Vacancy[]>([]);
   const [loading, setLoading] = useState(true);
@@ -41,17 +44,17 @@ export default function CompanyVacanciesPage() {
         setVacancies(data);
       } catch (err) {
         console.error(err);
-        setError(err instanceof Error ? err.message : 'Failed to load vacancies');
+        setError(err instanceof Error ? err.message : t('error'));
       } finally {
         setLoading(false);
       }
     };
 
     load();
-  }, [router]);
+  }, [router, t]);
 
   if (loading)
-    return <div className="flex justify-center mt-10 text-(--color-text)">Loading...</div>;
+    return <div className="flex justify-center mt-10 text-(--color-text)">{tCommon('loading')}</div>;
 
   if (error)
     return (
@@ -62,20 +65,20 @@ export default function CompanyVacanciesPage() {
 
   return (
     <div className="min-h-screen bg-(--color-bg) p-4 flex flex-col items-center text-(--color-text)">
-      <h1 className="text-2xl font-bold mb-6">My Vacancies</h1>
+      <h1 className="text-2xl font-bold mb-6">{t('title')}</h1>
 
       <div className="flex flex-col gap-4 w-full max-w-2xl mb-6">
         <Button
           className="bg-(--color-primary) hover:bg-primary-dark text-(--color-on-primary)"
           onClick={() => router.push('/dashboard/company/vacancies/add')}
         >
-          Add New Vacancy
+          {t('addNew')}
         </Button>
       </div>
 
       <div className="flex flex-col gap-4 w-full max-w-2xl">
         {vacancies.length === 0 ? (
-          <p className="text-(--color-muted) text-center">You have not posted any vacancies.</p>
+          <p className="text-(--color-muted) text-center">{t('noVacancies')}</p>
         ) : (
           vacancies.map((vacancy) => (
             <Card
@@ -84,15 +87,15 @@ export default function CompanyVacanciesPage() {
             >
               <h2 className="font-semibold text-lg">{vacancy.title}</h2>
 
-              <p><strong>Role:</strong> {vacancy.role}</p>
+              <p><strong>{t('role')}:</strong> {vacancy.role}</p>
 
               {vacancy.salaryRange && (
-                <p><strong>Salary:</strong> {vacancy.salaryRange}</p>
+                <p><strong>{t('salary')}:</strong> {vacancy.salaryRange}</p>
               )}
 
               <p>{vacancy.jobDescription}</p>
               <p className="text-sm text-(--color-muted) mt-1">
-                Posted: {new Date(vacancy.createdAt).toLocaleDateString()}
+                {t('posted')}: {new Date(vacancy.createdAt).toLocaleDateString()}
               </p>
 
               <div className="mt-2">
@@ -102,7 +105,7 @@ export default function CompanyVacanciesPage() {
                     router.push(`/dashboard/company/vacancies/edit/${vacancy.id}`)
                   }
                 >
-                  Edit
+                  {tCommon('edit')}
                 </Button>
               </div>
             </Card>
@@ -115,7 +118,7 @@ export default function CompanyVacanciesPage() {
           className="bg-(--color-secondary) hover:bg-secondary-dark text-(--color-on-primary)"
           onClick={() => router.push('/dashboard/company')}
         >
-          Back to Dashboard
+          {tCommon('backToDashboard')}
         </Button>
       </div>
     </div>

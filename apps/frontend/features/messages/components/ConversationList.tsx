@@ -1,5 +1,6 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
 import type { ConversationSummary } from '@/lib/messages/types';
 import { ConversationItem } from './ConversationItem';
 
@@ -18,10 +19,12 @@ export function ConversationList({
   loading,
   error,
 }: ConversationListProps) {
+  const t = useTranslations('Messages');
+
   if (loading) {
     return (
       <div className="flex items-center justify-center h-full">
-        <p className="text-(--color-muted)">Loading conversations...</p>
+        <p className="text-(--color-muted)">{t('loadingConversations')}</p>
       </div>
     );
   }
@@ -38,7 +41,7 @@ export function ConversationList({
     return (
       <div className="flex items-center justify-center h-full p-4">
         <p className="text-(--color-muted) text-center">
-          No conversations yet. Accept an application to start chatting.
+          {t('noConversations')}
         </p>
       </div>
     );

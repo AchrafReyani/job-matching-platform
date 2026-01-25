@@ -1,6 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/Button';
 import { getToken } from '@/lib/api';
 import { getProfile } from '@/lib/auth/api';
@@ -9,6 +10,8 @@ import { useEffect, useState } from 'react';
 
 export default function JobSeekerDashboard() {
   const router = useRouter();
+  const t = useTranslations('Dashboard.jobSeeker');
+  const tHeader = useTranslations('Header');
   const [name, setName] = useState<string | null>(null);
 
   useEffect(() => {
@@ -27,23 +30,23 @@ export default function JobSeekerDashboard() {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-(--color-bg) p-6">
       <h1 className="text-2xl font-bold mb-6 text-(--color-text)">
-        Welcome, {name}
+        {t('welcome', { name: name ?? '' })}
       </h1>
       <div className="flex flex-col gap-4 w-full max-w-sm">
         <Button onClick={() => router.push('/dashboard/job-seeker/profile')}>
-          View Profile
+          {t('profile')}
         </Button>
         <Button onClick={() => router.push('/dashboard/job-seeker/vacancies')}>
-          Browse Vacancies
+          {t('vacancies')}
         </Button>
         <Button onClick={() => router.push('/dashboard/job-seeker/applications')}>
-          Browse Applications
+          {t('applications')}
         </Button>
         <Button onClick={() => router.push('/dashboard/job-seeker/messages')}>
-          Messages
+          {t('messages')}
         </Button>
         <Button variant="destructive" onClick={logout}>
-          Logout
+          {tHeader('logout')}
         </Button>
       </div>
     </div>

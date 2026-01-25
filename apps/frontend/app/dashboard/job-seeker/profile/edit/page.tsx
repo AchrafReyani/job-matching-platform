@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import AuthGuard from "@/features/auth/components/AuthGuard";
 import ProfileCardLayout from "@/features/profile/components/ProfileCardLayout";
 import ProfileActionButtons from "@/features/profile/components/ProfileActionButtons";
@@ -12,6 +13,8 @@ import { getToken } from "@/lib/api";
 
 export default function EditJobSeekerProfilePage() {
   const router = useRouter();
+  const t = useTranslations('Profile.jobSeeker');
+  const tCommon = useTranslations('Common');
 
   const [fullName, setFullName] = useState("");
   const [portfolioUrl, setPortfolioUrl] = useState("");
@@ -47,9 +50,9 @@ export default function EditJobSeekerProfilePage() {
 
     try {
       await updateProfile({ fullName, portfolioUrl, experienceSummary });
-      setMessage("✅ Profile updated!");
+      setMessage(t('updateSuccess'));
     } catch {
-      setMessage("❌ Failed to update.");
+      setMessage(t('updateError'));
     } finally {
       setSaving(false);
     }
@@ -59,7 +62,7 @@ export default function EditJobSeekerProfilePage() {
 
   return (
     <AuthGuard allowedRole="JOB_SEEKER">
-      <ProfileCardLayout title="Edit Profile">
+      <ProfileCardLayout title={t('editTitle')}>
         <ProfileFormJobSeeker
           fullName={fullName}
           setFullName={setFullName}
@@ -72,9 +75,9 @@ export default function EditJobSeekerProfilePage() {
         {message && <p className="text-sm text-center pt-2">{message}</p>}
 
         <ProfileActionButtons
-          left={{ label: "Back", onClick: () => router.push("/dashboard/job-seeker/profile") }}
+          left={{ label: tCommon('back'), onClick: () => router.push("/dashboard/job-seeker/profile") }}
           right={{
-            label: saving ? "Saving..." : "Save Changes",
+            label: saving ? tCommon('saving') : tCommon('saveChanges'),
             onClick: handleSave,
             disabled: saving,
           }}

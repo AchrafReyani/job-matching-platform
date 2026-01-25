@@ -1,0 +1,239 @@
+{
+  "Common": {
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "back": "Back",
+    "save": "Save",
+    "cancel": "Cancel",
+    "edit": "Edit",
+    "delete": "Delete",
+    "ok": "OK",
+    "yes": "Yes",
+    "no": "No",
+    "submit": "Submit",
+    "sending": "Sending...",
+    "send": "Send",
+    "saving": "Saving...",
+    "saveChanges": "Save Changes",
+    "backToDashboard": "Back to Dashboard",
+    "viewProfile": "View Profile",
+    "unknown": "Unknown",
+    "unknownCompany": "Unknown Company"
+  },
+  "Header": {
+    "title": "JobMatch",
+    "logout": "Logout"
+  },
+  "Footer": {
+    "copyright": "© {year} JobMatch. All rights reserved.",
+    "github": "GitHub"
+  },
+  "Home": {
+    "title": "Welcome to JobMatch",
+    "subtitle": "Choose how you would like to get started:",
+    "login": "Login",
+    "registerCompany": "Register as Company",
+    "registerJobSeeker": "Register as Job Seeker"
+  },
+  "Auth": {
+    "login": "Login",
+    "loggingIn": "Logging in...",
+    "email": "Email",
+    "password": "Password",
+    "noAccount": "Do not have an account?",
+    "goBack": "Go back",
+    "invalidCredentials": "Invalid email or password",
+    "alreadyHaveAccount": "Already have an account?",
+    "loginHere": "Login here"
+  },
+  "Register": {
+    "jobSeeker": {
+      "title": "Register as Job Seeker",
+      "fullName": "Full Name",
+      "portfolioUrl": "Portfolio URL (optional)",
+      "experienceSummary": "Experience Summary (optional)",
+      "register": "Register",
+      "registering": "Registering...",
+      "error": "Failed to register. Please check your input."
+    },
+    "company": {
+      "title": "Register as Company",
+      "companyName": "Company Name",
+      "websiteUrl": "Website URL (optional)",
+      "description": "Company Description (optional)",
+      "register": "Register",
+      "registering": "Registering...",
+      "error": "Failed to register. Please check your input."
+    }
+  },
+  "Dashboard": {
+    "company": {
+      "welcome": "Welcome, {name}",
+      "profile": "Company Profile",
+      "vacancies": "Manage Vacancies",
+      "applications": "Browse Applications",
+      "messages": "Messages"
+    },
+    "jobSeeker": {
+      "welcome": "Welcome, {name}",
+      "profile": "View Profile",
+      "vacancies": "Browse Vacancies",
+      "applications": "Browse Applications",
+      "messages": "Messages"
+    }
+  },
+  "Profile": {
+    "company": {
+      "title": "Company Profile",
+      "editTitle": "Edit Company Profile",
+      "editProfile": "Edit Profile",
+      "updateSuccess": "Profile updated!",
+      "updateError": "Failed to update."
+    },
+    "jobSeeker": {
+      "title": "Your Profile",
+      "editTitle": "Edit Profile",
+      "editProfile": "Edit Profile",
+      "updateSuccess": "Profile updated!",
+      "updateError": "Failed to update."
+    },
+    "view": {
+      "jobSeekerProfile": "Job Seeker Profile",
+      "companyProfile": "Company Profile",
+      "jobSeekerInfo": "Job Seeker Info",
+      "companyInfo": "Company Info",
+      "role": "Role",
+      "name": "Name",
+      "portfolio": "Portfolio",
+      "experience": "Experience",
+      "companyName": "Company Name",
+      "website": "Website",
+      "description": "Description",
+      "notFound": "Profile not found.",
+      "error": "Failed to load profile."
+    },
+    "details": {
+      "noCompanyProfile": "No company profile found.",
+      "noJobSeekerProfile": "No job seeker profile found.",
+      "email": "Email",
+      "createdAt": "Created At",
+      "companyInfo": "Company Info",
+      "jobSeekerInfo": "Job Seeker Info",
+      "companyName": "Company Name",
+      "website": "Website",
+      "description": "Description",
+      "name": "Name",
+      "portfolio": "Portfolio",
+      "experience": "Experience"
+    },
+    "form": {
+      "companyName": "Company Name",
+      "websiteUrl": "Website URL",
+      "description": "Description",
+      "fullName": "Full Name",
+      "portfolioUrl": "Portfolio URL",
+      "experienceSummary": "Experience Summary"
+    }
+  },
+  "Vacancies": {
+    "list": {
+      "title": "My Vacancies",
+      "addNew": "Add New Vacancy",
+      "noVacancies": "You have not posted any vacancies.",
+      "role": "Role",
+      "salary": "Salary",
+      "posted": "Posted",
+      "error": "Failed to load vacancies"
+    },
+    "browse": {
+      "title": "All Vacancies",
+      "noVacancies": "No vacancies available.",
+      "company": "Company",
+      "role": "Role",
+      "salary": "Salary",
+      "posted": "Posted",
+      "apply": "Apply",
+      "applying": "Applying...",
+      "viewProfile": "View Profile",
+      "unknown": "Unknown",
+      "error": "Failed to load data",
+      "applySuccess": "Application submitted successfully!",
+      "alreadyApplied": "You have already applied for this vacancy.",
+      "applyError": "An error occurred while applying."
+    },
+    "add": {
+      "title": "Add New Vacancy",
+      "jobTitle": "Job Title",
+      "role": "Role",
+      "jobDescription": "Job Description",
+      "salaryRange": "Salary Range (optional)",
+      "adding": "Adding...",
+      "addVacancy": "Add Vacancy",
+      "error": "Something went wrong"
+    },
+    "edit": {
+      "title": "Edit Vacancy",
+      "saving": "Saving...",
+      "saveChanges": "Save Changes",
+      "error": "Failed to update.",
+      "deleteError": "Failed to delete.",
+      "notFound": "Vacancy not found.",
+      "confirmDelete": "Are you sure you want to delete this vacancy? This cannot be undone."
+    }
+  },
+  "Applications": {
+    "company": {
+      "title": "Received Applications",
+      "noApplications": "No one has applied to your vacancies yet.",
+      "applicant": "Applicant",
+      "viewProfile": "View Profile",
+      "appliedOn": "Applied on",
+      "accept": "Accept",
+      "reject": "Reject",
+      "error": "Failed to load company applications",
+      "confirmAccept": "Are you sure you want to ACCEPT this application? This action cannot be undone.",
+      "confirmReject": "Are you sure you want to REJECT this application? This action cannot be undone.",
+      "updateError": "Failed to update status",
+      "status": {
+        "applied": "Applied",
+        "accepted": "Accepted",
+        "rejected": "Rejected"
+      }
+    },
+    "jobSeeker": {
+      "title": "My Applications",
+      "noApplications": "You have not applied to any jobs yet.",
+      "unknownCompany": "Unknown Company",
+      "appliedOn": "Applied on",
+      "error": "Failed to fetch applications",
+      "status": {
+        "applied": "Applied",
+        "accepted": "Accepted",
+        "rejected": "Rejected"
+      }
+    }
+  },
+  "Messages": {
+    "title": "Messages",
+    "loadingConversations": "Loading conversations...",
+    "loadingMessages": "Loading messages...",
+    "noConversations": "No conversations yet. Accept an application to start chatting.",
+    "noMessages": "No messages yet. Start the conversation!",
+    "selectConversation": "Select a conversation",
+    "selectConversationDesc": "Choose a conversation from the list to start chatting",
+    "typeMessage": "Type your message...",
+    "viewJobSeekerProfile": "View Job Seeker Profile",
+    "viewCompanyProfile": "View Company Profile"
+  },
+  "NotFound": {
+    "title": "404",
+    "heading": "Page Not Found",
+    "description": "The page you are looking for does not exist or you do not have access to it.",
+    "goBack": "Go Back"
+  },
+  "LanguageSwitcher": {
+    "language": "Language",
+    "en": "English",
+    "nl": "Nederlands"
+  }
+}

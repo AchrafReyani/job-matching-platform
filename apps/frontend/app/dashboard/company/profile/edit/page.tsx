@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import AuthGuard from "@/features/auth/components/AuthGuard";
 import ProfileCardLayout from "@/features/profile/components/ProfileCardLayout";
 import ProfileActionButtons from "@/features/profile/components/ProfileActionButtons";
@@ -12,6 +13,8 @@ import { getProfile, updateProfile } from "@/lib/auth/api";
 
 export default function EditCompanyProfilePage() {
   const router = useRouter();
+  const t = useTranslations('Profile.company');
+  const tCommon = useTranslations('Common');
 
   const [companyName, setCompanyName] = useState("");
   const [websiteUrl, setWebsiteUrl] = useState("");
@@ -49,9 +52,9 @@ export default function EditCompanyProfilePage() {
 
     try {
       await updateProfile({ companyName, websiteUrl, description });
-      setMessage("✅ Profile updated!");
+      setMessage(t('updateSuccess'));
     } catch {
-      setMessage("❌ Failed to update.");
+      setMessage(t('updateError'));
     } finally {
       setSaving(false);
     }
@@ -61,7 +64,7 @@ export default function EditCompanyProfilePage() {
 
   return (
     <AuthGuard allowedRole="COMPANY">
-      <ProfileCardLayout title="Edit Company Profile">
+      <ProfileCardLayout title={t('editTitle')}>
         <ProfileFormCompany
           companyName={companyName}
           setCompanyName={setCompanyName}
@@ -75,11 +78,11 @@ export default function EditCompanyProfilePage() {
 
         <ProfileActionButtons
           left={{
-            label: "Back",
+            label: tCommon('back'),
             onClick: () => router.push("/dashboard/company/profile"),
           }}
           right={{
-            label: saving ? "Saving..." : "Save Changes",
+            label: saving ? tCommon('saving') : tCommon('saveChanges'),
             onClick: handleSave,
             disabled: saving,
           }}

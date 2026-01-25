@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 
 import { getToken } from '@/lib/api';
 import { getCompanyApplications, updateApplication } from '@/lib/applications/api';
@@ -12,6 +13,8 @@ import { Button } from '@/components/ui/Button';
 
 export default function CompanyApplicationsPage() {
   const router = useRouter();
+  const t = useTranslations('Applications.company');
+  const tCommon = useTranslations('Common');
 
   const [applications, setApplications] = useState<Application[]>([]);
   const [loading, setLoading] = useState(true);
@@ -31,20 +34,20 @@ export default function CompanyApplicationsPage() {
         setApplications(list);
       } catch (err) {
         console.error(err);
-        setError('Failed to load company applications');
+        setError(t('error'));
       } finally {
         setLoading(false);
       }
     };
 
     load();
-  }, [router]);
+  }, [router, t]);
 
   const handleDecision = async (id: number, status: ApplicationStatus) => {
     const confirmMsg =
       status === 'ACCEPTED'
-        ? 'Are you sure you want to ACCEPT this application? This action cannot be undone.'
-        : 'Are you sure you want to REJECT this application? This action cannot be undone.';
+        ? t('confirmAccept')
+        : t('confirmReject');
 
     if (!window.confirm(confirmMsg)) return;
 
@@ -55,13 +58,13 @@ export default function CompanyApplicationsPage() {
       setApplications((prev) => prev.map((app) => (app.id === id ? { ...app, status } : app)));
     } catch (err) {
       console.error(err);
-      alert('Failed to update status');
+      alert(t('updateError'));
     } finally {
       setProcessingId(null);
     }
   };
 
-  if (loading) return <div className="flex justify-center mt-10">Loading...</div>;
+  if (loading) return <div className="flex justify-center mt-10">{tCommon('loading')}</div>;
 
   if (error)
     return (
@@ -74,12 +77,12 @@ export default function CompanyApplicationsPage() {
     <div className="flex flex-col items-center justify-center min-h-screen bg-(--color-bg) p-6">
       <Card className="w-full max-w-3xl p-6">
         <h1 className="text-2xl font-bold text-center mb-6 text-(--color-text)">
-          Received Applications
+          {t('title')}
         </h1>
 
         {applications.length === 0 ? (
           <p className="text-center text-(--color-muted)">
-            No one has applied to your vacancies yet.
+            {t('noApplications')}
           </p>
         ) : (
           <div className="space-y-4">
@@ -93,21 +96,21 @@ export default function CompanyApplicationsPage() {
                 </h2>
 
                 <p className="text-(--color-text)">
-                  Applicant: <strong>{app.jobSeeker.fullName}</strong>
+                  {t('applicant')}: <strong>{app.jobSeeker.fullName}</strong>
                 </p>
 
                 <div className="mt-2">
                   <Button
                     onClick={() => router.push(`/profiles/${app.jobSeeker.userId}`)}
                     className="
-                      bg-transparent 
-                      text-(--color-primary) 
-                      border-(--color-primary) 
+                      bg-transparent
+                      text-(--color-primary)
+                      border-(--color-primary)
                       hover:bg-primary-light
                       hover:text-(--color-text)
                     "
                   >
-                    View Profile
+                    {t('viewProfile')}
                   </Button>
                 </div>
 
@@ -121,11 +124,11 @@ export default function CompanyApplicationsPage() {
                         : 'bg-(--color-warning-light) text-(--color-warning-dark)'
                     }`}
                   >
-                    {app.status}
+                    {t(`status.${app.status.toLowerCase()}`)}
                   </span>
 
                   <span className="text-sm text-(--color-muted)">
-                    Applied on {new Date(app.appliedAt).toLocaleDateString()}
+                    {t('appliedOn')} {new Date(app.appliedAt).toLocaleDateString()}
                   </span>
                 </div>
 
@@ -135,7 +138,7 @@ export default function CompanyApplicationsPage() {
                     onClick={() => handleDecision(app.id, 'ACCEPTED')}
                     className="text-white transition bg-(--color-success-dark) hover:bg-(--color-success-light)"
                   >
-                    Accept
+                    {t('accept')}
                   </Button>
 
                   <Button
@@ -143,7 +146,7 @@ export default function CompanyApplicationsPage() {
                     onClick={() => handleDecision(app.id, 'REJECTED')}
                     className="text-white transition bg-(--color-error-dark) hover:bg-(--color-error-light)"
                   >
-                    Reject
+                    {t('reject')}
                   </Button>
                 </div>
               </div>
@@ -152,7 +155,7 @@ export default function CompanyApplicationsPage() {
         )}
 
         <div className="mt-6 text-center">
-          <Button onClick={() => router.push('/dashboard/company')}>Back to Dashboard</Button>
+          <Button onClick={() => router.push('/dashboard/company')}>{tCommon('backToDashboard')}</Button>
         </div>
       </Card>
     </div>

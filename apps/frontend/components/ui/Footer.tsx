@@ -1,8 +1,11 @@
 'use client';
 
 import { Github } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 
 export function Footer() {
+  const t = useTranslations('Footer');
+
   return (
     <footer
       className="
@@ -13,7 +16,7 @@ export function Footer() {
       "
     >
       <p className="text-sm">
-        © {new Date().getFullYear()} JobMatch. All rights reserved.
+        {t('copyright', { year: new Date().getFullYear() })}
       </p>
 
       <a
@@ -23,7 +26,7 @@ export function Footer() {
         className="flex items-center gap-1 text-(--color-muted) hover:text-(--color-text) transition"
       >
         <Github size={18} />
-        <span className="text-sm">GitHub</span>
+        <span className="text-sm">{t('github')}</span>
       </a>
     </footer>
   );
