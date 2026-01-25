@@ -8,8 +8,10 @@ import { GetApplicationsForJobSeekerUseCase } from './usecase/get-applications-f
 import { GetApplicationsForCompanyUseCase } from './usecase/get-applications-for-company.usecase';
 import { GetApplicationByIdUseCase } from './usecase/get-application-by-id.usecase';
 import { UpdateApplicationStatusUseCase } from './usecase/update-application-status.usecase';
+import { NotificationsModule } from '../notifications/notifications.module';
 
 @Module({
+  imports: [NotificationsModule],
   controllers: [ApplicationsController],
   providers: [
     PrismaService,

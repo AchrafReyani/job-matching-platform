@@ -1,29 +1,20 @@
 'use client';
 
-import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
-import AuthGuard from "@/features/auth/components/AuthGuard";
-import ProfileCardLayout from "@/features/profile/components/ProfileCardLayout";
-import ProfileDetailsJobSeeker from "@/features/profile/components/ProfileDetailsJobSeeker";
-import ProfileActionButtons from "@/features/profile/components/ProfileActionButtons";
-import LoadingScreen from "@/components/common/LoadingScreen";
-import { getProfile } from "@/lib/auth/api";
-import { getToken } from "@/lib/api";
-import type { ProfileResponse } from "@/lib/auth/types";
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { DashboardLayout } from '@/components/layout/DashboardLayout';
+import ProfileDetailsJobSeeker from '@/features/profile/components/ProfileDetailsJobSeeker';
+import { Button } from '@/components/ui/Button';
+import { Card } from '@/components/ui/Card';
+import { getProfile } from '@/lib/auth/api';
+import type { ProfileResponse } from '@/lib/auth/types';
 
 export default function DashboardJobSeekerProfilePage() {
   const [profile, setProfile] = useState<ProfileResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
-  // Load profile (since this page *shows* details, not AuthGuard)
   useEffect(() => {
-    const token = getToken();
-    if (!token) {
-      router.push("/login");
-      return;
-    }
-
     (async () => {
       try {
         const data = await getProfile();
@@ -32,30 +23,28 @@ export default function DashboardJobSeekerProfilePage() {
         setLoading(false);
       }
     })();
-  }, [router]);
-
-  if (loading) return <LoadingScreen />;
+  }, []);
 
   return (
-    <AuthGuard allowedRole="JOB_SEEKER">
-      <ProfileCardLayout title="Your Profile">
-        {profile && (
-          <>
-            <ProfileDetailsJobSeeker profile={profile} />
+    <DashboardLayout requiredRole="JOB_SEEKER">
+      <div className="space-y-6">
+        <div className="flex justify-between items-center">
+          <h1 className="text-2xl font-bold text-[var(--color-text)]">Your Profile</h1>
+          <Button onClick={() => router.push('/dashboard/job-seeker/profile/edit')}>
+            Edit Profile
+          </Button>
+        </div>
 
-            <ProfileActionButtons
-              left={{
-                label: "Back to Dashboard",
-                onClick: () => router.push("/dashboard/job-seeker"),
-              }}
-              right={{
-                label: "Edit Profile",
-                onClick: () => router.push("/dashboard/job-seeker/profile/edit"),
-              }}
-            />
-          </>
-        )}
-      </ProfileCardLayout>
-    </AuthGuard>
+        {loading ? (
+          <div className="flex justify-center py-10">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[var(--color-primary)]" />
+          </div>
+        ) : profile ? (
+          <Card className="p-6">
+            <ProfileDetailsJobSeeker profile={profile} />
+          </Card>
+        ) : null}
+      </div>
+    </DashboardLayout>
   );
 }

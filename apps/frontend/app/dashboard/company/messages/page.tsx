@@ -1,9 +1,12 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { Button } from '@/components/ui/Button';
+import { Sidebar } from '@/components/layout/Sidebar';
+import LoadingScreen from '@/components/common/LoadingScreen';
 import type { ConversationSummary } from '@/lib/messages/types';
+import { getToken } from '@/lib/api';
+import { getProfile } from '@/lib/auth/api';
 import {
   ConversationList,
   ChatPanel,
@@ -14,6 +17,9 @@ import {
 
 export default function CompanyMessagesPage() {
   const router = useRouter();
+  const [loading, setLoading] = useState(true);
+  const [userName, setUserName] = useState('');
+
   const user = useCurrentUser();
   const { conversations, loading: conversationsLoading, error: conversationsError, refetch: refetchConversations } = useConversations();
   const [activeConversation, setActiveConversation] = useState<ConversationSummary | null>(null);
@@ -25,9 +31,34 @@ export default function CompanyMessagesPage() {
     sendMessage,
   } = useChat(activeConversation?.applicationId ?? null);
 
+  useEffect(() => {
+    const checkAuth = async () => {
+      const token = getToken();
+      if (!token) {
+        router.push('/login');
+        return;
+      }
+
+      try {
+        const profile = await getProfile();
+        if (profile.role !== 'COMPANY') {
+          router.push('/dashboard/job-seeker/messages');
+          return;
+        }
+        setUserName(profile.company?.companyName || 'Company');
+      } catch {
+        router.push('/login');
+        return;
+      }
+
+      setLoading(false);
+    };
+
+    checkAuth();
+  }, [router]);
+
   const handleSelectConversation = (conversation: ConversationSummary) => {
     setActiveConversation(conversation);
-    // Refetch conversations to update unread counts
     refetchConversations();
   };
 
@@ -36,45 +67,45 @@ export default function CompanyMessagesPage() {
     refetchConversations();
   };
 
+  if (loading) {
+    return <LoadingScreen />;
+  }
+
   return (
-    <div className="h-screen bg-(--color-bg) flex flex-col">
-      {/* Header */}
-      <div className="p-4 border-b border-(--color-muted) bg-(--color-secondary)">
-        <div className="flex items-center justify-between max-w-7xl mx-auto">
-          <h1 className="text-2xl font-bold text-(--color-text)">Messages</h1>
-          <Button
-            variant="outline"
-            onClick={() => router.push('/dashboard/company')}
-          >
-            Back to Dashboard
-          </Button>
-        </div>
-      </div>
+    <div className="h-screen bg-[var(--color-bg)] flex">
+      <Sidebar role="COMPANY" userName={userName} />
 
-      {/* Main content */}
-      <div className="flex-1 flex overflow-hidden max-w-7xl mx-auto w-full">
-        {/* Left panel - Conversation list */}
-        <div className="w-1/3 border-r border-(--color-muted) bg-(--color-secondary)">
-          <ConversationList
-            conversations={conversations}
-            activeApplicationId={activeConversation?.applicationId ?? null}
-            onSelectConversation={handleSelectConversation}
-            loading={conversationsLoading}
-            error={conversationsError}
-          />
+      <div className="ml-64 flex-1 flex flex-col">
+        {/* Header */}
+        <div className="p-4 border-b border-[var(--color-secondary)]">
+          <h1 className="text-2xl font-bold text-[var(--color-text)]">Messages</h1>
         </div>
 
-        {/* Right panel - Active chat */}
-        <div className="w-2/3 p-4">
-          <ChatPanel
-            conversation={activeConversation}
-            messages={messages}
-            currentUserId={user?.userId ?? null}
-            loading={messagesLoading}
-            error={messagesError}
-            onSendMessage={handleSendMessage}
-            userRole="COMPANY"
-          />
+        {/* Main content */}
+        <div className="flex-1 flex overflow-hidden">
+          {/* Left panel - Conversation list */}
+          <div className="w-1/3 border-r border-[var(--color-secondary)] bg-[var(--color-bg)]">
+            <ConversationList
+              conversations={conversations}
+              activeApplicationId={activeConversation?.applicationId ?? null}
+              onSelectConversation={handleSelectConversation}
+              loading={conversationsLoading}
+              error={conversationsError}
+            />
+          </div>
+
+          {/* Right panel - Active chat */}
+          <div className="w-2/3 flex flex-col">
+            <ChatPanel
+              conversation={activeConversation}
+              messages={messages}
+              currentUserId={user?.userId ?? null}
+              loading={messagesLoading}
+              error={messagesError}
+              onSendMessage={handleSendMessage}
+              userRole="COMPANY"
+            />
+          </div>
         </div>
       </div>
     </div>

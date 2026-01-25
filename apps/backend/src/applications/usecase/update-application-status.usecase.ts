@@ -3,15 +3,21 @@ import {
   Inject,
   NotFoundException,
   ForbiddenException,
+  Optional,
 } from '@nestjs/common';
-import { Application, ApplicationStatus } from '@prisma/client';
+import { Application, ApplicationStatus, NotificationType } from '@prisma/client';
 import * as applicationRepository from '../repository/application.repository';
+import type { NotificationRepository } from '../../notifications/repository/notification.repository';
+import { NOTIFICATION_REPOSITORY } from '../../notifications/repository/notification.repository';
 
 @Injectable()
 export class UpdateApplicationStatusUseCase {
   constructor(
     @Inject(applicationRepository.APPLICATION_REPOSITORY)
     private readonly applicationRepository: applicationRepository.ApplicationRepository,
+    @Optional()
+    @Inject(NOTIFICATION_REPOSITORY)
+    private readonly notificationRepository?: NotificationRepository,
   ) {}
 
   async execute(
@@ -26,7 +32,7 @@ export class UpdateApplicationStatusUseCase {
     }
 
     const application =
-      await this.applicationRepository.findApplicationWithVacancy(
+      await this.applicationRepository.findApplicationWithVacancyAndJobSeeker(
         applicationId,
       );
     if (!application) {
@@ -37,6 +43,38 @@ export class UpdateApplicationStatusUseCase {
       throw new ForbiddenException('Not allowed to update this application');
     }
 
-    return this.applicationRepository.updateStatus(applicationId, status);
+    const updatedApplication = await this.applicationRepository.updateStatus(
+      applicationId,
+      status,
+    );
+
+    // Create notification for job seeker
+    if (this.notificationRepository) {
+      const notificationType =
+        status === 'ACCEPTED'
+          ? NotificationType.APPLICATION_ACCEPTED
+          : status === 'REJECTED'
+            ? NotificationType.APPLICATION_REJECTED
+            : null;
+
+      if (notificationType) {
+        const title =
+          status === 'ACCEPTED' ? 'Application Accepted' : 'Application Rejected';
+        const message =
+          status === 'ACCEPTED'
+            ? `Your application to ${application.vacancy.title} at ${application.vacancy.company.companyName} was accepted!`
+            : `Your application to ${application.vacancy.title} at ${application.vacancy.company.companyName} was not selected`;
+
+        await this.notificationRepository.create({
+          userId: application.jobSeeker.userId,
+          type: notificationType,
+          title,
+          message,
+          relatedId: applicationId,
+        });
+      }
+    }
+
+    return updatedApplication;
   }
 }

@@ -11,6 +11,7 @@ import {
   ApplicationRepository,
   ApplicationWithRelations,
   ApplicationWithVacancy,
+  ApplicationWithVacancyAndJobSeeker,
 } from '../repository/application.repository';
 
 @Injectable()
@@ -168,6 +169,34 @@ export class PrismaApplicationRepository implements ApplicationRepository {
     return this.prisma.application.findUnique({
       where: { id: applicationId },
       include: { vacancy: true },
+    });
+  }
+
+  async findApplicationWithVacancyAndJobSeeker(
+    applicationId: number,
+  ): Promise<ApplicationWithVacancyAndJobSeeker | null> {
+    return this.prisma.application.findUnique({
+      where: { id: applicationId },
+      include: {
+        vacancy: {
+          include: {
+            company: {
+              select: {
+                id: true,
+                userId: true,
+                companyName: true,
+              },
+            },
+          },
+        },
+        jobSeeker: {
+          select: {
+            id: true,
+            userId: true,
+            fullName: true,
+          },
+        },
+      },
     });
   }
 }

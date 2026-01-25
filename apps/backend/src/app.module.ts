@@ -8,6 +8,8 @@ import { CompaniesModule } from './companies/companies.module';
 import { ApplicationsModule } from './applications/applications.module';
 import { MessagesModule } from './messages/messages.module';
 import { ProfilesModule } from './profiles/profiles.module';
+import { NotificationsModule } from './notifications/notifications.module';
+import { DashboardModule } from './dashboard/dashboard.module';
 
 import { AppController } from './app.controller';
 
@@ -21,6 +23,8 @@ import { AppController } from './app.controller';
     ApplicationsModule,
     MessagesModule,
     ProfilesModule,
+    NotificationsModule,
+    DashboardModule,
   ],
   controllers: [AppController],
   providers: [PrismaService],

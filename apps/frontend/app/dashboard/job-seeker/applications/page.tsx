@@ -1,14 +1,12 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { DashboardLayout } from '@/components/layout/DashboardLayout';
 import { Card } from '@/components/ui/Card';
-import { Button } from '@/components/ui/Button';
 import type { Application } from '@/lib/applications/types';
 import { getMyApplications } from '@/lib/applications/api';
 
 export default function JobSeekerApplicationsPage() {
-  const router = useRouter();
   const [applications, setApplications] = useState<Application[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -27,40 +25,47 @@ export default function JobSeekerApplicationsPage() {
     };
 
     fetchApplications();
-  }, [router]);
+  }, []);
 
   const getStatusClasses = (status: string) => {
     switch (status) {
       case 'ACCEPTED':
-        return 'bg-[var(--color-success-light)] text-[var(--color-success-dark)]';
+        return 'bg-green-100 text-green-800';
       case 'REJECTED':
-        return 'bg-[var(--color-error-light)] text-[var(--color-error-dark)]';
+        return 'bg-red-100 text-red-800';
       default:
-        return 'bg-[var(--color-warning-light)] text-[var(--color-warning-dark)]';
+        return 'bg-yellow-100 text-yellow-800';
     }
   };
 
-  if (loading) return <div className="flex justify-center mt-10">Loading...</div>;
-  if (error) return <div className="text-(--color-error-dark) text-center mt-6">{error}</div>;
-
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-(--color-bg) p-6 text-(--color-text)">
-      <Card className="w-full max-w-2xl p-6 bg-(--color-secondary) text-(--color-text)">
-        <h1 className="text-2xl font-bold text-center mb-6">My Applications</h1>
+    <DashboardLayout requiredRole="JOB_SEEKER">
+      <div className="space-y-6">
+        <h1 className="text-2xl font-bold text-[var(--color-text)]">My Applications</h1>
 
-        {applications.length === 0 ? (
-          <p className="text-center text-(--color-muted)">
+        {loading ? (
+          <div className="flex justify-center py-10">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[var(--color-primary)]" />
+          </div>
+        ) : error ? (
+          <div className="text-red-500 text-center py-10">{error}</div>
+        ) : applications.length === 0 ? (
+          <p className="text-[var(--color-text)] opacity-70 text-center py-10">
             You haven&apos;t applied to any jobs yet.
           </p>
         ) : (
           <div className="space-y-4">
             {applications.map((app) => (
-              <Card key={app.id} className="p-4 shadow-sm hover:shadow-md">
-                <h2 className="text-lg font-semibold">{app.vacancy.title}</h2>
-                <p className="text-(--color-muted)">
-                  {app.vacancy.company?.companyName ?? 'Unknown Company'}
-                </p>
-                <div className="mt-2 flex justify-between items-center">
+              <Card key={app.id} className="p-4">
+                <div className="flex justify-between items-start">
+                  <div>
+                    <h2 className="text-lg font-semibold text-[var(--color-text)]">
+                      {app.vacancy.title}
+                    </h2>
+                    <p className="text-[var(--color-text)] opacity-70">
+                      {app.vacancy.company?.companyName ?? 'Unknown Company'}
+                    </p>
+                  </div>
                   <span
                     className={`px-3 py-1 rounded-full text-sm font-medium ${getStatusClasses(
                       app.status
@@ -68,24 +73,15 @@ export default function JobSeekerApplicationsPage() {
                   >
                     {app.status}
                   </span>
-                  <span className="text-sm text-(--color-muted)">
-                    Applied on {new Date(app.appliedAt).toLocaleDateString()}
-                  </span>
                 </div>
+                <p className="text-sm text-[var(--color-text)] opacity-60 mt-2">
+                  Applied on {new Date(app.appliedAt).toLocaleDateString()}
+                </p>
               </Card>
             ))}
           </div>
         )}
-
-        <div className="mt-6 text-center">
-          <Button
-            className="bg-(--color-primary) hover:bg-primary-dark text-(--color-on-primary)"
-            onClick={() => router.push('/dashboard/job-seeker')}
-          >
-            Back to Dashboard
-          </Button>
-        </div>
-      </Card>
-    </div>
+      </div>
+    </DashboardLayout>
   );
 }

@@ -14,9 +14,10 @@ model User {
   role         Role
   createdAt    DateTime @default(now())
 
-  jobSeeker JobSeeker?
-  company   Company?
-  messages  Message[]
+  jobSeeker     JobSeeker?
+  company       Company?
+  messages      Message[]
+  notifications Notification[]
 }
 
 enum Role {
@@ -96,4 +97,25 @@ model Message {
   application Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
 
   sender      User        @relation(fields: [senderId], references: [id])
+}
+
+model Notification {
+  id          Int              @id @default(autoincrement())
+  userId      String
+  type        NotificationType
+  title       String
+  message     String
+  relatedId   Int?
+  isRead      Boolean          @default(false)
+  createdAt   DateTime         @default(now())
+
+  user        User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+enum NotificationType {
+  APPLICATION_ACCEPTED
+  APPLICATION_REJECTED
+  NEW_MESSAGE
+  NEW_APPLICATION
+  APPLICATION_WITHDRAWN
 }

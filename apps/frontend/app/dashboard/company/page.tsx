@@ -1,51 +1,62 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
-import { Button } from '@/components/ui/Button';
-import { getToken } from '@/lib/api';
-import { getProfile } from '@/lib/auth/api';
-import { logout } from '@/lib/auth/logout';
 import { useEffect, useState } from 'react';
+import { DashboardLayout } from '@/components/layout/DashboardLayout';
+import { CompanyStatsGrid } from '@/components/dashboard/StatsGrid';
+import { NotificationList } from '@/components/notifications/NotificationList';
+import { getDashboardStats } from '@/lib/dashboard/api';
+import { CompanyStats } from '@/lib/dashboard/types';
+import { Card } from '@/components/ui/Card';
 
 export default function CompanyDashboard() {
-  const router = useRouter();
-  const [companyName, setCompanyName] = useState<string | null>(null);
+  const [stats, setStats] = useState<CompanyStats | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const token = getToken();
-    if (!token) {
-      router.push('/login');
-      return;
-    }
+    const fetchStats = async () => {
+      try {
+        const data = await getDashboardStats();
+        setStats(data as CompanyStats);
+      } catch {
+        setError('Failed to load dashboard stats');
+      } finally {
+        setLoading(false);
+      }
+    };
 
-    (async () => {
-      const profile = await getProfile();
-      setCompanyName(profile?.company?.companyName || 'Company');
-    })();
-  }, [router]);
+    fetchStats();
+  }, []);
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-(--color-bg) p-6">
-      <h1 className="text-2xl font-bold mb-6 text-(--color-text)">
-        Welcome, {companyName}
-      </h1>
-      <div className="flex flex-col gap-4 w-full max-w-sm">
-        <Button onClick={() => router.push('/dashboard/company/profile')}>
-          Company Profile
-        </Button>
-        <Button onClick={() => router.push('/dashboard/company/vacancies')}>
-          Manage Vacancies
-        </Button>
-        <Button onClick={() => router.push('/dashboard/company/applications')}>
-          Browse Applications
-        </Button>
-        <Button onClick={() => router.push('/dashboard/company/messages')}>
-          Messages
-        </Button>
-        <Button variant="destructive" onClick={logout}>
-          Logout
-        </Button>
+    <DashboardLayout requiredRole="COMPANY">
+      <div className="space-y-8">
+        <div>
+          <h1 className="text-2xl font-bold text-[var(--color-text)]">Dashboard</h1>
+          <p className="text-[var(--color-text)] opacity-70 mt-1">
+            Manage your vacancies and track applicants
+          </p>
+        </div>
+
+        {/* Stats Section */}
+        {loading ? (
+          <div className="flex items-center justify-center py-8">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[var(--color-primary)]" />
+          </div>
+        ) : error ? (
+          <div className="text-center py-8 text-red-500">{error}</div>
+        ) : stats ? (
+          <CompanyStatsGrid stats={stats} />
+        ) : null}
+
+        {/* Notifications Section */}
+        <Card>
+          <h2 className="text-lg font-semibold text-[var(--color-text)] mb-4">
+            Recent Notifications
+          </h2>
+          <NotificationList limit={5} showMarkAllRead={true} />
+        </Card>
       </div>
-    </div>
+    </DashboardLayout>
   );
 }
