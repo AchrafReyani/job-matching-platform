@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 
 import { DashboardLayout } from '@/components/layout/DashboardLayout';
 import { getProfile } from '@/lib/auth/api';
@@ -15,6 +16,8 @@ import { Button } from '@/components/ui/Button';
 
 export default function CompanyVacanciesPage() {
   const router = useRouter();
+  const t = useTranslations('Vacancies.list');
+  const tCommon = useTranslations('Common');
 
   const [vacancies, setVacancies] = useState<Vacancy[]>([]);
   const [loading, setLoading] = useState(true);
@@ -31,22 +34,22 @@ export default function CompanyVacanciesPage() {
         setVacancies(data);
       } catch (err) {
         console.error(err);
-        setError(err instanceof Error ? err.message : 'Failed to load vacancies');
+        setError(err instanceof Error ? err.message : t('error'));
       } finally {
         setLoading(false);
       }
     };
 
     load();
-  }, []);
+  }, [t]);
 
   return (
     <DashboardLayout requiredRole="COMPANY">
       <div className="space-y-6">
         <div className="flex justify-between items-center">
-          <h1 className="text-2xl font-bold text-[var(--color-text)]">My Vacancies</h1>
+          <h1 className="text-2xl font-bold text-[var(--color-text)]">{t('title')}</h1>
           <Button onClick={() => router.push('/dashboard/company/vacancies/add')}>
-            Add New Vacancy
+            {t('addNew')}
           </Button>
         </div>
 
@@ -58,7 +61,7 @@ export default function CompanyVacanciesPage() {
           <div className="text-red-500 text-center py-10">{error}</div>
         ) : vacancies.length === 0 ? (
           <p className="text-[var(--color-text)] opacity-70 text-center py-10">
-            You have not posted any vacancies.
+            {t('noVacancies')}
           </p>
         ) : (
           <div className="space-y-4">
@@ -70,11 +73,11 @@ export default function CompanyVacanciesPage() {
                       {vacancy.title}
                     </h2>
                     <p className="text-[var(--color-text)]">
-                      <strong>Role:</strong> {vacancy.role}
+                      <strong>{t('role')}:</strong> {vacancy.role}
                     </p>
                     {vacancy.salaryRange && (
                       <p className="text-[var(--color-text)]">
-                        <strong>Salary:</strong> {vacancy.salaryRange}
+                        <strong>{t('salary')}:</strong> {vacancy.salaryRange}
                       </p>
                     )}
                   </div>
@@ -84,12 +87,12 @@ export default function CompanyVacanciesPage() {
                       router.push(`/dashboard/company/vacancies/edit/${vacancy.id}`)
                     }
                   >
-                    Edit
+                    {tCommon('edit')}
                   </Button>
                 </div>
                 <p className="text-[var(--color-text)] mt-2">{vacancy.jobDescription}</p>
                 <p className="text-sm text-[var(--color-text)] opacity-60 mt-1">
-                  Posted: {new Date(vacancy.createdAt).toLocaleDateString()}
+                  {t('posted')}: {new Date(vacancy.createdAt).toLocaleDateString()}
                 </p>
               </Card>
             ))}

@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 
 import { DashboardLayout } from '@/components/layout/DashboardLayout';
 import { createVacancy } from '@/lib/vacancies/api';
@@ -13,6 +14,8 @@ import { Input } from '@/components/ui/Input';
 
 export default function AddVacancyPage() {
   const router = useRouter();
+  const t = useTranslations('Vacancies.add');
+  const tCommon = useTranslations('Common');
 
   const [form, setForm] = useState<CreateVacancyPayload>({
     title: '',
@@ -37,7 +40,7 @@ export default function AddVacancyPage() {
       await createVacancy(form);
       router.push('/dashboard/company/vacancies');
     } catch {
-      setError('Something went wrong');
+      setError(t('error'));
     } finally {
       setLoading(false);
     }
@@ -46,17 +49,17 @@ export default function AddVacancyPage() {
   return (
     <DashboardLayout requiredRole="COMPANY">
       <div className="max-w-2xl">
-        <h1 className="text-2xl font-bold text-[var(--color-text)] mb-6">Add New Vacancy</h1>
+        <h1 className="text-2xl font-bold text-[var(--color-text)] mb-6">{t('title')}</h1>
 
         <Card className="p-6">
           <form onSubmit={handleSubmit} className="flex flex-col gap-4">
             <div>
               <label className="block text-sm font-medium text-[var(--color-text)] mb-1">
-                Job Title
+                {t('jobTitle')}
               </label>
               <Input
                 type="text"
-                placeholder="e.g. Senior Frontend Developer"
+                placeholder={t('jobTitlePlaceholder')}
                 value={form.title}
                 onChange={(e) => updateField('title', e.target.value)}
                 required
@@ -65,11 +68,11 @@ export default function AddVacancyPage() {
 
             <div>
               <label className="block text-sm font-medium text-[var(--color-text)] mb-1">
-                Role
+                {t('role')}
               </label>
               <Input
                 type="text"
-                placeholder="e.g. Frontend, Backend, Full Stack"
+                placeholder={t('rolePlaceholder')}
                 value={form.role}
                 onChange={(e) => updateField('role', e.target.value)}
                 required
@@ -78,10 +81,10 @@ export default function AddVacancyPage() {
 
             <div>
               <label className="block text-sm font-medium text-[var(--color-text)] mb-1">
-                Job Description
+                {t('jobDescription')}
               </label>
               <textarea
-                placeholder="Describe the role, responsibilities, and requirements..."
+                placeholder={t('jobDescriptionPlaceholder')}
                 value={form.jobDescription}
                 onChange={(e) => updateField('jobDescription', e.target.value)}
                 className="w-full border border-[var(--color-secondary)] rounded-lg p-3 resize-none h-32
@@ -93,11 +96,11 @@ export default function AddVacancyPage() {
 
             <div>
               <label className="block text-sm font-medium text-[var(--color-text)] mb-1">
-                Salary Range (optional)
+                {t('salaryRange')}
               </label>
               <Input
                 type="text"
-                placeholder="e.g. $80,000 - $120,000"
+                placeholder={t('salaryRangePlaceholder')}
                 value={form.salaryRange}
                 onChange={(e) => updateField('salaryRange', e.target.value)}
               />
@@ -113,11 +116,11 @@ export default function AddVacancyPage() {
                 variant="outline"
                 onClick={() => router.push('/dashboard/company/vacancies')}
               >
-                Cancel
+                {tCommon('cancel')}
               </Button>
 
               <Button type="submit" disabled={loading}>
-                {loading ? 'Adding...' : 'Add Vacancy'}
+                {loading ? t('adding') : t('addVacancy')}
               </Button>
             </div>
           </form>

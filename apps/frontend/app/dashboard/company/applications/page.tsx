@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 
 import { DashboardLayout } from '@/components/layout/DashboardLayout';
 import { getCompanyApplications, updateApplication } from '@/lib/applications/api';
@@ -12,6 +13,7 @@ import { Button } from '@/components/ui/Button';
 
 export default function CompanyApplicationsPage() {
   const router = useRouter();
+  const t = useTranslations('Applications.company');
 
   const [applications, setApplications] = useState<Application[]>([]);
   const [loading, setLoading] = useState(true);
@@ -25,20 +27,20 @@ export default function CompanyApplicationsPage() {
         setApplications(list);
       } catch (err) {
         console.error(err);
-        setError('Failed to load company applications');
+        setError(t('error'));
       } finally {
         setLoading(false);
       }
     };
 
     load();
-  }, []);
+  }, [t]);
 
   const handleDecision = async (id: number, status: ApplicationStatus) => {
     const confirmMsg =
       status === 'ACCEPTED'
-        ? 'Are you sure you want to ACCEPT this application?'
-        : 'Are you sure you want to REJECT this application?';
+        ? t('confirmAccept')
+        : t('confirmReject');
 
     if (!window.confirm(confirmMsg)) return;
 
@@ -48,7 +50,7 @@ export default function CompanyApplicationsPage() {
       setApplications((prev) => prev.map((app) => (app.id === id ? { ...app, status } : app)));
     } catch (err) {
       console.error(err);
-      alert('Failed to update status');
+      alert(t('updateError'));
     } finally {
       setProcessingId(null);
     }
@@ -68,7 +70,7 @@ export default function CompanyApplicationsPage() {
   return (
     <DashboardLayout requiredRole="COMPANY">
       <div className="space-y-6">
-        <h1 className="text-2xl font-bold text-[var(--color-text)]">Received Applications</h1>
+        <h1 className="text-2xl font-bold text-[var(--color-text)]">{t('title')}</h1>
 
         {loading ? (
           <div className="flex justify-center py-10">
@@ -78,7 +80,7 @@ export default function CompanyApplicationsPage() {
           <div className="text-red-500 text-center py-10">{error}</div>
         ) : applications.length === 0 ? (
           <p className="text-[var(--color-text)] opacity-70 text-center py-10">
-            No one has applied to your vacancies yet.
+            {t('noApplications')}
           </p>
         ) : (
           <div className="space-y-4">
@@ -90,14 +92,14 @@ export default function CompanyApplicationsPage() {
                       {app.vacancy.title}
                     </h2>
                     <p className="text-[var(--color-text)]">
-                      Applicant: <strong>{app.jobSeeker.fullName}</strong>
+                      {t('applicant')}: <strong>{app.jobSeeker.fullName}</strong>
                     </p>
                     <Button
                       variant="outline"
                       className="mt-2"
                       onClick={() => router.push(`/profiles/${app.jobSeeker.userId}`)}
                     >
-                      View Profile
+                      {t('viewProfile')}
                     </Button>
                   </div>
                   <span
@@ -105,12 +107,12 @@ export default function CompanyApplicationsPage() {
                       app.status
                     )}`}
                   >
-                    {app.status}
+                    {t(`status.${app.status.toLowerCase()}`)}
                   </span>
                 </div>
 
                 <p className="text-sm text-[var(--color-text)] opacity-60 mt-2">
-                  Applied on {new Date(app.appliedAt).toLocaleDateString()}
+                  {t('appliedOn')} {new Date(app.appliedAt).toLocaleDateString()}
                 </p>
 
                 {app.status === 'APPLIED' && (
@@ -120,14 +122,14 @@ export default function CompanyApplicationsPage() {
                       onClick={() => handleDecision(app.id, 'ACCEPTED')}
                       className="bg-green-600 hover:bg-green-700 text-white"
                     >
-                      Accept
+                      {t('accept')}
                     </Button>
                     <Button
                       disabled={processingId === app.id}
                       onClick={() => handleDecision(app.id, 'REJECTED')}
                       variant="destructive"
                     >
-                      Reject
+                      {t('reject')}
                     </Button>
                   </div>
                 )}

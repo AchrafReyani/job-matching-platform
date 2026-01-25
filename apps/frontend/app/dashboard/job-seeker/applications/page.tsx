@@ -1,12 +1,14 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { useTranslations } from 'next-intl';
 import { DashboardLayout } from '@/components/layout/DashboardLayout';
 import { Card } from '@/components/ui/Card';
 import type { Application } from '@/lib/applications/types';
 import { getMyApplications } from '@/lib/applications/api';
 
 export default function JobSeekerApplicationsPage() {
+  const t = useTranslations('Applications.jobSeeker');
   const [applications, setApplications] = useState<Application[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -18,14 +20,14 @@ export default function JobSeekerApplicationsPage() {
         setApplications(data);
       } catch (err) {
         console.error(err);
-        setError('Failed to fetch applications');
+        setError(t('error'));
       } finally {
         setLoading(false);
       }
     };
 
     fetchApplications();
-  }, []);
+  }, [t]);
 
   const getStatusClasses = (status: string) => {
     switch (status) {
@@ -41,7 +43,7 @@ export default function JobSeekerApplicationsPage() {
   return (
     <DashboardLayout requiredRole="JOB_SEEKER">
       <div className="space-y-6">
-        <h1 className="text-2xl font-bold text-[var(--color-text)]">My Applications</h1>
+        <h1 className="text-2xl font-bold text-[var(--color-text)]">{t('title')}</h1>
 
         {loading ? (
           <div className="flex justify-center py-10">
@@ -51,7 +53,7 @@ export default function JobSeekerApplicationsPage() {
           <div className="text-red-500 text-center py-10">{error}</div>
         ) : applications.length === 0 ? (
           <p className="text-[var(--color-text)] opacity-70 text-center py-10">
-            You haven&apos;t applied to any jobs yet.
+            {t('noApplications')}
           </p>
         ) : (
           <div className="space-y-4">
@@ -63,7 +65,7 @@ export default function JobSeekerApplicationsPage() {
                       {app.vacancy.title}
                     </h2>
                     <p className="text-[var(--color-text)] opacity-70">
-                      {app.vacancy.company?.companyName ?? 'Unknown Company'}
+                      {app.vacancy.company?.companyName ?? t('unknownCompany')}
                     </p>
                   </div>
                   <span
@@ -71,11 +73,11 @@ export default function JobSeekerApplicationsPage() {
                       app.status
                     )}`}
                   >
-                    {app.status}
+                    {t(`status.${app.status.toLowerCase()}`)}
                   </span>
                 </div>
                 <p className="text-sm text-[var(--color-text)] opacity-60 mt-2">
-                  Applied on {new Date(app.appliedAt).toLocaleDateString()}
+                  {t('appliedOn')} {new Date(app.appliedAt).toLocaleDateString()}
                 </p>
               </Card>
             ))}

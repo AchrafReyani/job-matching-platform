@@ -1,3 +1,6 @@
+'use client';
+
+import { useTranslations } from 'next-intl';
 import ProfileFieldEditable from '@/components/common/ProfileFieldEditable';
 
 interface Props {
@@ -17,22 +20,24 @@ export default function ProfileFormJobSeeker({
   experienceSummary,
   setExperienceSummary,
 }: Props) {
+  const t = useTranslations('Profile.form');
+
   return (
     <div className="space-y-3">
       <ProfileFieldEditable
-        label="Full Name"
+        label={t('fullName')}
         value={fullName}
         onChange={setFullName}
       />
 
       <ProfileFieldEditable
-        label="Portfolio URL"
+        label={t('portfolioUrl')}
         value={portfolioUrl}
         onChange={setPortfolioUrl}
       />
 
       <ProfileFieldEditable
-        label="Experience Summary"
+        label={t('experienceSummary')}
         value={experienceSummary}
         onChange={setExperienceSummary}
         textarea

@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import { Sidebar } from '@/components/layout/Sidebar';
 import LoadingScreen from '@/components/common/LoadingScreen';
 import type { ConversationSummary } from '@/lib/messages/types';
@@ -17,6 +18,7 @@ import {
 
 export default function CompanyMessagesPage() {
   const router = useRouter();
+  const t = useTranslations('Messages');
   const [loading, setLoading] = useState(true);
   const [userName, setUserName] = useState('');
 
@@ -78,7 +80,7 @@ export default function CompanyMessagesPage() {
       <div className="ml-64 flex-1 flex flex-col">
         {/* Header */}
         <div className="p-4 border-b border-[var(--color-secondary)]">
-          <h1 className="text-2xl font-bold text-[var(--color-text)]">Messages</h1>
+          <h1 className="text-2xl font-bold text-[var(--color-text)]">{t('title')}</h1>
         </div>
 
         {/* Main content */}

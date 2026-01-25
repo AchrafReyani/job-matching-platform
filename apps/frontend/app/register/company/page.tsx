@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import { registerCompany, login } from '@/lib/auth/api';
 import { saveToken } from '@/lib/api';
 import { Card } from '@/components/ui/Card';
@@ -10,6 +11,8 @@ import { Input } from '@/components/ui/Input';
 
 export default function RegisterCompanyPage() {
   const router = useRouter();
+  const t = useTranslations('Register.company');
+  const tAuth = useTranslations('Auth');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [companyName, setCompanyName] = useState('');
@@ -24,7 +27,6 @@ export default function RegisterCompanyPage() {
     setError(null);
 
     try {
-      // Register new company account
       await registerCompany({
         email,
         password,
@@ -33,7 +35,6 @@ export default function RegisterCompanyPage() {
         description,
       });
 
-      // Immediately login after registration
       const { access_token } = await login(email, password);
       saveToken(access_token);
 
@@ -44,7 +45,7 @@ export default function RegisterCompanyPage() {
       if (err instanceof Error) {
         setError(err.message);
       } else {
-        setError('Failed to register. Please check your input.');
+        setError(t('error'));
       }
     } finally {
       setLoading(false);
@@ -55,13 +56,13 @@ export default function RegisterCompanyPage() {
     <div className="min-h-screen flex items-center justify-center bg-(--color-bg)">
       <Card className="w-full max-w-md p-6">
         <h1 className="text-2xl font-bold mb-6 text-center text-(--color-text)">
-          Register as Company
+          {t('title')}
         </h1>
 
         <form onSubmit={handleRegister} className="flex flex-col gap-4">
           <Input
             type="email"
-            placeholder="Email"
+            placeholder={tAuth('email')}
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
@@ -69,7 +70,7 @@ export default function RegisterCompanyPage() {
 
           <Input
             type="password"
-            placeholder="Password"
+            placeholder={tAuth('password')}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
@@ -77,7 +78,7 @@ export default function RegisterCompanyPage() {
 
           <Input
             type="text"
-            placeholder="Company Name"
+            placeholder={t('companyName')}
             value={companyName}
             onChange={(e) => setCompanyName(e.target.value)}
             required
@@ -85,13 +86,13 @@ export default function RegisterCompanyPage() {
 
           <Input
             type="url"
-            placeholder="Website URL (optional)"
+            placeholder={t('websiteUrl')}
             value={websiteUrl}
             onChange={(e) => setWebsiteUrl(e.target.value)}
           />
 
           <textarea
-            placeholder="Company Description (optional)"
+            placeholder={t('description')}
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             className="
@@ -112,18 +113,18 @@ export default function RegisterCompanyPage() {
           )}
 
           <Button type="submit" disabled={loading}>
-            {loading ? 'Registering...' : 'Register'}
+            {loading ? t('registering') : t('register')}
           </Button>
         </form>
 
         <div className="mt-6 text-center text-sm text-(--color-text)">
           <p>
-            Already have an account?{' '}
+            {tAuth('alreadyHaveAccount')}{' '}
             <a
               href="/login"
               className="text-(--color-primary) hover:underline font-medium"
             >
-              Login here
+              {tAuth('loginHere')}
             </a>
           </p>
         </div>

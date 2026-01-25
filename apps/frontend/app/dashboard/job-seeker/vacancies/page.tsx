@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 
 import { DashboardLayout } from '@/components/layout/DashboardLayout';
 import { Card } from '@/components/ui/Card';
@@ -26,6 +27,8 @@ function isApiError(err: unknown): err is ApiError {
 
 export default function JobSeekerVacanciesPage() {
   const router = useRouter();
+  const t = useTranslations('Vacancies.browse');
+  const tCommon = useTranslations('Common');
 
   const [vacancies, setVacancies] = useState<Vacancy[]>([]);
   const [companies, setCompanies] = useState<Record<number, Company>>({});
@@ -50,14 +53,14 @@ export default function JobSeekerVacanciesPage() {
         setCompanies(map);
       } catch (err: unknown) {
         console.error(err);
-        setError(err instanceof Error ? err.message : 'Failed to load data');
+        setError(err instanceof Error ? err.message : t('error'));
       } finally {
         setLoading(false);
       }
     };
 
     load();
-  }, []);
+  }, [t]);
 
   /** ---------------- APPLY TO VACANCY ---------------- */
   const handleApply = async (vacancyId: number) => {
@@ -66,18 +69,18 @@ export default function JobSeekerVacanciesPage() {
 
     try {
       await createApplication({ vacancyId });
-      setPopupMessage('✅ Application submitted successfully!');
+      setPopupMessage(t('applySuccess'));
     } catch (err: unknown) {
       console.error(err);
 
       if (isApiError(err)) {
         if (err.status === 409 || err.status === 403) {
-          setPopupMessage('⚠️ You have already applied for this vacancy.');
+          setPopupMessage(t('alreadyApplied'));
         } else {
-          setPopupMessage('❌ An error occurred while applying.');
+          setPopupMessage(t('applyError'));
         }
       } else {
-        setPopupMessage('❌ An unexpected error occurred.');
+        setPopupMessage(t('applyError'));
       }
     } finally {
       setSubmitting(null);
@@ -91,7 +94,7 @@ export default function JobSeekerVacanciesPage() {
   return (
     <DashboardLayout requiredRole="JOB_SEEKER">
       <div className="space-y-6">
-        <h1 className="text-2xl font-bold text-[var(--color-text)]">Browse Vacancies</h1>
+        <h1 className="text-2xl font-bold text-[var(--color-text)]">{t('title')}</h1>
 
         {loading ? (
           <div className="flex justify-center py-10">
@@ -101,7 +104,7 @@ export default function JobSeekerVacanciesPage() {
           <div className="text-red-500 text-center py-10">{error}</div>
         ) : vacancies.length === 0 ? (
           <p className="text-[var(--color-text)] opacity-70 text-center py-10">
-            No vacancies available.
+            {t('noVacancies')}
           </p>
         ) : (
           <div className="flex flex-col gap-4">
@@ -118,16 +121,16 @@ export default function JobSeekerVacanciesPage() {
                   </h2>
 
                   <p className="text-[var(--color-text)]">
-                    <strong>Company:</strong> {company?.companyName || 'Unknown'}
+                    <strong>{t('company')}:</strong> {company?.companyName || t('unknown')}
                   </p>
 
                   <p className="text-[var(--color-text)]">
-                    <strong>Role:</strong> {vacancy.role}
+                    <strong>{t('role')}:</strong> {vacancy.role}
                   </p>
 
                   {vacancy.salaryRange && (
                     <p className="text-[var(--color-text)]">
-                      <strong>Salary:</strong> {vacancy.salaryRange}
+                      <strong>{t('salary')}:</strong> {vacancy.salaryRange}
                     </p>
                   )}
 
@@ -135,7 +138,7 @@ export default function JobSeekerVacanciesPage() {
 
                   {vacancy.createdAt && (
                     <p className="text-sm text-[var(--color-text)] opacity-60 mt-1">
-                      Posted: {new Date(vacancy.createdAt).toLocaleDateString()}
+                      {t('posted')}: {new Date(vacancy.createdAt).toLocaleDateString()}
                     </p>
                   )}
 
@@ -144,7 +147,7 @@ export default function JobSeekerVacanciesPage() {
                       onClick={() => handleApply(vacancy.id)}
                       disabled={submitting === vacancy.id}
                     >
-                      {submitting === vacancy.id ? 'Applying...' : 'Apply'}
+                      {submitting === vacancy.id ? t('applying') : t('apply')}
                     </Button>
 
                     <Button
@@ -152,7 +155,7 @@ export default function JobSeekerVacanciesPage() {
                       onClick={() => router.push(`/profiles/${company?.userId}`)}
                       disabled={!company?.userId}
                     >
-                      View Profile
+                      {t('viewProfile')}
                     </Button>
                   </div>
                 </Card>
@@ -166,7 +169,7 @@ export default function JobSeekerVacanciesPage() {
         <div className="fixed inset-0 flex items-center justify-center bg-black/50 z-50">
           <div className="bg-[var(--color-bg)] p-6 rounded-2xl shadow-lg max-w-sm text-center">
             <p className="mb-4 text-[var(--color-text)]">{popupMessage}</p>
-            <Button onClick={closePopup}>OK</Button>
+            <Button onClick={closePopup}>{tCommon('ok')}</Button>
           </div>
         </div>
       )}

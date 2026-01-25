@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import { DashboardLayout } from '@/components/layout/DashboardLayout';
 import ProfileDetailsCompany from '@/features/profile/components/ProfileDetailsCompany';
 import { Button } from '@/components/ui/Button';
@@ -13,6 +14,7 @@ export default function DashboardCompanyProfilePage() {
   const [profile, setProfile] = useState<ProfileResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
+  const t = useTranslations('Profile.company');
 
   useEffect(() => {
     (async () => {
@@ -29,9 +31,9 @@ export default function DashboardCompanyProfilePage() {
     <DashboardLayout requiredRole="COMPANY">
       <div className="space-y-6">
         <div className="flex justify-between items-center">
-          <h1 className="text-2xl font-bold text-[var(--color-text)]">Company Profile</h1>
+          <h1 className="text-2xl font-bold text-[var(--color-text)]">{t('title')}</h1>
           <Button onClick={() => router.push('/dashboard/company/profile/edit')}>
-            Edit Profile
+            {t('editProfile')}
           </Button>
         </div>
 
