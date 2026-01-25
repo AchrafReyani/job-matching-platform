@@ -61,6 +61,8 @@ services:
       - ./apps/frontend/lib:/app/lib
       - ./apps/frontend/public:/app/public
       - ./apps/frontend/mocks:/app/mocks
+      - ./apps/frontend/i18n:/app/i18n
+      - ./apps/frontend/messages:/app/messages
       # Prevent overwriting node_modules from container
       - /app/node_modules
       - /app/.next
