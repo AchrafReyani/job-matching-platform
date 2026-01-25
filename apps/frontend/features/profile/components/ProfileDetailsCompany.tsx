@@ -15,12 +15,12 @@ export default function ProfileDetailsCompany({ profile }: { profile: ProfileRes
       />
 
       <div className="mt-4 border-t border-(--color-muted) pt-3">
-        <h2 className="font-semibold text-lg mb-2">Company Info</h2>
+        <h2 className="font-semibold text-lg mb-2 text-[var(--color-text)]">Company Info</h2>
 
         <ProfileField label="Company Name" value={company.companyName} />
 
         {company.websiteUrl && (
-          <p>
+          <p className="text-[var(--color-text)]">
             <strong>Website:</strong>{' '}
             <a
               href={company.websiteUrl}

@@ -15,12 +15,12 @@ export default function ProfileDetailsJobSeeker({ profile }: { profile: ProfileR
       />
 
       <div className="mt-4 border-t border-(--color-muted) pt-3">
-        <h2 className="font-semibold text-lg mb-2">Job Seeker Info</h2>
+        <h2 className="font-semibold text-lg mb-2 text-[var(--color-text)]">Job Seeker Info</h2>
 
         <ProfileField label="Name" value={js.fullName} />
 
         {js.portfolioUrl && (
-          <p>
+          <p className="text-[var(--color-text)]">
             <strong>Portfolio:</strong>{" "}
             <a
               href={js.portfolioUrl}

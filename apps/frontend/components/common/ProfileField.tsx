@@ -5,7 +5,7 @@ interface ProfileFieldProps {
 
 export default function ProfileField({ label, value }: ProfileFieldProps) {
   return (
-    <p>
+    <p className="text-[var(--color-text)]">
       <strong>{label}:</strong> {value ?? '—'}
     </p>
   );
