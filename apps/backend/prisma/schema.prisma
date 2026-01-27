@@ -23,6 +23,7 @@ model User {
 enum Role {
   JOB_SEEKER
   COMPANY
+  ADMIN
 }
 
 model JobSeeker {
@@ -118,4 +119,38 @@ enum NotificationType {
   NEW_MESSAGE
   NEW_APPLICATION
   APPLICATION_WITHDRAWN
+}
+
+model ArchivedUser {
+  id          Int      @id @default(autoincrement())
+  originalId  String
+  email       String
+  role        String
+  profileData Json
+  archivedAt  DateTime @default(now())
+  archivedBy  String
+}
+
+model ArchivedVacancy {
+  id               Int      @id @default(autoincrement())
+  originalId       Int
+  companyName      String
+  title            String
+  salaryRange      String?
+  role             String
+  jobDescription   String
+  applicationCount Int
+  archivedAt       DateTime @default(now())
+  archivedBy       String
+}
+
+model ArchivedApplication {
+  id           Int      @id @default(autoincrement())
+  originalId   Int
+  vacancyTitle String
+  seekerName   String
+  status       String
+  messageCount Int
+  archivedAt   DateTime @default(now())
+  archivedBy   String
 }

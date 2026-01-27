@@ -9,13 +9,13 @@ import LoadingScreen from '@/components/common/LoadingScreen';
 
 interface DashboardLayoutProps {
   children: ReactNode;
-  requiredRole?: 'JOB_SEEKER' | 'COMPANY';
+  requiredRole?: 'JOB_SEEKER' | 'COMPANY' | 'ADMIN';
 }
 
 export function DashboardLayout({ children, requiredRole }: DashboardLayoutProps) {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
-  const [role, setRole] = useState<'JOB_SEEKER' | 'COMPANY' | null>(null);
+  const [role, setRole] = useState<'JOB_SEEKER' | 'COMPANY' | 'ADMIN' | null>(null);
   const [userName, setUserName] = useState('');
 
   useEffect(() => {
@@ -28,22 +28,26 @@ export function DashboardLayout({ children, requiredRole }: DashboardLayoutProps
 
       try {
         const profile = await getProfile();
-        const userRole = profile.role as 'JOB_SEEKER' | 'COMPANY';
+        const userRole = profile.role as 'JOB_SEEKER' | 'COMPANY' | 'ADMIN';
 
         if (requiredRole && userRole !== requiredRole) {
           // Redirect to correct dashboard if role doesn't match
-          const correctPath = userRole === 'JOB_SEEKER'
-            ? '/dashboard/job-seeker'
-            : '/dashboard/company';
+          const correctPath = userRole === 'ADMIN'
+            ? '/dashboard/admin'
+            : userRole === 'JOB_SEEKER'
+              ? '/dashboard/job-seeker'
+              : '/dashboard/company';
           router.push(correctPath);
           return;
         }
 
         setRole(userRole);
         setUserName(
-          userRole === 'JOB_SEEKER'
-            ? profile.jobSeeker?.fullName || 'Job Seeker'
-            : profile.company?.companyName || 'Company'
+          userRole === 'ADMIN'
+            ? 'Admin'
+            : userRole === 'JOB_SEEKER'
+              ? profile.jobSeeker?.fullName || 'Job Seeker'
+              : profile.company?.companyName || 'Company'
         );
       } catch {
         router.push('/login');

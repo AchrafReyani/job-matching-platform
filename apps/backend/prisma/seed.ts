@@ -104,6 +104,17 @@ async function main() {
     },
   });
 
+  // Admin
+  const adminPasswordHash = await bcrypt.hash('admin123', 10);
+  await prisma.user.create({
+    data: {
+      id: 'a1b2c3d4-e5f6-7890-abcd-ef1234567890',
+      email: 'admin@jobmatch.com',
+      passwordHash: adminPasswordHash,
+      role: Role.ADMIN,
+    },
+  });
+
   // ============================================
   // CREATE JOB SEEKER PROFILES
   // ============================================
@@ -462,6 +473,9 @@ async function main() {
   console.log('  - hr@innovate.io (Innovate.io)');
   console.log('  - hr@startup.dev (Startup Labs)');
   console.log('  - hr@acme.com (Acme Corporation)');
+  console.log('');
+  console.log('Admin (password: "admin123"):');
+  console.log('  - admin@jobmatch.com');
 }
 
 main()

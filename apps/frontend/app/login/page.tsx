@@ -24,7 +24,9 @@ export default function LoginPage() {
 
       try {
         const profile = await getProfile();
-        if (profile.role === 'JOB_SEEKER') {
+        if (profile.role === 'ADMIN') {
+          router.push('/dashboard/admin');
+        } else if (profile.role === 'JOB_SEEKER') {
           router.push('/dashboard/job-seeker');
         } else if (profile.role === 'COMPANY') {
           router.push('/dashboard/company');
@@ -48,12 +50,14 @@ export default function LoginPage() {
 
       const profile = await getProfile();
 
-      if (profile.role === 'JOB_SEEKER') {
+      if (profile.role === 'ADMIN') {
+        router.push('/dashboard/admin');
+      } else if (profile.role === 'JOB_SEEKER') {
         router.push('/dashboard/job-seeker');
       } else if (profile.role === 'COMPANY') {
         router.push('/dashboard/company');
       } else {
-        router.push('/dashboard');
+        router.push('/home');
       }
     } catch (err: unknown) {
       console.error(err);
