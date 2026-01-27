@@ -92,7 +92,7 @@ export function Sidebar({ role, userName }: SidebarProps) {
     { href: `${basePath}/applications`, icon: <ApplicationsIcon />, label: t('applications') },
     { href: `${basePath}/messages`, icon: <MessagesIcon />, label: t('messages') },
     { href: `${basePath}/profile`, icon: <ProfileIcon />, label: t('profile') },
-    { href: '/settings', icon: <SettingsIcon />, label: t('settings') },
+    { href: '/dashboard/settings', icon: <SettingsIcon />, label: t('settings') },
   ];
 
   const companyItems: SidebarItemData[] = [
@@ -101,14 +101,14 @@ export function Sidebar({ role, userName }: SidebarProps) {
     { href: `${basePath}/applications`, icon: <ApplicationsIcon />, label: t('applications') },
     { href: `${basePath}/messages`, icon: <MessagesIcon />, label: t('messages') },
     { href: `${basePath}/profile`, icon: <ProfileIcon />, label: t('profile') },
-    { href: '/settings', icon: <SettingsIcon />, label: t('settings') },
+    { href: '/dashboard/settings', icon: <SettingsIcon />, label: t('settings') },
   ];
 
   const adminItems: SidebarItemData[] = [
     { href: `${basePath}`, icon: <DashboardIcon />, label: t('dashboard') },
     { href: `${basePath}/users`, icon: <UsersIcon />, label: t('users') },
     { href: `${basePath}/vacancies`, icon: <VacanciesIcon />, label: t('vacancies') },
-    { href: '/settings', icon: <SettingsIcon />, label: t('settings') },
+    { href: '/dashboard/settings', icon: <SettingsIcon />, label: t('settings') },
   ];
 
   const items: SidebarItemData[] = role === 'ADMIN'
