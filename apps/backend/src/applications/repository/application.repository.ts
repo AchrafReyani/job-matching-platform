@@ -17,6 +17,10 @@ export type ApplicationWithVacancy = Application & {
   vacancy: Vacancy;
 };
 
+export type VacancyWithCompany = Vacancy & {
+  company: Pick<Company, 'id' | 'userId' | 'companyName'>;
+};
+
 export type ApplicationWithVacancyAndJobSeeker = Application & {
   vacancy: Vacancy & {
     company: Pick<Company, 'id' | 'userId' | 'companyName'>;
@@ -38,6 +42,7 @@ export interface ApplicationRepository {
   findJobSeekerByUserId(userId: string): Promise<JobSeeker | null>;
   findCompanyByUserId(userId: string): Promise<Company | null>;
   findVacancyById(vacancyId: number): Promise<Vacancy | null>;
+  findVacancyWithCompanyById(vacancyId: number): Promise<VacancyWithCompany | null>;
   findApplicationWithVacancy(
     applicationId: number,
   ): Promise<ApplicationWithVacancy | null>;

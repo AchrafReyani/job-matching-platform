@@ -346,5 +346,63 @@
     "settings": "Instellingen",
     "users": "Gebruikers",
     "logout": "Uitloggen"
+  },
+  "Settings": {
+    "title": "Instellingen",
+    "subtitle": "Beheer je accountinstellingen en voorkeuren",
+    "password": {
+      "title": "Wachtwoord & Beveiliging",
+      "currentPassword": "Huidig Wachtwoord",
+      "newPassword": "Nieuw Wachtwoord",
+      "confirmPassword": "Bevestig Nieuw Wachtwoord",
+      "passwordRequirements": "Wachtwoord moet minimaal 8 tekens bevatten",
+      "changePassword": "Wachtwoord Wijzigen",
+      "passwordsDoNotMatch": "Wachtwoorden komen niet overeen",
+      "passwordTooShort": "Wachtwoord moet minimaal 8 tekens bevatten",
+      "updateSuccess": "Wachtwoord succesvol gewijzigd!",
+      "updateError": "Wachtwoord wijzigen mislukt"
+    },
+    "notifications": {
+      "title": "Meldingsvoorkeuren",
+      "loadError": "Meldingsvoorkeuren laden mislukt",
+      "updateError": "Meldingsvoorkeuren bijwerken mislukt",
+      "applicationAccepted": "Sollicitatie Geaccepteerd",
+      "applicationAcceptedDesc": "Ontvang meldingen wanneer je sollicitatie is geaccepteerd",
+      "applicationRejected": "Sollicitatie Afgewezen",
+      "applicationRejectedDesc": "Ontvang meldingen wanneer je sollicitatie is afgewezen",
+      "newMessages": "Nieuwe Berichten",
+      "newMessagesDesc": "Ontvang meldingen wanneer je een nieuw bericht ontvangt",
+      "newApplications": "Nieuwe Sollicitaties",
+      "newApplicationsDesc": "Ontvang meldingen wanneer iemand solliciteert op je vacature",
+      "applicationWithdrawn": "Sollicitatie Ingetrokken",
+      "applicationWithdrawnDesc": "Ontvang meldingen wanneer een sollicitant zijn sollicitatie intrekt"
+    },
+    "appearance": {
+      "title": "Uiterlijk",
+      "light": "Licht",
+      "dark": "Donker",
+      "system": "Systeem"
+    },
+    "dangerZone": {
+      "title": "Gevarenzone",
+      "description": "Zodra je je account verwijdert, is er geen weg terug. Wees zeker van je keuze.",
+      "deleteAccount": "Mijn Account Verwijderen",
+      "confirmDeleteTitle": "Account Verwijderen",
+      "warningTitle": "Waarschuwing: Deze actie kan niet ongedaan worden gemaakt",
+      "warningMessage": "Al je gegevens worden permanent verwijderd, inclusief je profiel, sollicitaties en berichten.",
+      "willBeDeleted": "Het volgende wordt verwijderd:",
+      "deleteJobSeekerProfile": "Je werkzoekende profiel",
+      "deleteApplications": "Al je sollicitaties",
+      "deleteMessages": "Al je berichten",
+      "deleteCompanyProfile": "Je bedrijfsprofiel",
+      "deleteVacancies": "Al je geplaatste vacatures",
+      "deleteCompanyApplications": "Alle sollicitaties op je vacatures",
+      "enterPassword": "Voer je wachtwoord in om te bevestigen",
+      "passwordPlaceholder": "Je wachtwoord",
+      "typeDelete": "Typ DELETE om te bevestigen",
+      "confirmDelete": "Mijn Account Verwijderen",
+      "deleting": "Verwijderen...",
+      "deleteError": "Account verwijderen mislukt"
+    }
   }
 }

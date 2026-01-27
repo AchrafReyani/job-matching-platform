@@ -9,6 +9,8 @@ import { GetApplicationsForCompanyUseCase } from './usecase/get-applications-for
 import { GetApplicationByIdUseCase } from './usecase/get-application-by-id.usecase';
 import { UpdateApplicationStatusUseCase } from './usecase/update-application-status.usecase';
 import { NotificationsModule } from '../notifications/notifications.module';
+import { PrismaUserRepository } from '../users/infrastructure/prisma-user.repository';
+import { USER_REPOSITORY } from '../users/repository/user.repository';
 
 @Module({
   imports: [NotificationsModule],
@@ -18,6 +20,10 @@ import { NotificationsModule } from '../notifications/notifications.module';
     {
       provide: APPLICATION_REPOSITORY,
       useClass: PrismaApplicationRepository,
+    },
+    {
+      provide: USER_REPOSITORY,
+      useClass: PrismaUserRepository,
     },
     CreateApplicationUseCase,
     GetApplicationsForJobSeekerUseCase,

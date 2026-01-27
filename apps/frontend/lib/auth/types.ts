@@ -5,7 +5,7 @@ export interface LoginResponse {
 export interface ProfileResponse {
   id: string;
   email: string;
-  role: 'JOB_SEEKER' | 'COMPANY';
+  role: 'JOB_SEEKER' | 'COMPANY' | 'ADMIN';
   createdAt: string;
   jobSeeker?: {
     id: number;

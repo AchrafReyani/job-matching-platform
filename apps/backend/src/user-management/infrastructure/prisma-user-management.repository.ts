@@ -67,6 +67,7 @@ export class PrismaUserManagementRepository
         role: true,
         passwordHash: true,
         createdAt: true,
+        notificationPreferences: true,
         jobSeeker: {
           select: {
             id: true,

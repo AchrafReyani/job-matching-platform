@@ -346,5 +346,63 @@
     "settings": "Settings",
     "users": "Users",
     "logout": "Logout"
+  },
+  "Settings": {
+    "title": "Settings",
+    "subtitle": "Manage your account settings and preferences",
+    "password": {
+      "title": "Password & Security",
+      "currentPassword": "Current Password",
+      "newPassword": "New Password",
+      "confirmPassword": "Confirm New Password",
+      "passwordRequirements": "Password must be at least 8 characters",
+      "changePassword": "Change Password",
+      "passwordsDoNotMatch": "Passwords do not match",
+      "passwordTooShort": "Password must be at least 8 characters",
+      "updateSuccess": "Password changed successfully!",
+      "updateError": "Failed to change password"
+    },
+    "notifications": {
+      "title": "Notification Preferences",
+      "loadError": "Failed to load notification preferences",
+      "updateError": "Failed to update notification preferences",
+      "applicationAccepted": "Application Accepted",
+      "applicationAcceptedDesc": "Receive notifications when your application is accepted",
+      "applicationRejected": "Application Rejected",
+      "applicationRejectedDesc": "Receive notifications when your application is rejected",
+      "newMessages": "New Messages",
+      "newMessagesDesc": "Receive notifications when you get a new message",
+      "newApplications": "New Applications",
+      "newApplicationsDesc": "Receive notifications when someone applies to your vacancy",
+      "applicationWithdrawn": "Application Withdrawn",
+      "applicationWithdrawnDesc": "Receive notifications when an applicant withdraws their application"
+    },
+    "appearance": {
+      "title": "Appearance",
+      "light": "Light",
+      "dark": "Dark",
+      "system": "System"
+    },
+    "dangerZone": {
+      "title": "Danger Zone",
+      "description": "Once you delete your account, there is no going back. Please be certain.",
+      "deleteAccount": "Delete My Account",
+      "confirmDeleteTitle": "Delete Account",
+      "warningTitle": "Warning: This action cannot be undone",
+      "warningMessage": "All your data will be permanently deleted, including your profile, applications, and messages.",
+      "willBeDeleted": "The following will be deleted:",
+      "deleteJobSeekerProfile": "Your job seeker profile",
+      "deleteApplications": "All your job applications",
+      "deleteMessages": "All your messages",
+      "deleteCompanyProfile": "Your company profile",
+      "deleteVacancies": "All your posted vacancies",
+      "deleteCompanyApplications": "All applications to your vacancies",
+      "enterPassword": "Enter your password to confirm",
+      "passwordPlaceholder": "Your password",
+      "typeDelete": "Type DELETE to confirm",
+      "confirmDelete": "Delete My Account",
+      "deleting": "Deleting...",
+      "deleteError": "Failed to delete account"
+    }
   }
 }

@@ -8,11 +8,12 @@ generator client {
 }
 
 model User {
-  id           String   @id @default(uuid())
-  email        String   @unique
-  passwordHash String
-  role         Role
-  createdAt    DateTime @default(now())
+  id                      String   @id @default(uuid())
+  email                   String   @unique
+  passwordHash            String
+  role                    Role
+  createdAt               DateTime @default(now())
+  notificationPreferences Json     @default("{}")
 
   jobSeeker     JobSeeker?
   company       Company?

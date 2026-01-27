@@ -3,19 +3,31 @@ import {
   Inject,
   NotFoundException,
   ConflictException,
+  Optional,
 } from '@nestjs/common';
-import { Application } from '@prisma/client';
+import { Application, NotificationType } from '@prisma/client';
 import * as applicationRepository from '../repository/application.repository';
+import type { NotificationRepository } from '../../notifications/repository/notification.repository';
+import { NOTIFICATION_REPOSITORY } from '../../notifications/repository/notification.repository';
+import type { UserRepository } from '../../users/repository/user.repository';
+import { USER_REPOSITORY } from '../../users/repository/user.repository';
+import type { NotificationPreferences } from '../../users/dto/update-notification-preferences.dto';
 
 @Injectable()
 export class CreateApplicationUseCase {
   constructor(
     @Inject(applicationRepository.APPLICATION_REPOSITORY)
     private readonly applicationRepository: applicationRepository.ApplicationRepository,
+    @Optional()
+    @Inject(NOTIFICATION_REPOSITORY)
+    private readonly notificationRepository?: NotificationRepository,
+    @Optional()
+    @Inject(USER_REPOSITORY)
+    private readonly userRepository?: UserRepository,
   ) {}
 
   async execute(userId: string, vacancyId: number): Promise<Application> {
-    const vacancy = await this.applicationRepository.findVacancyById(vacancyId);
+    const vacancy = await this.applicationRepository.findVacancyWithCompanyById(vacancyId);
     if (!vacancy) {
       throw new NotFoundException('Vacancy not found');
     }
@@ -34,6 +46,31 @@ export class CreateApplicationUseCase {
       throw new ConflictException('You have already applied to this vacancy');
     }
 
-    return this.applicationRepository.create(jobSeeker.id, vacancyId);
+    const application = await this.applicationRepository.create(jobSeeker.id, vacancyId);
+
+    // Send notification to company (check preferences first)
+    if (this.notificationRepository && vacancy.company?.userId) {
+      let shouldNotify = true;
+      if (this.userRepository) {
+        const prefs = await this.userRepository.getNotificationPreferences(
+          vacancy.company.userId,
+        ) as NotificationPreferences;
+        if (prefs.newApplications === false) {
+          shouldNotify = false;
+        }
+      }
+
+      if (shouldNotify) {
+        await this.notificationRepository.create({
+          userId: vacancy.company.userId,
+          type: NotificationType.NEW_APPLICATION,
+          title: 'New Application',
+          message: `${jobSeeker.fullName} applied to ${vacancy.title}`,
+          relatedId: application.id,
+        });
+      }
+    }
+
+    return application;
   }
 }

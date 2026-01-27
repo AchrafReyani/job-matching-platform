@@ -9,6 +9,9 @@ import { Application, ApplicationStatus, NotificationType } from '@prisma/client
 import * as applicationRepository from '../repository/application.repository';
 import type { NotificationRepository } from '../../notifications/repository/notification.repository';
 import { NOTIFICATION_REPOSITORY } from '../../notifications/repository/notification.repository';
+import type { UserRepository } from '../../users/repository/user.repository';
+import { USER_REPOSITORY } from '../../users/repository/user.repository';
+import type { NotificationPreferences } from '../../users/dto/update-notification-preferences.dto';
 
 @Injectable()
 export class UpdateApplicationStatusUseCase {
@@ -18,6 +21,9 @@ export class UpdateApplicationStatusUseCase {
     @Optional()
     @Inject(NOTIFICATION_REPOSITORY)
     private readonly notificationRepository?: NotificationRepository,
+    @Optional()
+    @Inject(USER_REPOSITORY)
+    private readonly userRepository?: UserRepository,
   ) {}
 
   async execute(
@@ -48,7 +54,7 @@ export class UpdateApplicationStatusUseCase {
       status,
     );
 
-    // Create notification for job seeker
+    // Create notification for job seeker (check preferences first)
     if (this.notificationRepository) {
       const notificationType =
         status === 'ACCEPTED'
@@ -58,20 +64,37 @@ export class UpdateApplicationStatusUseCase {
             : null;
 
       if (notificationType) {
-        const title =
-          status === 'ACCEPTED' ? 'Application Accepted' : 'Application Rejected';
-        const message =
-          status === 'ACCEPTED'
-            ? `Your application to ${application.vacancy.title} at ${application.vacancy.company.companyName} was accepted!`
-            : `Your application to ${application.vacancy.title} at ${application.vacancy.company.companyName} was not selected`;
+        // Check user's notification preferences
+        let shouldNotify = true;
+        if (this.userRepository) {
+          const prefs = await this.userRepository.getNotificationPreferences(
+            application.jobSeeker.userId,
+          ) as NotificationPreferences;
 
-        await this.notificationRepository.create({
-          userId: application.jobSeeker.userId,
-          type: notificationType,
-          title,
-          message,
-          relatedId: applicationId,
-        });
+          if (status === 'ACCEPTED' && prefs.applicationAccepted === false) {
+            shouldNotify = false;
+          }
+          if (status === 'REJECTED' && prefs.applicationRejected === false) {
+            shouldNotify = false;
+          }
+        }
+
+        if (shouldNotify) {
+          const title =
+            status === 'ACCEPTED' ? 'Application Accepted' : 'Application Rejected';
+          const message =
+            status === 'ACCEPTED'
+              ? `Your application to ${application.vacancy.title} at ${application.vacancy.company.companyName} was accepted!`
+              : `Your application to ${application.vacancy.title} at ${application.vacancy.company.companyName} was not selected`;
+
+          await this.notificationRepository.create({
+            userId: application.jobSeeker.userId,
+            type: notificationType,
+            title,
+            message,
+            relatedId: applicationId,
+          });
+        }
       }
     }
 
