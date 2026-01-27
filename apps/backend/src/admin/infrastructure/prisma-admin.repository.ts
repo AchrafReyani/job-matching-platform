@@ -280,6 +280,25 @@ export class PrismaAdminRepository implements AdminRepository {
             },
           });
         }
+
+        // Delete messages first
+        await tx.message.deleteMany({
+          where: {
+            application: {
+              jobSeekerId: user.jobSeeker.id,
+            },
+          },
+        });
+
+        // Delete applications
+        await tx.application.deleteMany({
+          where: { jobSeekerId: user.jobSeeker.id },
+        });
+
+        // Delete job seeker profile
+        await tx.jobSeeker.delete({
+          where: { userId: id },
+        });
       }
 
       // Archive vacancies and applications for company
@@ -311,9 +330,49 @@ export class PrismaAdminRepository implements AdminRepository {
             });
           }
         }
+
+        // Delete messages for all applications on company's vacancies
+        await tx.message.deleteMany({
+          where: {
+            application: {
+              vacancy: {
+                companyId: user.company.id,
+              },
+            },
+          },
+        });
+
+        // Delete applications for all company vacancies
+        await tx.application.deleteMany({
+          where: {
+            vacancy: {
+              companyId: user.company.id,
+            },
+          },
+        });
+
+        // Delete all vacancies
+        await tx.vacancy.deleteMany({
+          where: { companyId: user.company.id },
+        });
+
+        // Delete company profile
+        await tx.company.delete({
+          where: { userId: id },
+        });
       }
 
-      // Delete user (cascades to profile, etc.)
+      // Delete notifications
+      await tx.notification.deleteMany({
+        where: { userId: id },
+      });
+
+      // Delete messages sent by this user
+      await tx.message.deleteMany({
+        where: { senderId: id },
+      });
+
+      // Finally delete the user
       await tx.user.delete({ where: { id } });
     });
   }
