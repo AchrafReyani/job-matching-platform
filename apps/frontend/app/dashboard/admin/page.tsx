@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { useTranslations } from 'next-intl';
 import { DashboardLayout } from '@/components/layout/DashboardLayout';
 import { StatCard } from '@/components/dashboard/StatCard';
 import { getAdminStats } from '@/lib/admin/api';
@@ -45,6 +46,7 @@ const TrendingUpIcon = () => (
 );
 
 export default function AdminDashboardPage() {
+  const t = useTranslations('Admin.dashboard');
   const [stats, setStats] = useState<AdminStats | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -68,15 +70,15 @@ export default function AdminDashboardPage() {
     <DashboardLayout requiredRole="ADMIN">
       <div className="space-y-8">
         <div>
-          <h1 className="text-2xl font-bold text-[var(--color-text)]">Admin Dashboard</h1>
+          <h1 className="text-2xl font-bold text-[var(--color-text)]">{t('title')}</h1>
           <p className="text-[var(--color-text)] opacity-70 mt-1">
-            Platform overview and statistics
+            {t('subtitle')}
           </p>
         </div>
 
         {loading && (
           <div className="text-center py-8">
-            <p className="text-[var(--color-text)]">Loading statistics...</p>
+            <p className="text-[var(--color-text)]">{t('loadingStats')}</p>
           </div>
         )}
 
@@ -91,22 +93,22 @@ export default function AdminDashboardPage() {
             {/* Main Stats */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               <StatCard
-                title="Total Job Seekers"
+                title={t('totalJobSeekers')}
                 value={stats.totalJobSeekers}
                 icon={<UsersIcon />}
               />
               <StatCard
-                title="Total Companies"
+                title={t('totalCompanies')}
                 value={stats.totalCompanies}
                 icon={<BuildingIcon />}
               />
               <StatCard
-                title="Total Vacancies"
+                title={t('totalVacancies')}
                 value={stats.totalVacancies}
                 icon={<BriefcaseIcon />}
               />
               <StatCard
-                title="Total Applications"
+                title={t('totalApplications')}
                 value={stats.totalApplications}
                 icon={<DocumentIcon />}
               />
@@ -115,25 +117,25 @@ export default function AdminDashboardPage() {
             {/* Activity Stats */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               <StatCard
-                title="Active Vacancies"
+                title={t('activeVacancies')}
                 value={stats.activeVacancies}
                 icon={<BriefcaseIcon />}
                 variant="success"
               />
               <StatCard
-                title="Pending Applications"
+                title={t('pendingApplications')}
                 value={stats.pendingApplications}
                 icon={<ClockIcon />}
                 variant="warning"
               />
               <StatCard
-                title="New Users This Week"
+                title={t('newUsersThisWeek')}
                 value={stats.newUsersThisWeek}
                 icon={<TrendingUpIcon />}
                 variant="success"
               />
               <StatCard
-                title="Applications This Month"
+                title={t('applicationsThisMonth')}
                 value={stats.applicationsThisMonth}
                 icon={<DocumentIcon />}
               />
@@ -150,8 +152,8 @@ export default function AdminDashboardPage() {
                     <UsersIcon />
                   </div>
                   <div>
-                    <h3 className="text-lg font-semibold text-[var(--color-text)]">User Management</h3>
-                    <p className="text-sm text-[var(--color-text)] opacity-70">Manage job seekers and companies</p>
+                    <h3 className="text-lg font-semibold text-[var(--color-text)]">{t('userManagement')}</h3>
+                    <p className="text-sm text-[var(--color-text)] opacity-70">{t('userManagementDesc')}</p>
                   </div>
                 </div>
               </Link>
@@ -165,8 +167,8 @@ export default function AdminDashboardPage() {
                     <BriefcaseIcon />
                   </div>
                   <div>
-                    <h3 className="text-lg font-semibold text-[var(--color-text)]">Vacancy Management</h3>
-                    <p className="text-sm text-[var(--color-text)] opacity-70">Manage all job postings</p>
+                    <h3 className="text-lg font-semibold text-[var(--color-text)]">{t('vacancyManagement')}</h3>
+                    <p className="text-sm text-[var(--color-text)] opacity-70">{t('vacancyManagementDesc')}</p>
                   </div>
                 </div>
               </Link>

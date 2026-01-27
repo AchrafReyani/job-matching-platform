@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState, useCallback } from 'react';
+import { useTranslations } from 'next-intl';
 import { DashboardLayout } from '@/components/layout/DashboardLayout';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
@@ -13,6 +14,8 @@ import {
 import { VacancyListItem, VacancyFilter, PaginatedResult, UpdateVacancyData } from '@/lib/admin/types';
 
 export default function VacancyManagementPage() {
+  const t = useTranslations('Admin.vacancies');
+  const tCommon = useTranslations('Common');
   const [vacancies, setVacancies] = useState<PaginatedResult<VacancyListItem> | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -39,11 +42,11 @@ export default function VacancyManagementPage() {
       setVacancies(data);
       setError(null);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to load vacancies');
+      setError(err instanceof Error ? err.message : t('failedToLoad'));
     } finally {
       setLoading(false);
     }
-  }, [filter]);
+  }, [filter, t]);
 
   useEffect(() => {
     fetchVacancies();
@@ -70,7 +73,7 @@ export default function VacancyManagementPage() {
       setEditingVacancy(null);
       fetchVacancies();
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to update vacancy');
+      setError(err instanceof Error ? err.message : t('failedToUpdate'));
     } finally {
       setEditLoading(false);
     }
@@ -84,7 +87,7 @@ export default function VacancyManagementPage() {
       setDeletingVacancy(null);
       fetchVacancies();
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to delete vacancy');
+      setError(err instanceof Error ? err.message : t('failedToDelete'));
     } finally {
       setDeleteLoading(false);
     }
@@ -97,7 +100,7 @@ export default function VacancyManagementPage() {
       setShowBulkDelete(false);
       fetchVacancies();
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to delete all vacancies');
+      setError(err instanceof Error ? err.message : t('failedToBulkDelete'));
     } finally {
       setBulkDeleteLoading(false);
     }
@@ -107,9 +110,9 @@ export default function VacancyManagementPage() {
     <DashboardLayout requiredRole="ADMIN">
       <div className="space-y-6">
         <div>
-          <h1 className="text-2xl font-bold text-[var(--color-text)]">Vacancy Management</h1>
+          <h1 className="text-2xl font-bold text-[var(--color-text)]">{t('title')}</h1>
           <p className="text-[var(--color-text)] opacity-70 mt-1">
-            Manage all job postings
+            {t('subtitle')}
           </p>
         </div>
 
@@ -117,15 +120,15 @@ export default function VacancyManagementPage() {
         <div className="bg-[var(--color-bg)] border border-[var(--color-secondary)] rounded-xl p-4">
           <div className="flex flex-wrap gap-4 items-end">
             <div className="flex-1 min-w-[200px]">
-              <label className="block text-sm text-[var(--color-text)] mb-1">Search</label>
+              <label className="block text-sm text-[var(--color-text)] mb-1">{t('search')}</label>
               <div className="flex gap-2">
                 <Input
                   value={searchInput}
                   onChange={(e) => setSearchInput(e.target.value)}
-                  placeholder="Search by title..."
+                  placeholder={t('searchPlaceholder')}
                   onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
                 />
-                <Button onClick={handleSearch}>Search</Button>
+                <Button onClick={handleSearch}>{t('search')}</Button>
               </div>
             </div>
           </div>
@@ -137,14 +140,14 @@ export default function VacancyManagementPage() {
             variant="destructive"
             onClick={() => setShowBulkDelete(true)}
           >
-            Delete All Vacancies
+            {t('deleteAllVacancies')}
           </Button>
         </div>
 
         {error && (
           <div className="bg-red-100 text-red-700 p-4 rounded-lg">
             {error}
-            <button onClick={() => setError(null)} className="ml-4 underline">Dismiss</button>
+            <button onClick={() => setError(null)} className="ml-4 underline">{tCommon('ok')}</button>
           </div>
         )}
 
@@ -153,25 +156,25 @@ export default function VacancyManagementPage() {
           <table className="w-full">
             <thead className="bg-[var(--color-secondary)]">
               <tr>
-                <th className="px-4 py-3 text-left text-sm font-medium text-[var(--color-text)]">Title</th>
-                <th className="px-4 py-3 text-left text-sm font-medium text-[var(--color-text)]">Company</th>
-                <th className="px-4 py-3 text-left text-sm font-medium text-[var(--color-text)]">Role</th>
-                <th className="px-4 py-3 text-left text-sm font-medium text-[var(--color-text)]">Applications</th>
-                <th className="px-4 py-3 text-left text-sm font-medium text-[var(--color-text)]">Created</th>
-                <th className="px-4 py-3 text-left text-sm font-medium text-[var(--color-text)]">Actions</th>
+                <th className="px-4 py-3 text-left text-sm font-medium text-[var(--color-text)]">{t('vacancyTitle')}</th>
+                <th className="px-4 py-3 text-left text-sm font-medium text-[var(--color-text)]">{t('companyName')}</th>
+                <th className="px-4 py-3 text-left text-sm font-medium text-[var(--color-text)]">{t('role')}</th>
+                <th className="px-4 py-3 text-left text-sm font-medium text-[var(--color-text)]">{t('applications')}</th>
+                <th className="px-4 py-3 text-left text-sm font-medium text-[var(--color-text)]">{t('created')}</th>
+                <th className="px-4 py-3 text-left text-sm font-medium text-[var(--color-text)]">{t('actions')}</th>
               </tr>
             </thead>
             <tbody>
               {loading ? (
                 <tr>
                   <td colSpan={6} className="px-4 py-8 text-center text-[var(--color-text)]">
-                    Loading...
+                    {tCommon('loading')}
                   </td>
                 </tr>
               ) : vacancies?.data.length === 0 ? (
                 <tr>
                   <td colSpan={6} className="px-4 py-8 text-center text-[var(--color-text)]">
-                    No vacancies found
+                    {t('noVacanciesFound')}
                   </td>
                 </tr>
               ) : (
@@ -191,10 +194,10 @@ export default function VacancyManagementPage() {
                     <td className="px-4 py-3 text-sm">
                       <div className="flex gap-2">
                         <Button size="sm" variant="secondary" onClick={() => handleEdit(vacancy)}>
-                          Edit
+                          {tCommon('edit')}
                         </Button>
                         <Button size="sm" variant="destructive" onClick={() => setDeletingVacancy(vacancy)}>
-                          Delete
+                          {tCommon('delete')}
                         </Button>
                       </div>
                     </td>
@@ -208,7 +211,11 @@ export default function VacancyManagementPage() {
           {vacancies && vacancies.totalPages > 1 && (
             <div className="px-4 py-3 border-t border-[var(--color-secondary)] flex items-center justify-between">
               <p className="text-sm text-[var(--color-text)]">
-                Showing {((vacancies.page - 1) * vacancies.pageSize) + 1} to {Math.min(vacancies.page * vacancies.pageSize, vacancies.total)} of {vacancies.total}
+                {t('showingResults', {
+                  from: ((vacancies.page - 1) * vacancies.pageSize) + 1,
+                  to: Math.min(vacancies.page * vacancies.pageSize, vacancies.total),
+                  total: vacancies.total
+                })}
               </p>
               <div className="flex gap-2">
                 <Button
@@ -217,7 +224,7 @@ export default function VacancyManagementPage() {
                   disabled={vacancies.page <= 1}
                   onClick={() => handlePageChange(vacancies.page - 1)}
                 >
-                  Previous
+                  {t('previous')}
                 </Button>
                 <Button
                   size="sm"
@@ -225,7 +232,7 @@ export default function VacancyManagementPage() {
                   disabled={vacancies.page >= vacancies.totalPages}
                   onClick={() => handlePageChange(vacancies.page + 1)}
                 >
-                  Next
+                  {t('next')}
                 </Button>
               </div>
             </div>
@@ -237,31 +244,31 @@ export default function VacancyManagementPage() {
       {editingVacancy && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-[var(--color-bg)] rounded-xl p-6 w-full max-w-md">
-            <h2 className="text-xl font-bold text-[var(--color-text)] mb-4">Edit Vacancy</h2>
+            <h2 className="text-xl font-bold text-[var(--color-text)] mb-4">{t('editVacancy')}</h2>
             <div className="space-y-4">
               <div>
-                <label className="block text-sm text-[var(--color-text)] mb-1">Title</label>
+                <label className="block text-sm text-[var(--color-text)] mb-1">{t('vacancyTitle')}</label>
                 <Input
                   value={editForm.title || ''}
                   onChange={(e) => setEditForm({ ...editForm, title: e.target.value })}
                 />
               </div>
               <div>
-                <label className="block text-sm text-[var(--color-text)] mb-1">Role</label>
+                <label className="block text-sm text-[var(--color-text)] mb-1">{t('role')}</label>
                 <Input
                   value={editForm.role || ''}
                   onChange={(e) => setEditForm({ ...editForm, role: e.target.value })}
                 />
               </div>
               <div>
-                <label className="block text-sm text-[var(--color-text)] mb-1">Salary Range</label>
+                <label className="block text-sm text-[var(--color-text)] mb-1">{t('salaryRange')}</label>
                 <Input
                   value={editForm.salaryRange || ''}
                   onChange={(e) => setEditForm({ ...editForm, salaryRange: e.target.value })}
                 />
               </div>
               <div>
-                <label className="block text-sm text-[var(--color-text)] mb-1">Job Description</label>
+                <label className="block text-sm text-[var(--color-text)] mb-1">{t('jobDescription')}</label>
                 <textarea
                   className="w-full px-3 py-2 border border-[var(--color-secondary)] rounded-lg bg-[var(--color-bg)] text-[var(--color-text)]"
                   rows={4}
@@ -272,10 +279,10 @@ export default function VacancyManagementPage() {
             </div>
             <div className="flex gap-2 mt-6">
               <Button onClick={handleEditSubmit} disabled={editLoading}>
-                {editLoading ? 'Saving...' : 'Save'}
+                {editLoading ? tCommon('saving') : tCommon('save')}
               </Button>
               <Button variant="secondary" onClick={() => setEditingVacancy(null)}>
-                Cancel
+                {tCommon('cancel')}
               </Button>
             </div>
           </div>
@@ -286,17 +293,16 @@ export default function VacancyManagementPage() {
       {deletingVacancy && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-[var(--color-bg)] rounded-xl p-6 w-full max-w-md">
-            <h2 className="text-xl font-bold text-[var(--color-text)] mb-4">Confirm Delete</h2>
+            <h2 className="text-xl font-bold text-[var(--color-text)] mb-4">{t('confirmDelete')}</h2>
             <p className="text-[var(--color-text)]">
-              Are you sure you want to delete vacancy <strong>{deletingVacancy.title}</strong>?
-              This will also delete all applications for this vacancy. This action cannot be undone.
+              {t('confirmDeleteMessage', { title: deletingVacancy.title })}
             </p>
             <div className="flex gap-2 mt-6">
               <Button variant="destructive" onClick={handleDelete} disabled={deleteLoading}>
-                {deleteLoading ? 'Deleting...' : 'Delete'}
+                {deleteLoading ? t('deleting') : tCommon('delete')}
               </Button>
               <Button variant="secondary" onClick={() => setDeletingVacancy(null)}>
-                Cancel
+                {tCommon('cancel')}
               </Button>
             </div>
           </div>
@@ -307,17 +313,16 @@ export default function VacancyManagementPage() {
       {showBulkDelete && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-[var(--color-bg)] rounded-xl p-6 w-full max-w-md">
-            <h2 className="text-xl font-bold text-[var(--color-text)] mb-4">Confirm Bulk Delete</h2>
+            <h2 className="text-xl font-bold text-[var(--color-text)] mb-4">{t('confirmBulkDelete')}</h2>
             <p className="text-[var(--color-text)]">
-              Are you sure you want to delete <strong>all vacancies</strong>?
-              This will also delete all applications and messages. This action cannot be undone.
+              {t('confirmBulkDeleteMessage')}
             </p>
             <div className="flex gap-2 mt-6">
               <Button variant="destructive" onClick={handleBulkDelete} disabled={bulkDeleteLoading}>
-                {bulkDeleteLoading ? 'Deleting...' : 'Delete All'}
+                {bulkDeleteLoading ? t('deleting') : t('deleteAll')}
               </Button>
               <Button variant="secondary" onClick={() => setShowBulkDelete(false)}>
-                Cancel
+                {tCommon('cancel')}
               </Button>
             </div>
           </div>

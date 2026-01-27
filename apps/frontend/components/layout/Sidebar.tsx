@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { useTranslations } from 'next-intl';
 import { SidebarItem } from './SidebarItem';
 import { getUnreadCount } from '@/lib/notifications/api';
 import { logout } from '@/lib/auth/logout';
@@ -56,6 +57,7 @@ const UsersIcon = () => (
 );
 
 export function Sidebar({ role, userName }: SidebarProps) {
+  const t = useTranslations('Sidebar');
   const [unreadCount, setUnreadCount] = useState(0);
   const basePath = role === 'ADMIN'
     ? '/dashboard/admin'
@@ -85,28 +87,28 @@ export function Sidebar({ role, userName }: SidebarProps) {
   type SidebarItemData = { href: string; icon: React.ReactNode; label: string; badge?: number };
 
   const jobSeekerItems: SidebarItemData[] = [
-    { href: `${basePath}`, icon: <DashboardIcon />, label: 'Dashboard', badge: unreadCount },
-    { href: `${basePath}/vacancies`, icon: <VacanciesIcon />, label: 'Vacancies' },
-    { href: `${basePath}/applications`, icon: <ApplicationsIcon />, label: 'Applications' },
-    { href: `${basePath}/messages`, icon: <MessagesIcon />, label: 'Messages' },
-    { href: `${basePath}/profile`, icon: <ProfileIcon />, label: 'Profile' },
-    { href: '/settings', icon: <SettingsIcon />, label: 'Settings' },
+    { href: `${basePath}`, icon: <DashboardIcon />, label: t('dashboard'), badge: unreadCount },
+    { href: `${basePath}/vacancies`, icon: <VacanciesIcon />, label: t('vacancies') },
+    { href: `${basePath}/applications`, icon: <ApplicationsIcon />, label: t('applications') },
+    { href: `${basePath}/messages`, icon: <MessagesIcon />, label: t('messages') },
+    { href: `${basePath}/profile`, icon: <ProfileIcon />, label: t('profile') },
+    { href: '/settings', icon: <SettingsIcon />, label: t('settings') },
   ];
 
   const companyItems: SidebarItemData[] = [
-    { href: `${basePath}`, icon: <DashboardIcon />, label: 'Dashboard', badge: unreadCount },
-    { href: `${basePath}/vacancies`, icon: <VacanciesIcon />, label: 'My Vacancies' },
-    { href: `${basePath}/applications`, icon: <ApplicationsIcon />, label: 'Applications' },
-    { href: `${basePath}/messages`, icon: <MessagesIcon />, label: 'Messages' },
-    { href: `${basePath}/profile`, icon: <ProfileIcon />, label: 'Profile' },
-    { href: '/settings', icon: <SettingsIcon />, label: 'Settings' },
+    { href: `${basePath}`, icon: <DashboardIcon />, label: t('dashboard'), badge: unreadCount },
+    { href: `${basePath}/vacancies`, icon: <VacanciesIcon />, label: t('myVacancies') },
+    { href: `${basePath}/applications`, icon: <ApplicationsIcon />, label: t('applications') },
+    { href: `${basePath}/messages`, icon: <MessagesIcon />, label: t('messages') },
+    { href: `${basePath}/profile`, icon: <ProfileIcon />, label: t('profile') },
+    { href: '/settings', icon: <SettingsIcon />, label: t('settings') },
   ];
 
   const adminItems: SidebarItemData[] = [
-    { href: `${basePath}`, icon: <DashboardIcon />, label: 'Dashboard' },
-    { href: `${basePath}/users`, icon: <UsersIcon />, label: 'Users' },
-    { href: `${basePath}/vacancies`, icon: <VacanciesIcon />, label: 'Vacancies' },
-    { href: '/settings', icon: <SettingsIcon />, label: 'Settings' },
+    { href: `${basePath}`, icon: <DashboardIcon />, label: t('dashboard') },
+    { href: `${basePath}/users`, icon: <UsersIcon />, label: t('users') },
+    { href: `${basePath}/vacancies`, icon: <VacanciesIcon />, label: t('vacancies') },
+    { href: '/settings', icon: <SettingsIcon />, label: t('settings') },
   ];
 
   const items: SidebarItemData[] = role === 'ADMIN'
@@ -139,7 +141,7 @@ export function Sidebar({ role, userName }: SidebarProps) {
       {/* Logout */}
       <div className="p-4 border-t border-[var(--color-secondary)]">
         <Button variant="destructive" onClick={logout} className="w-full">
-          Logout
+          {t('logout')}
         </Button>
       </div>
     </aside>

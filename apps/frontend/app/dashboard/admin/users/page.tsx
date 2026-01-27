@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState, useCallback } from 'react';
+import { useTranslations } from 'next-intl';
 import { DashboardLayout } from '@/components/layout/DashboardLayout';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
@@ -14,6 +15,8 @@ import {
 import { UserListItem, UserFilter, PaginatedResult, UpdateUserData } from '@/lib/admin/types';
 
 export default function UserManagementPage() {
+  const t = useTranslations('Admin.users');
+  const tCommon = useTranslations('Common');
   const [users, setUsers] = useState<PaginatedResult<UserListItem> | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -40,11 +43,11 @@ export default function UserManagementPage() {
       setUsers(data);
       setError(null);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to load users');
+      setError(err instanceof Error ? err.message : t('failedToLoad'));
     } finally {
       setLoading(false);
     }
-  }, [filter]);
+  }, [filter, t]);
 
   useEffect(() => {
     fetchUsers();
@@ -75,7 +78,7 @@ export default function UserManagementPage() {
       setEditingUser(null);
       fetchUsers();
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to update user');
+      setError(err instanceof Error ? err.message : t('failedToUpdate'));
     } finally {
       setEditLoading(false);
     }
@@ -89,7 +92,7 @@ export default function UserManagementPage() {
       setDeletingUser(null);
       fetchUsers();
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to delete user');
+      setError(err instanceof Error ? err.message : t('failedToDelete'));
     } finally {
       setDeleteLoading(false);
     }
@@ -107,7 +110,7 @@ export default function UserManagementPage() {
       setBulkDeleteType(null);
       fetchUsers();
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to perform bulk delete');
+      setError(err instanceof Error ? err.message : t('failedToBulkDelete'));
     } finally {
       setBulkDeleteLoading(false);
     }
@@ -117,9 +120,9 @@ export default function UserManagementPage() {
     <DashboardLayout requiredRole="ADMIN">
       <div className="space-y-6">
         <div>
-          <h1 className="text-2xl font-bold text-[var(--color-text)]">User Management</h1>
+          <h1 className="text-2xl font-bold text-[var(--color-text)]">{t('title')}</h1>
           <p className="text-[var(--color-text)] opacity-70 mt-1">
-            Manage job seekers and companies
+            {t('subtitle')}
           </p>
         </div>
 
@@ -127,37 +130,37 @@ export default function UserManagementPage() {
         <div className="bg-[var(--color-bg)] border border-[var(--color-secondary)] rounded-xl p-4">
           <div className="flex flex-wrap gap-4 items-end">
             <div className="flex-1 min-w-[200px]">
-              <label className="block text-sm text-[var(--color-text)] mb-1">Search</label>
+              <label className="block text-sm text-[var(--color-text)] mb-1">{t('search')}</label>
               <div className="flex gap-2">
                 <Input
                   value={searchInput}
                   onChange={(e) => setSearchInput(e.target.value)}
-                  placeholder="Search by email or name..."
+                  placeholder={t('searchPlaceholder')}
                   onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
                 />
-                <Button onClick={handleSearch}>Search</Button>
+                <Button onClick={handleSearch}>{t('search')}</Button>
               </div>
             </div>
             <div>
-              <label className="block text-sm text-[var(--color-text)] mb-1">Filter by Role</label>
+              <label className="block text-sm text-[var(--color-text)] mb-1">{t('filterByRole')}</label>
               <div className="flex gap-2">
                 <Button
                   variant={!filter.role ? 'primary' : 'secondary'}
                   onClick={() => handleFilterRole(undefined)}
                 >
-                  All
+                  {t('all')}
                 </Button>
                 <Button
                   variant={filter.role === 'JOB_SEEKER' ? 'primary' : 'secondary'}
                   onClick={() => handleFilterRole('JOB_SEEKER')}
                 >
-                  Job Seekers
+                  {t('jobSeekers')}
                 </Button>
                 <Button
                   variant={filter.role === 'COMPANY' ? 'primary' : 'secondary'}
                   onClick={() => handleFilterRole('COMPANY')}
                 >
-                  Companies
+                  {t('companies')}
                 </Button>
               </div>
             </div>
@@ -170,20 +173,20 @@ export default function UserManagementPage() {
             variant="destructive"
             onClick={() => setBulkDeleteType('job-seekers')}
           >
-            Delete All Job Seekers
+            {t('deleteAllJobSeekers')}
           </Button>
           <Button
             variant="destructive"
             onClick={() => setBulkDeleteType('companies')}
           >
-            Delete All Companies
+            {t('deleteAllCompanies')}
           </Button>
         </div>
 
         {error && (
           <div className="bg-red-100 text-red-700 p-4 rounded-lg">
             {error}
-            <button onClick={() => setError(null)} className="ml-4 underline">Dismiss</button>
+            <button onClick={() => setError(null)} className="ml-4 underline">{tCommon('ok')}</button>
           </div>
         )}
 
@@ -192,24 +195,24 @@ export default function UserManagementPage() {
           <table className="w-full">
             <thead className="bg-[var(--color-secondary)]">
               <tr>
-                <th className="px-4 py-3 text-left text-sm font-medium text-[var(--color-text)]">Email</th>
-                <th className="px-4 py-3 text-left text-sm font-medium text-[var(--color-text)]">Name</th>
-                <th className="px-4 py-3 text-left text-sm font-medium text-[var(--color-text)]">Role</th>
-                <th className="px-4 py-3 text-left text-sm font-medium text-[var(--color-text)]">Created</th>
-                <th className="px-4 py-3 text-left text-sm font-medium text-[var(--color-text)]">Actions</th>
+                <th className="px-4 py-3 text-left text-sm font-medium text-[var(--color-text)]">{t('email')}</th>
+                <th className="px-4 py-3 text-left text-sm font-medium text-[var(--color-text)]">{t('name')}</th>
+                <th className="px-4 py-3 text-left text-sm font-medium text-[var(--color-text)]">{t('role')}</th>
+                <th className="px-4 py-3 text-left text-sm font-medium text-[var(--color-text)]">{t('created')}</th>
+                <th className="px-4 py-3 text-left text-sm font-medium text-[var(--color-text)]">{t('actions')}</th>
               </tr>
             </thead>
             <tbody>
               {loading ? (
                 <tr>
                   <td colSpan={5} className="px-4 py-8 text-center text-[var(--color-text)]">
-                    Loading...
+                    {tCommon('loading')}
                   </td>
                 </tr>
               ) : users?.data.length === 0 ? (
                 <tr>
                   <td colSpan={5} className="px-4 py-8 text-center text-[var(--color-text)]">
-                    No users found
+                    {t('noUsersFound')}
                   </td>
                 </tr>
               ) : (
@@ -223,7 +226,7 @@ export default function UserManagementPage() {
                           ? 'bg-blue-100 text-blue-700'
                           : 'bg-purple-100 text-purple-700'
                       }`}>
-                        {user.role === 'JOB_SEEKER' ? 'Job Seeker' : 'Company'}
+                        {user.role === 'JOB_SEEKER' ? t('jobSeeker') : t('company')}
                       </span>
                     </td>
                     <td className="px-4 py-3 text-sm text-[var(--color-text)]">
@@ -232,10 +235,10 @@ export default function UserManagementPage() {
                     <td className="px-4 py-3 text-sm">
                       <div className="flex gap-2">
                         <Button size="sm" variant="secondary" onClick={() => handleEdit(user)}>
-                          Edit
+                          {tCommon('edit')}
                         </Button>
                         <Button size="sm" variant="destructive" onClick={() => setDeletingUser(user)}>
-                          Delete
+                          {tCommon('delete')}
                         </Button>
                       </div>
                     </td>
@@ -249,7 +252,11 @@ export default function UserManagementPage() {
           {users && users.totalPages > 1 && (
             <div className="px-4 py-3 border-t border-[var(--color-secondary)] flex items-center justify-between">
               <p className="text-sm text-[var(--color-text)]">
-                Showing {((users.page - 1) * users.pageSize) + 1} to {Math.min(users.page * users.pageSize, users.total)} of {users.total}
+                {t('showingResults', {
+                  from: ((users.page - 1) * users.pageSize) + 1,
+                  to: Math.min(users.page * users.pageSize, users.total),
+                  total: users.total
+                })}
               </p>
               <div className="flex gap-2">
                 <Button
@@ -258,7 +265,7 @@ export default function UserManagementPage() {
                   disabled={users.page <= 1}
                   onClick={() => handlePageChange(users.page - 1)}
                 >
-                  Previous
+                  {t('previous')}
                 </Button>
                 <Button
                   size="sm"
@@ -266,7 +273,7 @@ export default function UserManagementPage() {
                   disabled={users.page >= users.totalPages}
                   onClick={() => handlePageChange(users.page + 1)}
                 >
-                  Next
+                  {t('next')}
                 </Button>
               </div>
             </div>
@@ -278,17 +285,17 @@ export default function UserManagementPage() {
       {editingUser && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-[var(--color-bg)] rounded-xl p-6 w-full max-w-md">
-            <h2 className="text-xl font-bold text-[var(--color-text)] mb-4">Edit User</h2>
+            <h2 className="text-xl font-bold text-[var(--color-text)] mb-4">{t('editUser')}</h2>
             <div className="space-y-4">
               <div>
-                <label className="block text-sm text-[var(--color-text)] mb-1">Email</label>
+                <label className="block text-sm text-[var(--color-text)] mb-1">{t('email')}</label>
                 <Input
                   value={editForm.email || ''}
                   onChange={(e) => setEditForm({ ...editForm, email: e.target.value })}
                 />
               </div>
               <div>
-                <label className="block text-sm text-[var(--color-text)] mb-1">Name</label>
+                <label className="block text-sm text-[var(--color-text)] mb-1">{t('name')}</label>
                 <Input
                   value={editForm.name || ''}
                   onChange={(e) => setEditForm({ ...editForm, name: e.target.value })}
@@ -297,10 +304,10 @@ export default function UserManagementPage() {
             </div>
             <div className="flex gap-2 mt-6">
               <Button onClick={handleEditSubmit} disabled={editLoading}>
-                {editLoading ? 'Saving...' : 'Save'}
+                {editLoading ? tCommon('saving') : tCommon('save')}
               </Button>
               <Button variant="secondary" onClick={() => setEditingUser(null)}>
-                Cancel
+                {tCommon('cancel')}
               </Button>
             </div>
           </div>
@@ -311,17 +318,16 @@ export default function UserManagementPage() {
       {deletingUser && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-[var(--color-bg)] rounded-xl p-6 w-full max-w-md">
-            <h2 className="text-xl font-bold text-[var(--color-text)] mb-4">Confirm Delete</h2>
+            <h2 className="text-xl font-bold text-[var(--color-text)] mb-4">{t('confirmDelete')}</h2>
             <p className="text-[var(--color-text)]">
-              Are you sure you want to delete user <strong>{deletingUser.email}</strong>?
-              This action cannot be undone.
+              {t('confirmDeleteMessage', { email: deletingUser.email })}
             </p>
             <div className="flex gap-2 mt-6">
               <Button variant="destructive" onClick={handleDelete} disabled={deleteLoading}>
-                {deleteLoading ? 'Deleting...' : 'Delete'}
+                {deleteLoading ? t('deleting') : tCommon('delete')}
               </Button>
               <Button variant="secondary" onClick={() => setDeletingUser(null)}>
-                Cancel
+                {tCommon('cancel')}
               </Button>
             </div>
           </div>
@@ -332,17 +338,16 @@ export default function UserManagementPage() {
       {bulkDeleteType && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-[var(--color-bg)] rounded-xl p-6 w-full max-w-md">
-            <h2 className="text-xl font-bold text-[var(--color-text)] mb-4">Confirm Bulk Delete</h2>
+            <h2 className="text-xl font-bold text-[var(--color-text)] mb-4">{t('confirmBulkDelete')}</h2>
             <p className="text-[var(--color-text)]">
-              Are you sure you want to delete <strong>all {bulkDeleteType === 'job-seekers' ? 'job seekers' : 'companies'}</strong>?
-              This action cannot be undone.
+              {bulkDeleteType === 'job-seekers' ? t('confirmBulkDeleteJobSeekers') : t('confirmBulkDeleteCompanies')}
             </p>
             <div className="flex gap-2 mt-6">
               <Button variant="destructive" onClick={handleBulkDelete} disabled={bulkDeleteLoading}>
-                {bulkDeleteLoading ? 'Deleting...' : 'Delete All'}
+                {bulkDeleteLoading ? t('deleting') : t('deleteAll')}
               </Button>
               <Button variant="secondary" onClick={() => setBulkDeleteType(null)}>
-                Cancel
+                {tCommon('cancel')}
               </Button>
             </div>
           </div>
