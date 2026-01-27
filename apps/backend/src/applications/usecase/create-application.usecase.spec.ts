@@ -7,7 +7,7 @@ describe('CreateApplicationUseCase', () => {
   let useCase: CreateApplicationUseCase;
   const mockRepo = {
     create: jest.fn(),
-    findVacancyById: jest.fn(),
+    findVacancyWithCompanyById: jest.fn(),
     findJobSeekerByUserId: jest.fn(),
     findExisting: jest.fn(),
   };
@@ -31,7 +31,7 @@ describe('CreateApplicationUseCase', () => {
   });
 
   it('should create an application successfully', async () => {
-    mockRepo.findVacancyById.mockResolvedValue({ id: 1, title: 'Developer' });
+    mockRepo.findVacancyWithCompanyById.mockResolvedValue({ id: 1, title: 'Developer' });
     mockRepo.findJobSeekerByUserId.mockResolvedValue({
       id: 10,
       userId: 'user-1',
@@ -46,7 +46,7 @@ describe('CreateApplicationUseCase', () => {
 
     const result = await useCase.execute('user-1', 1);
 
-    expect(mockRepo.findVacancyById).toHaveBeenCalledWith(1);
+    expect(mockRepo.findVacancyWithCompanyById).toHaveBeenCalledWith(1);
     expect(mockRepo.findJobSeekerByUserId).toHaveBeenCalledWith('user-1');
     expect(mockRepo.findExisting).toHaveBeenCalledWith(10, 1);
     expect(mockRepo.create).toHaveBeenCalledWith(10, 1);
@@ -59,7 +59,7 @@ describe('CreateApplicationUseCase', () => {
   });
 
   it('should throw NotFoundException if vacancy not found', async () => {
-    mockRepo.findVacancyById.mockResolvedValue(null);
+    mockRepo.findVacancyWithCompanyById.mockResolvedValue(null);
 
     await expect(useCase.execute('user-1', 999)).rejects.toThrow(
       NotFoundException,
@@ -68,7 +68,7 @@ describe('CreateApplicationUseCase', () => {
   });
 
   it('should throw NotFoundException if job seeker profile not found', async () => {
-    mockRepo.findVacancyById.mockResolvedValue({ id: 1 });
+    mockRepo.findVacancyWithCompanyById.mockResolvedValue({ id: 1 });
     mockRepo.findJobSeekerByUserId.mockResolvedValue(null);
 
     await expect(useCase.execute('user-1', 1)).rejects.toThrow(
@@ -78,7 +78,7 @@ describe('CreateApplicationUseCase', () => {
   });
 
   it('should throw ConflictException if already applied', async () => {
-    mockRepo.findVacancyById.mockResolvedValue({ id: 1 });
+    mockRepo.findVacancyWithCompanyById.mockResolvedValue({ id: 1 });
     mockRepo.findJobSeekerByUserId.mockResolvedValue({ id: 10 });
     mockRepo.findExisting.mockResolvedValue({ id: 100 });
 

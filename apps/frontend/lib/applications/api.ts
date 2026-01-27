@@ -48,3 +48,11 @@ export async function getApplicationById(id: number): Promise<Application> {
     method: 'GET',
   });
 }
+
+export async function deleteMatch(
+  applicationId: number
+): Promise<{ message: string }> {
+  return authRequest<{ message: string }>(`/applications/${applicationId}/match`, {
+    method: 'DELETE',
+  });
+}

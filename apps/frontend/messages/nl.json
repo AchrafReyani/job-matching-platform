@@ -233,7 +233,21 @@
     "selectConversationDesc": "Kies een gesprek uit de lijst om te chatten",
     "typeMessage": "Typ je bericht...",
     "viewJobSeekerProfile": "Bekijk Werkzoekende Profiel",
-    "viewCompanyProfile": "Bekijk Bedrijfsprofiel"
+    "viewCompanyProfile": "Bekijk Bedrijfsprofiel",
+    "chatSettings": "Chat instellingen",
+    "deleteMatchButton": "Match Verwijderen",
+    "deleteMatch": {
+      "title": "Match Verwijderen",
+      "warningTitle": "Waarschuwing: Deze actie kan niet ongedaan worden gemaakt",
+      "warningMessage": "Je staat op het punt om je match met {name} voor de positie \"{vacancy}\" te verwijderen. Alle berichten worden permanent verwijderd.",
+      "willBeDeleted": "Het volgende wordt verwijderd:",
+      "deleteMessages": "Alle berichten in dit gesprek",
+      "deleteConnection": "Je verbinding met deze match",
+      "reapplyNote": "Let op: De werkzoekende kan opnieuw solliciteren op deze vacature nadat de match is verwijderd.",
+      "confirm": "Match Verwijderen",
+      "deleting": "Verwijderen...",
+      "error": "Match verwijderen mislukt"
+    }
   },
   "NotFound": {
     "title": "404",

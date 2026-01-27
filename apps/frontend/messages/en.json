@@ -233,7 +233,21 @@
     "selectConversationDesc": "Choose a conversation from the list to start chatting",
     "typeMessage": "Type your message...",
     "viewJobSeekerProfile": "View Job Seeker Profile",
-    "viewCompanyProfile": "View Company Profile"
+    "viewCompanyProfile": "View Company Profile",
+    "chatSettings": "Chat settings",
+    "deleteMatchButton": "Delete Match",
+    "deleteMatch": {
+      "title": "Delete Match",
+      "warningTitle": "Warning: This action cannot be undone",
+      "warningMessage": "You are about to delete your match with {name} for the position \"{vacancy}\". All messages will be permanently deleted.",
+      "willBeDeleted": "The following will be deleted:",
+      "deleteMessages": "All messages in this conversation",
+      "deleteConnection": "Your connection with this match",
+      "reapplyNote": "Note: The job seeker can reapply to this vacancy after the match is deleted.",
+      "confirm": "Delete Match",
+      "deleting": "Deleting...",
+      "error": "Failed to delete match"
+    }
   },
   "NotFound": {
     "title": "404",

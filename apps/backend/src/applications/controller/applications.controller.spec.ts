@@ -6,6 +6,7 @@ import { GetApplicationsForJobSeekerUseCase } from '../usecase/get-applications-
 import { GetApplicationsForCompanyUseCase } from '../usecase/get-applications-for-company.usecase';
 import { GetApplicationByIdUseCase } from '../usecase/get-application-by-id.usecase';
 import { UpdateApplicationStatusUseCase } from '../usecase/update-application-status.usecase';
+import { DeleteMatchUseCase } from '../usecase/delete-match.usecase';
 
 describe('ApplicationsController', () => {
   let controller: ApplicationsController;
@@ -14,6 +15,7 @@ describe('ApplicationsController', () => {
   const mockGetApplicationsForCompanyUseCase = { execute: jest.fn() };
   const mockGetApplicationByIdUseCase = { execute: jest.fn() };
   const mockUpdateApplicationStatusUseCase = { execute: jest.fn() };
+  const mockDeleteMatchUseCase = { execute: jest.fn() };
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -38,6 +40,10 @@ describe('ApplicationsController', () => {
         {
           provide: UpdateApplicationStatusUseCase,
           useValue: mockUpdateApplicationStatusUseCase,
+        },
+        {
+          provide: DeleteMatchUseCase,
+          useValue: mockDeleteMatchUseCase,
         },
       ],
     }).compile();
@@ -167,6 +173,28 @@ describe('ApplicationsController', () => {
       await expect(
         controller.updateApplication(req as never, 1, dto),
       ).rejects.toThrow(ForbiddenException);
+    });
+  });
+
+  describe('deleteMatch', () => {
+    it('should delete match successfully', async () => {
+      mockDeleteMatchUseCase.execute.mockResolvedValue(undefined);
+
+      const req = { user: { userId: 'user-1', role: 'JOB_SEEKER' } };
+      const result = await controller.deleteMatch(req as never, 1);
+
+      expect(mockDeleteMatchUseCase.execute).toHaveBeenCalledWith('user-1', 1);
+      expect(result).toEqual({ message: 'Match deleted successfully' });
+    });
+
+    it('should work for company users too', async () => {
+      mockDeleteMatchUseCase.execute.mockResolvedValue(undefined);
+
+      const req = { user: { userId: 'company-1', role: 'COMPANY' } };
+      const result = await controller.deleteMatch(req as never, 1);
+
+      expect(mockDeleteMatchUseCase.execute).toHaveBeenCalledWith('company-1', 1);
+      expect(result).toEqual({ message: 'Match deleted successfully' });
     });
   });
 });

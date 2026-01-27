@@ -2,8 +2,10 @@ import { Injectable } from '@nestjs/common';
 import {
   Application,
   ApplicationStatus,
+  ArchivedMatch,
   Company,
   JobSeeker,
+  Message,
   Vacancy,
 } from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
@@ -12,6 +14,7 @@ import {
   ApplicationWithRelations,
   ApplicationWithVacancy,
   ApplicationWithVacancyAndJobSeeker,
+  ArchiveMatchData,
   VacancyWithCompany,
 } from '../repository/application.repository';
 
@@ -213,6 +216,39 @@ export class PrismaApplicationRepository implements ApplicationRepository {
           },
         },
       },
+    });
+  }
+
+  async getMessagesForApplication(applicationId: number): Promise<Message[]> {
+    return this.prisma.message.findMany({
+      where: { applicationId },
+      orderBy: { sentAt: 'asc' },
+    });
+  }
+
+  async archiveMatch(data: ArchiveMatchData): Promise<ArchivedMatch> {
+    return this.prisma.archivedMatch.create({
+      data: {
+        applicationId: data.applicationId,
+        vacancyId: data.vacancyId,
+        vacancyTitle: data.vacancyTitle,
+        jobSeekerId: data.jobSeekerId,
+        jobSeekerName: data.jobSeekerName,
+        companyId: data.companyId,
+        companyName: data.companyName,
+        applicationStatus: data.applicationStatus,
+        appliedAt: data.appliedAt,
+        messages: data.messages,
+        messageCount: data.messageCount,
+        deletedBy: data.deletedBy,
+        deletedByRole: data.deletedByRole,
+      },
+    });
+  }
+
+  async deleteApplication(id: number): Promise<void> {
+    await this.prisma.application.delete({
+      where: { id },
     });
   }
 }

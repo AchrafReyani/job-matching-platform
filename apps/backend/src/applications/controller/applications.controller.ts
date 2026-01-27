@@ -3,6 +3,7 @@ import {
   Post,
   Get,
   Patch,
+  Delete,
   Param,
   Body,
   Request,
@@ -19,6 +20,7 @@ import { GetApplicationsForJobSeekerUseCase } from '../usecase/get-applications-
 import { GetApplicationsForCompanyUseCase } from '../usecase/get-applications-for-company.usecase';
 import { GetApplicationByIdUseCase } from '../usecase/get-application-by-id.usecase';
 import { UpdateApplicationStatusUseCase } from '../usecase/update-application-status.usecase';
+import { DeleteMatchUseCase } from '../usecase/delete-match.usecase';
 
 interface AuthenticatedRequest extends Request {
   user: {
@@ -36,6 +38,7 @@ export class ApplicationsController {
     private readonly getApplicationsForCompanyUseCase: GetApplicationsForCompanyUseCase,
     private readonly getApplicationByIdUseCase: GetApplicationByIdUseCase,
     private readonly updateApplicationStatusUseCase: UpdateApplicationStatusUseCase,
+    private readonly deleteMatchUseCase: DeleteMatchUseCase,
   ) {}
 
   @Get('details/:id')
@@ -98,5 +101,16 @@ export class ApplicationsController {
       id,
       dto.status as ApplicationStatus,
     );
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Delete(':id/match')
+  async deleteMatch(
+    @Request() req: AuthenticatedRequest,
+    @Param('id', ParseIntPipe) id: number,
+  ) {
+    const userId = req.user.userId || req.user.sub;
+    await this.deleteMatchUseCase.execute(userId!, id);
+    return { message: 'Match deleted successfully' };
   }
 }

@@ -8,6 +8,7 @@ import { GetApplicationsForJobSeekerUseCase } from './usecase/get-applications-f
 import { GetApplicationsForCompanyUseCase } from './usecase/get-applications-for-company.usecase';
 import { GetApplicationByIdUseCase } from './usecase/get-application-by-id.usecase';
 import { UpdateApplicationStatusUseCase } from './usecase/update-application-status.usecase';
+import { DeleteMatchUseCase } from './usecase/delete-match.usecase';
 import { NotificationsModule } from '../notifications/notifications.module';
 import { PrismaUserRepository } from '../users/infrastructure/prisma-user.repository';
 import { USER_REPOSITORY } from '../users/repository/user.repository';
@@ -30,6 +31,7 @@ import { USER_REPOSITORY } from '../users/repository/user.repository';
     GetApplicationsForCompanyUseCase,
     GetApplicationByIdUseCase,
     UpdateApplicationStatusUseCase,
+    DeleteMatchUseCase,
   ],
 })
 export class ApplicationsModule {}

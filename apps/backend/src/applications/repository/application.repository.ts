@@ -4,6 +4,8 @@ import {
   JobSeeker,
   Company,
   ApplicationStatus,
+  Message,
+  ArchivedMatch,
 } from '@prisma/client';
 
 export type ApplicationWithRelations = Application & {
@@ -28,6 +30,22 @@ export type ApplicationWithVacancyAndJobSeeker = Application & {
   jobSeeker: Pick<JobSeeker, 'id' | 'userId' | 'fullName'>;
 };
 
+export interface ArchiveMatchData {
+  applicationId: number;
+  vacancyId: number;
+  vacancyTitle: string;
+  jobSeekerId: number;
+  jobSeekerName: string;
+  companyId: number;
+  companyName: string;
+  applicationStatus: string;
+  appliedAt: Date;
+  messages: object;
+  messageCount: number;
+  deletedBy: string;
+  deletedByRole: string;
+}
+
 export interface ApplicationRepository {
   create(jobSeekerId: number, vacancyId: number): Promise<Application>;
   findById(id: number): Promise<Application | null>;
@@ -49,6 +67,9 @@ export interface ApplicationRepository {
   findApplicationWithVacancyAndJobSeeker(
     applicationId: number,
   ): Promise<ApplicationWithVacancyAndJobSeeker | null>;
+  getMessagesForApplication(applicationId: number): Promise<Message[]>;
+  archiveMatch(data: ArchiveMatchData): Promise<ArchivedMatch>;
+  deleteApplication(id: number): Promise<void>;
 }
 
 export const APPLICATION_REPOSITORY = Symbol('ApplicationRepository');

@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/Button';
@@ -9,6 +9,8 @@ import type { ConversationSummary } from '@/lib/messages/types';
 import { ChatMessage } from './ChatMessage';
 import { ChatInput } from './ChatInput';
 import { EmptyState } from './EmptyState';
+import { ChatSettingsMenu } from './ChatSettingsMenu';
+import { DeleteMatchModal } from './DeleteMatchModal';
 
 interface ChatPanelProps {
   conversation: ConversationSummary | null;
@@ -32,6 +34,11 @@ export function ChatPanel({
   const router = useRouter();
   const t = useTranslations('Messages');
   const messagesContainerRef = useRef<HTMLDivElement>(null);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+
+  const basePath = userRole === 'JOB_SEEKER'
+    ? '/dashboard/job-seeker'
+    : '/dashboard/company';
 
   useEffect(() => {
     const container = messagesContainerRef.current;
@@ -82,13 +89,16 @@ export function ChatPanel({
               {conversation.vacancyTitle}
             </p>
           </div>
-          <Button
-            variant="outline"
-            onClick={() => router.push(`/profiles/${conversation.otherPartyUserId}`)}
-            className="text-(--color-primary) border-(--color-primary)"
-          >
-            {profileLabel}
-          </Button>
+          <div className="flex items-center gap-2">
+            <Button
+              variant="outline"
+              onClick={() => router.push(`/profiles/${conversation.otherPartyUserId}`)}
+              className="text-(--color-primary) border-(--color-primary)"
+            >
+              {profileLabel}
+            </Button>
+            <ChatSettingsMenu onDeleteMatch={() => setShowDeleteModal(true)} />
+          </div>
         </div>
       </div>
 
@@ -113,6 +123,16 @@ export function ChatPanel({
       <div className="p-4 border-t border-(--color-muted)">
         <ChatInput onSend={onSendMessage} />
       </div>
+
+      {/* Delete Match Modal */}
+      <DeleteMatchModal
+        isOpen={showDeleteModal}
+        onClose={() => setShowDeleteModal(false)}
+        applicationId={conversation.applicationId}
+        otherPartyName={conversation.otherPartyName}
+        vacancyTitle={conversation.vacancyTitle}
+        basePath={basePath}
+      />
     </div>
   );
 }

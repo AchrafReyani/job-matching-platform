@@ -120,6 +120,7 @@ enum NotificationType {
   NEW_MESSAGE
   NEW_APPLICATION
   APPLICATION_WITHDRAWN
+  MATCH_ENDED
 }
 
 model ArchivedUser {
@@ -154,4 +155,22 @@ model ArchivedApplication {
   messageCount Int
   archivedAt   DateTime @default(now())
   archivedBy   String
+}
+
+model ArchivedMatch {
+  id                Int      @id @default(autoincrement())
+  applicationId     Int
+  vacancyId         Int
+  vacancyTitle      String
+  jobSeekerId       Int
+  jobSeekerName     String
+  companyId         Int
+  companyName       String
+  applicationStatus String
+  appliedAt         DateTime
+  messages          Json
+  messageCount      Int
+  deletedBy         String
+  deletedByRole     String
+  archivedAt        DateTime @default(now())
 }

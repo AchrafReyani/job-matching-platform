@@ -11,10 +11,11 @@ All features must follow TDD:
 
 ### Browser Verification - MANDATORY
 After implementing any new feature:
-1. Use Chrome browser automation tools to manually verify the feature works
-2. Test as different user roles (JOB_SEEKER, COMPANY, ADMIN) when applicable
-3. Verify UI renders correctly and interactions work as expected
-4. Take screenshots to confirm functionality before marking complete
+1. **Re-seed the database first** for consistent test data: `docker-compose exec -T backend npx prisma db seed`
+2. Use Chrome browser automation tools to manually verify the feature works
+3. Test as different user roles (JOB_SEEKER, COMPANY, ADMIN) when applicable
+4. Verify UI renders correctly and interactions work as expected
+5. Take screenshots to confirm functionality before marking complete
 
 ## Project Architecture
 
