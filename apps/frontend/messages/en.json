@@ -139,9 +139,21 @@
       "fullName": "Full Name",
       "portfolioUrl": "Portfolio URL",
       "experienceSummary": "Experience Summary"
+    },
+    "tabs": {
+      "about": "About",
+      "vacancies": "Vacancies",
+      "noVacancies": "No vacancies posted yet.",
+      "addVacancy": "Add Your First Vacancy",
+      "edit": "Edit"
     }
   },
   "Vacancies": {
+    "card": {
+      "role": "Role",
+      "salary": "Salary",
+      "posted": "Posted"
+    },
     "list": {
       "title": "My Vacancies",
       "addNew": "Add New Vacancy",
@@ -236,6 +248,13 @@
     "viewCompanyProfile": "View Company Profile",
     "chatSettings": "Chat settings",
     "deleteMatchButton": "Delete Match",
+    "vacancyDetails": {
+      "loading": "Loading details...",
+      "loadError": "Failed to load vacancy details",
+      "role": "Role",
+      "salary": "Salary Range",
+      "description": "Description"
+    },
     "deleteMatch": {
       "title": "Delete Match",
       "warningTitle": "Warning: This action cannot be undone",

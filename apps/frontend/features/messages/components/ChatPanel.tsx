@@ -11,6 +11,7 @@ import { ChatInput } from './ChatInput';
 import { EmptyState } from './EmptyState';
 import { ChatSettingsMenu } from './ChatSettingsMenu';
 import { DeleteMatchModal } from './DeleteMatchModal';
+import { ExpandableVacancyDetails } from './ExpandableVacancyDetails';
 
 interface ChatPanelProps {
   conversation: ConversationSummary | null;
@@ -80,16 +81,17 @@ export function ChatPanel({
     <div className="flex flex-col h-full bg-(--color-secondary) rounded-lg">
       {/* Header */}
       <div className="p-4 border-b border-(--color-muted)">
-        <div className="flex items-center justify-between">
-          <div>
+        <div className="flex items-start justify-between gap-4">
+          <div className="flex-1 min-w-0">
             <h2 className="text-xl font-bold text-(--color-text)">
               {conversation.otherPartyName}
             </h2>
-            <p className="text-sm text-(--color-muted)">
-              {conversation.vacancyTitle}
-            </p>
+            <ExpandableVacancyDetails
+              vacancyId={conversation.vacancyId}
+              vacancyTitle={conversation.vacancyTitle}
+            />
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 flex-shrink-0">
             <Button
               variant="outline"
               onClick={() => router.push(`/profiles/${conversation.otherPartyUserId}`)}

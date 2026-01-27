@@ -38,6 +38,7 @@ export type ChatMessageList = ChatMessage[];
 /** Conversation summary with unread count */
 export interface ConversationSummary {
   applicationId: number;
+  vacancyId: number;
   vacancyTitle: string;
   otherPartyName: string;
   otherPartyUserId: string;

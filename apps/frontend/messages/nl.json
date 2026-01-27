@@ -139,9 +139,21 @@
       "fullName": "Volledige Naam",
       "portfolioUrl": "Portfolio URL",
       "experienceSummary": "Ervaring Samenvatting"
+    },
+    "tabs": {
+      "about": "Over",
+      "vacancies": "Vacatures",
+      "noVacancies": "Nog geen vacatures geplaatst.",
+      "addVacancy": "Voeg Je Eerste Vacature Toe",
+      "edit": "Bewerk"
     }
   },
   "Vacancies": {
+    "card": {
+      "role": "Rol",
+      "salary": "Salaris",
+      "posted": "Geplaatst"
+    },
     "list": {
       "title": "Mijn Vacatures",
       "addNew": "Nieuwe Vacature Toevoegen",
@@ -236,6 +248,13 @@
     "viewCompanyProfile": "Bekijk Bedrijfsprofiel",
     "chatSettings": "Chat instellingen",
     "deleteMatchButton": "Match Verwijderen",
+    "vacancyDetails": {
+      "loading": "Details laden...",
+      "loadError": "Vacaturedetails laden mislukt",
+      "role": "Rol",
+      "salary": "Salarisschaal",
+      "description": "Beschrijving"
+    },
     "deleteMatch": {
       "title": "Match Verwijderen",
       "warningTitle": "Waarschuwing: Deze actie kan niet ongedaan worden gemaakt",

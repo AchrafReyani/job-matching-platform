@@ -132,6 +132,7 @@ export class PrismaMessageRepository implements MessageRepository {
 
         return {
           applicationId: app.id,
+          vacancyId: app.vacancy.id,
           vacancyTitle: app.vacancy.title,
           otherPartyName,
           otherPartyUserId,

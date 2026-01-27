@@ -5,6 +5,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import { COMPANY_REPOSITORY } from './repository/company.repository';
 import { GetCompanyByIdUseCase } from './usecase/get-company-by-id.usecase';
 import { GetAllCompaniesUseCase } from './usecase/get-all-companies.usecase';
+import { GetCompanyWithVacanciesUseCase } from './usecase/get-company-with-vacancies.usecase';
 
 @Module({
   controllers: [CompaniesController],
@@ -16,6 +17,7 @@ import { GetAllCompaniesUseCase } from './usecase/get-all-companies.usecase';
     },
     GetCompanyByIdUseCase,
     GetAllCompaniesUseCase,
+    GetCompanyWithVacanciesUseCase,
   ],
 })
 export class CompaniesModule {}

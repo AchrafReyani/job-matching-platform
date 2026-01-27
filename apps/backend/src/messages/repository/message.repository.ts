@@ -24,6 +24,7 @@ export type ApplicationWithParticipants = Application & {
 
 export interface ConversationSummary {
   applicationId: number;
+  vacancyId: number;
   vacancyTitle: string;
   otherPartyName: string;
   otherPartyUserId: string;
