@@ -1,8 +1,8 @@
-import { Injectable } from "@nestjs/common";
-import { User, Role } from "@prisma/client";
-import { PrismaService } from "../../prisma/prisma.service";
-import { UserRepository } from "../repository/user.repository";
-import { NotificationPreferences } from "../dto/update-notification-preferences.dto";
+import { Injectable } from '@nestjs/common';
+import { User, Role } from '@prisma/client';
+import { PrismaService } from '../../prisma/prisma.service';
+import { UserRepository } from '../repository/user.repository';
+import { NotificationPreferences } from '../dto/update-notification-preferences.dto';
 
 @Injectable()
 export class PrismaUserRepository implements UserRepository {
@@ -50,13 +50,13 @@ export class PrismaUserRepository implements UserRepository {
 
     // Return defaults based on role if no preferences set
     if (!prefs || Object.keys(prefs).length === 0) {
-      if (user.role === "JOB_SEEKER") {
+      if (user.role === 'JOB_SEEKER') {
         return {
           applicationAccepted: true,
           applicationRejected: true,
           newMessages: true,
         };
-      } else if (user.role === "COMPANY") {
+      } else if (user.role === 'COMPANY') {
         return {
           newApplications: true,
           newMessages: true,
@@ -118,14 +118,14 @@ export class PrismaUserRepository implements UserRepository {
       // Archive user data
       const profileData = user.jobSeeker
         ? {
-            type: "JOB_SEEKER",
+            type: 'JOB_SEEKER',
             fullName: user.jobSeeker.fullName,
             portfolioUrl: user.jobSeeker.portfolioUrl,
             experienceSummary: user.jobSeeker.experienceSummary,
           }
         : user.company
           ? {
-              type: "COMPANY",
+              type: 'COMPANY',
               companyName: user.company.companyName,
               websiteUrl: user.company.websiteUrl,
               description: user.company.description,

@@ -1,16 +1,22 @@
 'use client';
-import { ReactNode } from 'react';
+import { ReactNode, HTMLAttributes } from 'react';
 
-export function Card({ children, className = '' }: { children: ReactNode; className?: string }) {
+interface CardProps extends HTMLAttributes<HTMLDivElement> {
+  children: ReactNode;
+  className?: string;
+}
+
+export function Card({ children, className = '', ...props }: CardProps) {
   return (
     <div
       className={`
-        bg-(--color-bg) 
-        rounded-2xl 
-        shadow-(--shadow-header) 
+        bg-(--color-bg)
+        rounded-2xl
+        shadow-(--shadow-header)
         p-6
         ${className}
       `}
+      {...props}
     >
       {children}
     </div>

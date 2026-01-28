@@ -1,8 +1,8 @@
-import { Test, TestingModule } from "@nestjs/testing";
-import { GetVacanciesUseCase } from "./get-vacancies.usecase";
-import * as vacancyRepository from "../repository/vacancy.repository";
+import { Test, TestingModule } from '@nestjs/testing';
+import { GetVacanciesUseCase } from './get-vacancies.usecase';
+import * as vacancyRepository from '../repository/vacancy.repository';
 
-describe("GetVacanciesUseCase", () => {
+describe('GetVacanciesUseCase', () => {
   let useCase: GetVacanciesUseCase;
 
   const mockRepo = {
@@ -27,10 +27,10 @@ describe("GetVacanciesUseCase", () => {
     jest.clearAllMocks();
   });
 
-  it("should call repository.findAll and return the vacancies", async () => {
+  it('should call repository.findAll and return the vacancies', async () => {
     const mockVacancies = [
-      { id: 1, title: "Frontend Dev" },
-      { id: 2, title: "Backend Dev" },
+      { id: 1, title: 'Frontend Dev' },
+      { id: 2, title: 'Backend Dev' },
     ];
     mockRepo.findAll.mockResolvedValue(mockVacancies);
 

@@ -1,5 +1,5 @@
-import { Injectable, Inject, NotFoundException } from "@nestjs/common";
-import * as applicationRepository from "../repository/application.repository";
+import { Injectable, Inject, NotFoundException } from '@nestjs/common';
+import * as applicationRepository from '../repository/application.repository';
 
 @Injectable()
 export class GetApplicationsForCompanyUseCase {
@@ -14,7 +14,7 @@ export class GetApplicationsForCompanyUseCase {
     const company =
       await this.applicationRepository.findCompanyByUserId(userId);
     if (!company) {
-      throw new NotFoundException("Company profile not found");
+      throw new NotFoundException('Company profile not found');
     }
 
     return this.applicationRepository.findByCompanyId(company.id);

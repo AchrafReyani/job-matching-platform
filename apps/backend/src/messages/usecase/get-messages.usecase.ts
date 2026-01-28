@@ -3,8 +3,8 @@ import {
   Inject,
   NotFoundException,
   ForbiddenException,
-} from "@nestjs/common";
-import * as messageRepository from "../repository/message.repository";
+} from '@nestjs/common';
+import * as messageRepository from '../repository/message.repository';
 
 @Injectable()
 export class GetMessagesUseCase {
@@ -23,7 +23,7 @@ export class GetMessagesUseCase {
       );
 
     if (!application) {
-      throw new NotFoundException("Application not found");
+      throw new NotFoundException('Application not found');
     }
 
     const isParticipant =
@@ -31,7 +31,7 @@ export class GetMessagesUseCase {
       application.vacancy.company.user.id === userId;
 
     if (!isParticipant) {
-      throw new ForbiddenException("You are not authorized to view this chat");
+      throw new ForbiddenException('You are not authorized to view this chat');
     }
 
     return this.messageRepository.findByApplicationId(applicationId);

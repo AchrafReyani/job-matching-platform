@@ -28,4 +28,4 @@ export interface CompanyRepository {
   findAll(): Promise<CompanyPublicInfo[]>;
 }
 
-export const COMPANY_REPOSITORY = Symbol("CompanyRepository");
+export const COMPANY_REPOSITORY = Symbol('CompanyRepository');

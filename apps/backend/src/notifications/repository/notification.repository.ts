@@ -1,4 +1,4 @@
-import { Notification, NotificationType } from "@prisma/client";
+import { Notification, NotificationType } from '@prisma/client';
 
 export interface CreateNotificationData {
   userId: string;
@@ -21,4 +21,4 @@ export interface NotificationRepository {
   markAllAsReadByUserId(userId: string): Promise<number>;
 }
 
-export const NOTIFICATION_REPOSITORY = Symbol("NotificationRepository");
+export const NOTIFICATION_REPOSITORY = Symbol('NotificationRepository');

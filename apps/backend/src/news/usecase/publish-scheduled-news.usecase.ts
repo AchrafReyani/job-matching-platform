@@ -1,5 +1,5 @@
-import { Injectable, Inject, Logger } from "@nestjs/common";
-import { NewsRepository, NEWS_REPOSITORY } from "../repository/news.repository";
+import { Injectable, Inject, Logger } from '@nestjs/common';
+import { NewsRepository, NEWS_REPOSITORY } from '../repository/news.repository';
 
 @Injectable()
 export class PublishScheduledNewsUseCase {
@@ -21,7 +21,7 @@ export class PublishScheduledNewsUseCase {
     await this.newsRepository.publishScheduled(ids);
 
     this.logger.log(
-      `Published ${ids.length} scheduled news posts: ${ids.join(", ")}`,
+      `Published ${ids.length} scheduled news posts: ${ids.join(', ')}`,
     );
 
     return ids.length;

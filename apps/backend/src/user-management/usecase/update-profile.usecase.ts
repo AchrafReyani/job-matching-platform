@@ -3,9 +3,9 @@ import {
   Inject,
   NotFoundException,
   BadRequestException,
-} from "@nestjs/common";
-import { JobSeeker, Company } from "@prisma/client";
-import * as userManagementRepository from "../repository/user-management.repository";
+} from '@nestjs/common';
+import { JobSeeker, Company } from '@prisma/client';
+import * as userManagementRepository from '../repository/user-management.repository';
 
 export interface UpdateProfileResult {
   message: string;
@@ -26,12 +26,12 @@ export class UpdateProfileUseCase {
       | userManagementRepository.UpdateJobSeekerProfileData
       | userManagementRepository.UpdateCompanyProfileData,
   ): Promise<UpdateProfileResult> {
-    if (role === "JOB_SEEKER") {
+    if (role === 'JOB_SEEKER') {
       const jobSeeker =
         await this.userManagementRepository.findJobSeekerByUserId(userId);
 
       if (!jobSeeker) {
-        throw new NotFoundException("Job seeker profile not found");
+        throw new NotFoundException('Job seeker profile not found');
       }
 
       const updated =
@@ -40,15 +40,15 @@ export class UpdateProfileUseCase {
           data as userManagementRepository.UpdateJobSeekerProfileData,
         );
 
-      return { message: "Profile updated successfully", updated };
+      return { message: 'Profile updated successfully', updated };
     }
 
-    if (role === "COMPANY") {
+    if (role === 'COMPANY') {
       const company =
         await this.userManagementRepository.findCompanyByUserId(userId);
 
       if (!company) {
-        throw new NotFoundException("Company profile not found");
+        throw new NotFoundException('Company profile not found');
       }
 
       const updated = await this.userManagementRepository.updateCompanyProfile(
@@ -56,9 +56,9 @@ export class UpdateProfileUseCase {
         data as userManagementRepository.UpdateCompanyProfileData,
       );
 
-      return { message: "Company profile updated successfully", updated };
+      return { message: 'Company profile updated successfully', updated };
     }
 
-    throw new BadRequestException("Invalid role for profile update");
+    throw new BadRequestException('Invalid role for profile update');
   }
 }

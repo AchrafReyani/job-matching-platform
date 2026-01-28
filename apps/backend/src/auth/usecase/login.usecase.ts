@@ -1,8 +1,8 @@
-import { Injectable, Inject, UnauthorizedException } from "@nestjs/common";
-import { JwtService } from "@nestjs/jwt";
-import * as bcrypt from "bcryptjs";
-import * as authRepository from "../repository/auth.repository";
-import { LoginDto } from "../dto/login.dto";
+import { Injectable, Inject, UnauthorizedException } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
+import * as bcrypt from 'bcryptjs';
+import * as authRepository from '../repository/auth.repository';
+import { LoginDto } from '../dto/login.dto';
 
 export interface LoginResult {
   access_token: string;
@@ -20,7 +20,7 @@ export class LoginUseCase {
     const user = await this.authRepository.findUserByEmail(dto.email);
 
     if (!user) {
-      throw new UnauthorizedException("Invalid credentials");
+      throw new UnauthorizedException('Invalid credentials');
     }
 
     const isPasswordValid = await bcrypt.compare(
@@ -29,7 +29,7 @@ export class LoginUseCase {
     );
 
     if (!isPasswordValid) {
-      throw new UnauthorizedException("Invalid credentials");
+      throw new UnauthorizedException('Invalid credentials');
     }
 
     const payload = { sub: user.id, role: user.role };

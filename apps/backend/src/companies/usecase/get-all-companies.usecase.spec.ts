@@ -1,8 +1,8 @@
-import { Test, TestingModule } from "@nestjs/testing";
-import { GetAllCompaniesUseCase } from "./get-all-companies.usecase";
-import * as companyRepository from "../repository/company.repository";
+import { Test, TestingModule } from '@nestjs/testing';
+import { GetAllCompaniesUseCase } from './get-all-companies.usecase';
+import * as companyRepository from '../repository/company.repository';
 
-describe("GetAllCompaniesUseCase", () => {
+describe('GetAllCompaniesUseCase', () => {
   let useCase: GetAllCompaniesUseCase;
   const mockRepo = {
     findAll: jest.fn(),
@@ -26,10 +26,10 @@ describe("GetAllCompaniesUseCase", () => {
     jest.clearAllMocks();
   });
 
-  it("should return all companies", async () => {
+  it('should return all companies', async () => {
     const companies = [
-      { id: 1, companyName: "Acme Corp", userId: "user-1" },
-      { id: 2, companyName: "Tech Inc", userId: "user-2" },
+      { id: 1, companyName: 'Acme Corp', userId: 'user-1' },
+      { id: 2, companyName: 'Tech Inc', userId: 'user-2' },
     ];
     mockRepo.findAll.mockResolvedValue(companies);
 
@@ -39,7 +39,7 @@ describe("GetAllCompaniesUseCase", () => {
     expect(result).toEqual(companies);
   });
 
-  it("should return empty array if no companies", async () => {
+  it('should return empty array if no companies', async () => {
     mockRepo.findAll.mockResolvedValue([]);
 
     const result = await useCase.execute();

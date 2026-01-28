@@ -1,5 +1,5 @@
-import { User, Role } from "@prisma/client";
-import { NotificationPreferences } from "../dto/update-notification-preferences.dto";
+import { User, Role } from '@prisma/client';
+import { NotificationPreferences } from '../dto/update-notification-preferences.dto';
 
 export interface UserRepository {
   create(email: string, passwordHash: string, role: Role): Promise<User>;
@@ -14,4 +14,4 @@ export interface UserRepository {
   deleteUser(id: string, archivedBy: string): Promise<void>;
 }
 
-export const USER_REPOSITORY = Symbol("UserRepository");
+export const USER_REPOSITORY = Symbol('UserRepository');

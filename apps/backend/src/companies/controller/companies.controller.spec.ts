@@ -1,10 +1,10 @@
-import { Test, TestingModule } from "@nestjs/testing";
-import { CompaniesController } from "./companies.controller";
-import { GetCompanyByIdUseCase } from "../usecase/get-company-by-id.usecase";
-import { GetAllCompaniesUseCase } from "../usecase/get-all-companies.usecase";
-import { GetCompanyWithVacanciesUseCase } from "../usecase/get-company-with-vacancies.usecase";
+import { Test, TestingModule } from '@nestjs/testing';
+import { CompaniesController } from './companies.controller';
+import { GetCompanyByIdUseCase } from '../usecase/get-company-by-id.usecase';
+import { GetAllCompaniesUseCase } from '../usecase/get-all-companies.usecase';
+import { GetCompanyWithVacanciesUseCase } from '../usecase/get-company-with-vacancies.usecase';
 
-describe("CompaniesController", () => {
+describe('CompaniesController', () => {
   let controller: CompaniesController;
   const mockGetCompanyByIdUseCase = { execute: jest.fn() };
   const mockGetAllCompaniesUseCase = { execute: jest.fn() };
@@ -33,9 +33,9 @@ describe("CompaniesController", () => {
     jest.clearAllMocks();
   });
 
-  describe("getCompany", () => {
-    it("should return company by id", async () => {
-      const mockCompany = { id: 1, companyName: "Acme Corp", userId: "user-1" };
+  describe('getCompany', () => {
+    it('should return company by id', async () => {
+      const mockCompany = { id: 1, companyName: 'Acme Corp', userId: 'user-1' };
       mockGetCompanyByIdUseCase.execute.mockResolvedValue(mockCompany);
 
       const result = await controller.getCompany(1);
@@ -45,11 +45,11 @@ describe("CompaniesController", () => {
     });
   });
 
-  describe("getAllCompanies", () => {
-    it("should return all companies", async () => {
+  describe('getAllCompanies', () => {
+    it('should return all companies', async () => {
       const mockCompanies = [
-        { id: 1, companyName: "Acme Corp" },
-        { id: 2, companyName: "Tech Inc" },
+        { id: 1, companyName: 'Acme Corp' },
+        { id: 2, companyName: 'Tech Inc' },
       ];
       mockGetAllCompaniesUseCase.execute.mockResolvedValue(mockCompanies);
 
@@ -60,22 +60,22 @@ describe("CompaniesController", () => {
     });
   });
 
-  describe("getCompanyProfile", () => {
-    it("should return company with vacancies", async () => {
+  describe('getCompanyProfile', () => {
+    it('should return company with vacancies', async () => {
       const mockCompanyWithVacancies = {
         id: 1,
-        companyName: "TechCorp",
-        userId: "user-1",
-        websiteUrl: "https://techcorp.com",
-        description: "A tech company",
+        companyName: 'TechCorp',
+        userId: 'user-1',
+        websiteUrl: 'https://techcorp.com',
+        description: 'A tech company',
         vacancies: [
           {
             id: 1,
-            title: "Frontend Developer",
-            salaryRange: "$100k - $120k",
-            role: "Frontend",
-            jobDescription: "Building UIs",
-            createdAt: new Date("2024-01-15"),
+            title: 'Frontend Developer',
+            salaryRange: '$100k - $120k',
+            role: 'Frontend',
+            jobDescription: 'Building UIs',
+            createdAt: new Date('2024-01-15'),
           },
         ],
       };

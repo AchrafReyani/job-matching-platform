@@ -1,9 +1,9 @@
-import { Injectable, Inject } from "@nestjs/common";
+import { Injectable, Inject } from '@nestjs/common';
 import type {
   AdminRepository,
   AdminStats,
-} from "../repository/admin.repository";
-import { ADMIN_REPOSITORY } from "../repository/admin.repository";
+} from '../repository/admin.repository';
+import { ADMIN_REPOSITORY } from '../repository/admin.repository';
 
 @Injectable()
 export class GetAdminStatsUseCase {

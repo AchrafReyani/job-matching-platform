@@ -1,5 +1,5 @@
-import { Injectable, Inject } from "@nestjs/common";
-import { NewsRepository, NEWS_REPOSITORY } from "../repository/news.repository";
+import { Injectable, Inject } from '@nestjs/common';
+import { NewsRepository, NEWS_REPOSITORY } from '../repository/news.repository';
 
 @Injectable()
 export class GetNewsUnreadCountUseCase {
@@ -10,7 +10,7 @@ export class GetNewsUnreadCountUseCase {
 
   async execute(
     userId: string,
-    userRole: "JOB_SEEKER" | "COMPANY",
+    userRole: 'JOB_SEEKER' | 'COMPANY',
   ): Promise<{ count: number }> {
     const count = await this.newsRepository.getUnreadCount(userId, userRole);
     return { count };

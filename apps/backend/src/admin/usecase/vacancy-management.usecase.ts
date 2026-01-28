@@ -1,13 +1,13 @@
-import { Injectable, Inject, NotFoundException } from "@nestjs/common";
+import { Injectable, Inject, NotFoundException } from '@nestjs/common';
 import type {
   AdminRepository,
   VacancyListItem,
   VacancyDetails,
   PaginatedResult,
   VacancyFilter,
-} from "../repository/admin.repository";
-import { ADMIN_REPOSITORY } from "../repository/admin.repository";
-import { UpdateVacancyDto } from "../dto/update-vacancy.dto";
+} from '../repository/admin.repository';
+import { ADMIN_REPOSITORY } from '../repository/admin.repository';
+import { UpdateVacancyDto } from '../dto/update-vacancy.dto';
 
 @Injectable()
 export class GetVacanciesUseCase {
@@ -33,7 +33,7 @@ export class GetVacancyByIdUseCase {
   async execute(id: number): Promise<VacancyDetails> {
     const vacancy = await this.adminRepository.getVacancyById(id);
     if (!vacancy) {
-      throw new NotFoundException("Vacancy not found");
+      throw new NotFoundException('Vacancy not found');
     }
     return vacancy;
   }
@@ -49,7 +49,7 @@ export class UpdateVacancyUseCase {
   async execute(id: number, dto: UpdateVacancyDto): Promise<void> {
     const vacancy = await this.adminRepository.getVacancyById(id);
     if (!vacancy) {
-      throw new NotFoundException("Vacancy not found");
+      throw new NotFoundException('Vacancy not found');
     }
 
     await this.adminRepository.updateVacancy(id, dto);
@@ -66,7 +66,7 @@ export class DeleteVacancyUseCase {
   async execute(id: number, adminUserId: string): Promise<void> {
     const vacancy = await this.adminRepository.getVacancyById(id);
     if (!vacancy) {
-      throw new NotFoundException("Vacancy not found");
+      throw new NotFoundException('Vacancy not found');
     }
 
     await this.adminRepository.deleteVacancy(id, adminUserId);

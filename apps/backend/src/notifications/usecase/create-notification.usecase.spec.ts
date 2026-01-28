@@ -1,9 +1,9 @@
-import { Test, TestingModule } from "@nestjs/testing";
-import { CreateNotificationUseCase } from "./create-notification.usecase";
-import { NOTIFICATION_REPOSITORY } from "../repository/notification.repository";
-import { NotificationType } from "@prisma/client";
+import { Test, TestingModule } from '@nestjs/testing';
+import { CreateNotificationUseCase } from './create-notification.usecase';
+import { NOTIFICATION_REPOSITORY } from '../repository/notification.repository';
+import { NotificationType } from '@prisma/client';
 
-describe("CreateNotificationUseCase", () => {
+describe('CreateNotificationUseCase', () => {
   let useCase: CreateNotificationUseCase;
   const mockRepo = {
     create: jest.fn(),
@@ -24,12 +24,12 @@ describe("CreateNotificationUseCase", () => {
     jest.clearAllMocks();
   });
 
-  it("should create a notification", async () => {
+  it('should create a notification', async () => {
     const notificationData = {
-      userId: "user-1",
+      userId: 'user-1',
       type: NotificationType.APPLICATION_ACCEPTED,
-      title: "Application Accepted",
-      message: "Your application was accepted!",
+      title: 'Application Accepted',
+      message: 'Your application was accepted!',
       relatedId: 10,
     };
 
@@ -48,12 +48,12 @@ describe("CreateNotificationUseCase", () => {
     expect(result).toEqual(createdNotification);
   });
 
-  it("should create a notification without relatedId", async () => {
+  it('should create a notification without relatedId', async () => {
     const notificationData = {
-      userId: "user-1",
+      userId: 'user-1',
       type: NotificationType.NEW_MESSAGE,
-      title: "New Message",
-      message: "You have a new message",
+      title: 'New Message',
+      message: 'You have a new message',
     };
 
     const createdNotification = {

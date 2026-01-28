@@ -1,10 +1,10 @@
-import { Test, TestingModule } from "@nestjs/testing";
-import { NotFoundException } from "@nestjs/common";
-import { DeleteNewsUseCase } from "./delete-news.usecase";
-import { NEWS_REPOSITORY } from "../repository/news.repository";
-import { NewsCategory, NewsStatus, NewsAudience, News } from "@prisma/client";
+import { Test, TestingModule } from '@nestjs/testing';
+import { NotFoundException } from '@nestjs/common';
+import { DeleteNewsUseCase } from './delete-news.usecase';
+import { NEWS_REPOSITORY } from '../repository/news.repository';
+import { NewsCategory, NewsStatus, NewsAudience, News } from '@prisma/client';
 
-describe("DeleteNewsUseCase", () => {
+describe('DeleteNewsUseCase', () => {
   let useCase: DeleteNewsUseCase;
   const mockRepo = {
     findById: jest.fn(),
@@ -31,8 +31,8 @@ describe("DeleteNewsUseCase", () => {
 
   const mockNews: News = {
     id: 1,
-    title: "Test News",
-    content: "Test content",
+    title: 'Test News',
+    content: 'Test content',
     category: NewsCategory.ANNOUNCEMENT,
     status: NewsStatus.DRAFT,
     audience: NewsAudience.ALL,
@@ -43,15 +43,15 @@ describe("DeleteNewsUseCase", () => {
     updatedAt: new Date(),
   };
 
-  it("should throw NotFoundException if news does not exist", async () => {
+  it('should throw NotFoundException if news does not exist', async () => {
     mockRepo.findById.mockResolvedValue(null);
 
     await expect(useCase.execute(999)).rejects.toThrow(NotFoundException);
-    await expect(useCase.execute(999)).rejects.toThrow("News not found");
+    await expect(useCase.execute(999)).rejects.toThrow('News not found');
     expect(mockRepo.delete).not.toHaveBeenCalled();
   });
 
-  it("should delete news if it exists", async () => {
+  it('should delete news if it exists', async () => {
     mockRepo.findById.mockResolvedValue(mockNews);
     mockRepo.delete.mockResolvedValue(undefined);
 
@@ -61,7 +61,7 @@ describe("DeleteNewsUseCase", () => {
     expect(mockRepo.delete).toHaveBeenCalledWith(1);
   });
 
-  it("should delete published news", async () => {
+  it('should delete published news', async () => {
     const publishedNews = {
       ...mockNews,
       status: NewsStatus.PUBLISHED,

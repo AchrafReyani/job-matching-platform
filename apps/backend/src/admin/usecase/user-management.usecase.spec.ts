@@ -1,5 +1,5 @@
-import { Test, TestingModule } from "@nestjs/testing";
-import { NotFoundException, BadRequestException } from "@nestjs/common";
+import { Test, TestingModule } from '@nestjs/testing';
+import { NotFoundException, BadRequestException } from '@nestjs/common';
 import {
   GetUsersUseCase,
   GetUserByIdUseCase,
@@ -7,10 +7,10 @@ import {
   DeleteUserUseCase,
   DeleteAllJobSeekersUseCase,
   DeleteAllCompaniesUseCase,
-} from "./user-management.usecase";
-import { ADMIN_REPOSITORY } from "../repository/admin.repository";
+} from './user-management.usecase';
+import { ADMIN_REPOSITORY } from '../repository/admin.repository';
 
-describe("User Management Use Cases", () => {
+describe('User Management Use Cases', () => {
   const mockRepo = {
     getUsers: jest.fn(),
     getUserById: jest.fn(),
@@ -24,7 +24,7 @@ describe("User Management Use Cases", () => {
     jest.clearAllMocks();
   });
 
-  describe("GetUsersUseCase", () => {
+  describe('GetUsersUseCase', () => {
     let useCase: GetUsersUseCase;
 
     beforeEach(async () => {
@@ -38,14 +38,14 @@ describe("User Management Use Cases", () => {
       useCase = module.get<GetUsersUseCase>(GetUsersUseCase);
     });
 
-    it("should return paginated users", async () => {
+    it('should return paginated users', async () => {
       const mockResult = {
         data: [
           {
-            id: "1",
-            email: "test@example.com",
-            name: "Test",
-            role: "JOB_SEEKER",
+            id: '1',
+            email: 'test@example.com',
+            name: 'Test',
+            role: 'JOB_SEEKER',
             createdAt: new Date(),
           },
         ],
@@ -63,7 +63,7 @@ describe("User Management Use Cases", () => {
       expect(result.total).toBe(1);
     });
 
-    it("should filter by role", async () => {
+    it('should filter by role', async () => {
       mockRepo.getUsers.mockResolvedValue({
         data: [],
         total: 0,
@@ -72,12 +72,12 @@ describe("User Management Use Cases", () => {
         totalPages: 0,
       });
 
-      await useCase.execute({ role: "JOB_SEEKER" });
+      await useCase.execute({ role: 'JOB_SEEKER' });
 
-      expect(mockRepo.getUsers).toHaveBeenCalledWith({ role: "JOB_SEEKER" });
+      expect(mockRepo.getUsers).toHaveBeenCalledWith({ role: 'JOB_SEEKER' });
     });
 
-    it("should filter by search term", async () => {
+    it('should filter by search term', async () => {
       mockRepo.getUsers.mockResolvedValue({
         data: [],
         total: 0,
@@ -86,13 +86,13 @@ describe("User Management Use Cases", () => {
         totalPages: 0,
       });
 
-      await useCase.execute({ search: "alice" });
+      await useCase.execute({ search: 'alice' });
 
-      expect(mockRepo.getUsers).toHaveBeenCalledWith({ search: "alice" });
+      expect(mockRepo.getUsers).toHaveBeenCalledWith({ search: 'alice' });
     });
   });
 
-  describe("GetUserByIdUseCase", () => {
+  describe('GetUserByIdUseCase', () => {
     let useCase: GetUserByIdUseCase;
 
     beforeEach(async () => {
@@ -106,32 +106,32 @@ describe("User Management Use Cases", () => {
       useCase = module.get<GetUserByIdUseCase>(GetUserByIdUseCase);
     });
 
-    it("should return user details", async () => {
+    it('should return user details', async () => {
       const mockUser = {
-        id: "user-1",
-        email: "test@example.com",
-        role: "JOB_SEEKER",
+        id: 'user-1',
+        email: 'test@example.com',
+        role: 'JOB_SEEKER',
         createdAt: new Date(),
-        profile: { name: "Test User" },
+        profile: { name: 'Test User' },
       };
       mockRepo.getUserById.mockResolvedValue(mockUser);
 
-      const result = await useCase.execute("user-1");
+      const result = await useCase.execute('user-1');
 
-      expect(mockRepo.getUserById).toHaveBeenCalledWith("user-1");
-      expect(result.email).toBe("test@example.com");
+      expect(mockRepo.getUserById).toHaveBeenCalledWith('user-1');
+      expect(result.email).toBe('test@example.com');
     });
 
-    it("should throw NotFoundException when user not found", async () => {
+    it('should throw NotFoundException when user not found', async () => {
       mockRepo.getUserById.mockResolvedValue(null);
 
-      await expect(useCase.execute("nonexistent")).rejects.toThrow(
+      await expect(useCase.execute('nonexistent')).rejects.toThrow(
         NotFoundException,
       );
     });
   });
 
-  describe("UpdateUserUseCase", () => {
+  describe('UpdateUserUseCase', () => {
     let useCase: UpdateUserUseCase;
 
     beforeEach(async () => {
@@ -145,42 +145,42 @@ describe("User Management Use Cases", () => {
       useCase = module.get<UpdateUserUseCase>(UpdateUserUseCase);
     });
 
-    it("should update user successfully", async () => {
+    it('should update user successfully', async () => {
       const mockUser = {
-        id: "user-1",
-        email: "old@example.com",
-        role: "JOB_SEEKER",
+        id: 'user-1',
+        email: 'old@example.com',
+        role: 'JOB_SEEKER',
       };
       mockRepo.getUserById.mockResolvedValue(mockUser);
       mockRepo.updateUser.mockResolvedValue(undefined);
 
-      await useCase.execute("user-1", { email: "new@example.com" });
+      await useCase.execute('user-1', { email: 'new@example.com' });
 
-      expect(mockRepo.updateUser).toHaveBeenCalledWith("user-1", {
-        email: "new@example.com",
+      expect(mockRepo.updateUser).toHaveBeenCalledWith('user-1', {
+        email: 'new@example.com',
       });
     });
 
-    it("should throw NotFoundException when user not found", async () => {
+    it('should throw NotFoundException when user not found', async () => {
       mockRepo.getUserById.mockResolvedValue(null);
 
       await expect(
-        useCase.execute("nonexistent", { email: "test@example.com" }),
+        useCase.execute('nonexistent', { email: 'test@example.com' }),
       ).rejects.toThrow(NotFoundException);
       expect(mockRepo.updateUser).not.toHaveBeenCalled();
     });
 
-    it("should throw BadRequestException when trying to modify admin", async () => {
-      mockRepo.getUserById.mockResolvedValue({ id: "admin-1", role: "ADMIN" });
+    it('should throw BadRequestException when trying to modify admin', async () => {
+      mockRepo.getUserById.mockResolvedValue({ id: 'admin-1', role: 'ADMIN' });
 
       await expect(
-        useCase.execute("admin-1", { email: "test@example.com" }),
+        useCase.execute('admin-1', { email: 'test@example.com' }),
       ).rejects.toThrow(BadRequestException);
       expect(mockRepo.updateUser).not.toHaveBeenCalled();
     });
   });
 
-  describe("DeleteUserUseCase", () => {
+  describe('DeleteUserUseCase', () => {
     let useCase: DeleteUserUseCase;
 
     beforeEach(async () => {
@@ -194,48 +194,48 @@ describe("User Management Use Cases", () => {
       useCase = module.get<DeleteUserUseCase>(DeleteUserUseCase);
     });
 
-    it("should delete user successfully", async () => {
-      const mockUser = { id: "user-1", role: "JOB_SEEKER" };
+    it('should delete user successfully', async () => {
+      const mockUser = { id: 'user-1', role: 'JOB_SEEKER' };
       mockRepo.getUserById.mockResolvedValue(mockUser);
       mockRepo.deleteUser.mockResolvedValue(undefined);
 
-      await useCase.execute("user-1", "admin-1");
+      await useCase.execute('user-1', 'admin-1');
 
-      expect(mockRepo.deleteUser).toHaveBeenCalledWith("user-1", "admin-1");
+      expect(mockRepo.deleteUser).toHaveBeenCalledWith('user-1', 'admin-1');
     });
 
-    it("should throw NotFoundException when user not found", async () => {
+    it('should throw NotFoundException when user not found', async () => {
       mockRepo.getUserById.mockResolvedValue(null);
 
-      await expect(useCase.execute("nonexistent", "admin-1")).rejects.toThrow(
+      await expect(useCase.execute('nonexistent', 'admin-1')).rejects.toThrow(
         NotFoundException,
       );
       expect(mockRepo.deleteUser).not.toHaveBeenCalled();
     });
 
-    it("should throw BadRequestException when trying to delete admin", async () => {
-      mockRepo.getUserById.mockResolvedValue({ id: "admin-2", role: "ADMIN" });
+    it('should throw BadRequestException when trying to delete admin', async () => {
+      mockRepo.getUserById.mockResolvedValue({ id: 'admin-2', role: 'ADMIN' });
 
-      await expect(useCase.execute("admin-2", "admin-1")).rejects.toThrow(
+      await expect(useCase.execute('admin-2', 'admin-1')).rejects.toThrow(
         BadRequestException,
       );
       expect(mockRepo.deleteUser).not.toHaveBeenCalled();
     });
 
-    it("should throw BadRequestException when trying to delete yourself", async () => {
+    it('should throw BadRequestException when trying to delete yourself', async () => {
       mockRepo.getUserById.mockResolvedValue({
-        id: "admin-1",
-        role: "JOB_SEEKER",
+        id: 'admin-1',
+        role: 'JOB_SEEKER',
       });
 
-      await expect(useCase.execute("admin-1", "admin-1")).rejects.toThrow(
+      await expect(useCase.execute('admin-1', 'admin-1')).rejects.toThrow(
         BadRequestException,
       );
       expect(mockRepo.deleteUser).not.toHaveBeenCalled();
     });
   });
 
-  describe("DeleteAllJobSeekersUseCase", () => {
+  describe('DeleteAllJobSeekersUseCase', () => {
     let useCase: DeleteAllJobSeekersUseCase;
 
     beforeEach(async () => {
@@ -251,17 +251,17 @@ describe("User Management Use Cases", () => {
       );
     });
 
-    it("should delete all job seekers and return count", async () => {
+    it('should delete all job seekers and return count', async () => {
       mockRepo.deleteAllJobSeekers.mockResolvedValue(5);
 
-      const result = await useCase.execute("admin-1");
+      const result = await useCase.execute('admin-1');
 
-      expect(mockRepo.deleteAllJobSeekers).toHaveBeenCalledWith("admin-1");
+      expect(mockRepo.deleteAllJobSeekers).toHaveBeenCalledWith('admin-1');
       expect(result).toBe(5);
     });
   });
 
-  describe("DeleteAllCompaniesUseCase", () => {
+  describe('DeleteAllCompaniesUseCase', () => {
     let useCase: DeleteAllCompaniesUseCase;
 
     beforeEach(async () => {
@@ -277,12 +277,12 @@ describe("User Management Use Cases", () => {
       );
     });
 
-    it("should delete all companies and return count", async () => {
+    it('should delete all companies and return count', async () => {
       mockRepo.deleteAllCompanies.mockResolvedValue(3);
 
-      const result = await useCase.execute("admin-1");
+      const result = await useCase.execute('admin-1');
 
-      expect(mockRepo.deleteAllCompanies).toHaveBeenCalledWith("admin-1");
+      expect(mockRepo.deleteAllCompanies).toHaveBeenCalledWith('admin-1');
       expect(result).toBe(3);
     });
   });

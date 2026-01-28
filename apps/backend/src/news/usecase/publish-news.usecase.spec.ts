@@ -1,10 +1,10 @@
-import { Test, TestingModule } from "@nestjs/testing";
-import { NotFoundException, BadRequestException } from "@nestjs/common";
-import { PublishNewsUseCase } from "./publish-news.usecase";
-import { NEWS_REPOSITORY } from "../repository/news.repository";
-import { NewsCategory, NewsStatus, NewsAudience, News } from "@prisma/client";
+import { Test, TestingModule } from '@nestjs/testing';
+import { NotFoundException, BadRequestException } from '@nestjs/common';
+import { PublishNewsUseCase } from './publish-news.usecase';
+import { NEWS_REPOSITORY } from '../repository/news.repository';
+import { NewsCategory, NewsStatus, NewsAudience, News } from '@prisma/client';
 
-describe("PublishNewsUseCase", () => {
+describe('PublishNewsUseCase', () => {
   let useCase: PublishNewsUseCase;
   const mockRepo = {
     findById: jest.fn(),
@@ -31,8 +31,8 @@ describe("PublishNewsUseCase", () => {
 
   const mockNews: News = {
     id: 1,
-    title: "Test News",
-    content: "Test content",
+    title: 'Test News',
+    content: 'Test content',
     category: NewsCategory.ANNOUNCEMENT,
     status: NewsStatus.DRAFT,
     audience: NewsAudience.ALL,
@@ -43,15 +43,15 @@ describe("PublishNewsUseCase", () => {
     updatedAt: new Date(),
   };
 
-  it("should throw NotFoundException if news does not exist", async () => {
+  it('should throw NotFoundException if news does not exist', async () => {
     mockRepo.findById.mockResolvedValue(null);
 
     await expect(useCase.execute(999)).rejects.toThrow(NotFoundException);
-    await expect(useCase.execute(999)).rejects.toThrow("News not found");
+    await expect(useCase.execute(999)).rejects.toThrow('News not found');
     expect(mockRepo.update).not.toHaveBeenCalled();
   });
 
-  it("should throw BadRequestException if news is already published", async () => {
+  it('should throw BadRequestException if news is already published', async () => {
     const publishedNews = {
       ...mockNews,
       status: NewsStatus.PUBLISHED,
@@ -61,12 +61,12 @@ describe("PublishNewsUseCase", () => {
 
     await expect(useCase.execute(1)).rejects.toThrow(BadRequestException);
     await expect(useCase.execute(1)).rejects.toThrow(
-      "News is already published",
+      'News is already published',
     );
     expect(mockRepo.update).not.toHaveBeenCalled();
   });
 
-  it("should publish draft news", async () => {
+  it('should publish draft news', async () => {
     mockRepo.findById.mockResolvedValue(mockNews);
     const publishedNews = {
       ...mockNews,
@@ -85,11 +85,11 @@ describe("PublishNewsUseCase", () => {
     expect(result.status).toBe(NewsStatus.PUBLISHED);
   });
 
-  it("should publish scheduled news and clear scheduledAt", async () => {
+  it('should publish scheduled news and clear scheduledAt', async () => {
     const scheduledNews = {
       ...mockNews,
       status: NewsStatus.SCHEDULED,
-      scheduledAt: new Date("2030-01-01"),
+      scheduledAt: new Date('2030-01-01'),
     };
     mockRepo.findById.mockResolvedValue(scheduledNews);
     const publishedNews = {

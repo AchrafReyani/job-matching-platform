@@ -1,7 +1,7 @@
-import { Injectable, Inject, ConflictException } from "@nestjs/common";
-import { User, Role } from "@prisma/client";
-import * as bcrypt from "bcryptjs";
-import * as userRepository from "../repository/user.repository";
+import { Injectable, Inject, ConflictException } from '@nestjs/common';
+import { User, Role } from '@prisma/client';
+import * as bcrypt from 'bcryptjs';
+import * as userRepository from '../repository/user.repository';
 
 @Injectable()
 export class CreateUserUseCase {
@@ -14,7 +14,7 @@ export class CreateUserUseCase {
     const existing = await this.userRepository.findByEmail(email);
 
     if (existing) {
-      throw new ConflictException("Email already registered");
+      throw new ConflictException('Email already registered');
     }
 
     const passwordHash = await bcrypt.hash(password, 10);

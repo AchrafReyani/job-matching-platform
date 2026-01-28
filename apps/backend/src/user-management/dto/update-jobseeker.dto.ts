@@ -1,4 +1,4 @@
-import { IsOptional, IsString, IsUrl } from "class-validator";
+import { IsOptional, IsString, IsUrl } from 'class-validator';
 
 export class UpdateJobSeekerDto {
   @IsOptional()
@@ -6,7 +6,7 @@ export class UpdateJobSeekerDto {
   fullName?: string;
 
   @IsOptional()
-  @IsUrl({}, { message: "Portfolio must be a valid URL" })
+  @IsUrl({}, { message: 'Portfolio must be a valid URL' })
   portfolioUrl?: string;
 
   @IsOptional()

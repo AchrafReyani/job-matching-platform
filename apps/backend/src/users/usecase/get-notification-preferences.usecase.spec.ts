@@ -1,7 +1,7 @@
-import { GetNotificationPreferencesUseCase } from "./get-notification-preferences.usecase";
-import type { UserRepository } from "../repository/user.repository";
+import { GetNotificationPreferencesUseCase } from './get-notification-preferences.usecase';
+import type { UserRepository } from '../repository/user.repository';
 
-describe("GetNotificationPreferencesUseCase", () => {
+describe('GetNotificationPreferencesUseCase', () => {
   let useCase: GetNotificationPreferencesUseCase;
   let mockUserRepository: jest.Mocked<UserRepository>;
 
@@ -23,7 +23,7 @@ describe("GetNotificationPreferencesUseCase", () => {
     jest.clearAllMocks();
   });
 
-  it("should return notification preferences for job seeker", async () => {
+  it('should return notification preferences for job seeker', async () => {
     const mockPrefs = {
       applicationAccepted: true,
       applicationRejected: true,
@@ -31,15 +31,15 @@ describe("GetNotificationPreferencesUseCase", () => {
     };
     mockUserRepository.getNotificationPreferences.mockResolvedValue(mockPrefs);
 
-    const result = await useCase.execute("user-123");
+    const result = await useCase.execute('user-123');
 
     expect(result).toEqual(mockPrefs);
     expect(mockUserRepository.getNotificationPreferences).toHaveBeenCalledWith(
-      "user-123",
+      'user-123',
     );
   });
 
-  it("should return notification preferences for company", async () => {
+  it('should return notification preferences for company', async () => {
     const mockPrefs = {
       newApplications: true,
       newMessages: true,
@@ -47,18 +47,18 @@ describe("GetNotificationPreferencesUseCase", () => {
     };
     mockUserRepository.getNotificationPreferences.mockResolvedValue(mockPrefs);
 
-    const result = await useCase.execute("company-123");
+    const result = await useCase.execute('company-123');
 
     expect(result).toEqual(mockPrefs);
     expect(mockUserRepository.getNotificationPreferences).toHaveBeenCalledWith(
-      "company-123",
+      'company-123',
     );
   });
 
-  it("should return empty object if no preferences set", async () => {
+  it('should return empty object if no preferences set', async () => {
     mockUserRepository.getNotificationPreferences.mockResolvedValue({});
 
-    const result = await useCase.execute("user-123");
+    const result = await useCase.execute('user-123');
 
     expect(result).toEqual({});
   });

@@ -1,6 +1,6 @@
-import { Injectable, Inject, NotFoundException } from "@nestjs/common";
-import { User } from "@prisma/client";
-import * as userRepository from "../repository/user.repository";
+import { Injectable, Inject, NotFoundException } from '@nestjs/common';
+import { User } from '@prisma/client';
+import * as userRepository from '../repository/user.repository';
 
 @Injectable()
 export class FindUserByEmailUseCase {
@@ -13,7 +13,7 @@ export class FindUserByEmailUseCase {
     const user = await this.userRepository.findByEmail(email);
 
     if (!user) {
-      throw new NotFoundException("User not found");
+      throw new NotFoundException('User not found');
     }
 
     return user;

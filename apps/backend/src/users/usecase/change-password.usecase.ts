@@ -3,10 +3,10 @@ import {
   Inject,
   UnauthorizedException,
   BadRequestException,
-} from "@nestjs/common";
-import * as bcrypt from "bcryptjs";
-import type { UserRepository } from "../repository/user.repository";
-import { USER_REPOSITORY } from "../repository/user.repository";
+} from '@nestjs/common';
+import * as bcrypt from 'bcryptjs';
+import type { UserRepository } from '../repository/user.repository';
+import { USER_REPOSITORY } from '../repository/user.repository';
 
 interface ChangePasswordInput {
   userId: string;
@@ -24,7 +24,7 @@ export class ChangePasswordUseCase {
   async execute(input: ChangePasswordInput): Promise<void> {
     const user = await this.userRepository.findById(input.userId);
     if (!user) {
-      throw new UnauthorizedException("User not found");
+      throw new UnauthorizedException('User not found');
     }
 
     // Verify current password
@@ -34,7 +34,7 @@ export class ChangePasswordUseCase {
     );
 
     if (!isCurrentPasswordValid) {
-      throw new UnauthorizedException("Current password is incorrect");
+      throw new UnauthorizedException('Current password is incorrect');
     }
 
     // Check if new password is same as current
@@ -45,7 +45,7 @@ export class ChangePasswordUseCase {
 
     if (isSamePassword) {
       throw new BadRequestException(
-        "New password must be different from current password",
+        'New password must be different from current password',
       );
     }
 

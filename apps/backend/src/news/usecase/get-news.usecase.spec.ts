@@ -1,10 +1,10 @@
-import { Test, TestingModule } from "@nestjs/testing";
-import { GetNewsUseCase } from "./get-news.usecase";
-import { NEWS_REPOSITORY, PaginatedNews } from "../repository/news.repository";
-import { NewsCategory, NewsStatus, NewsAudience, News } from "@prisma/client";
-import { NewsQueryDto } from "../dto";
+import { Test, TestingModule } from '@nestjs/testing';
+import { GetNewsUseCase } from './get-news.usecase';
+import { NEWS_REPOSITORY, PaginatedNews } from '../repository/news.repository';
+import { NewsCategory, NewsStatus, NewsAudience, News } from '@prisma/client';
+import { NewsQueryDto } from '../dto';
 
-describe("GetNewsUseCase", () => {
+describe('GetNewsUseCase', () => {
   let useCase: GetNewsUseCase;
   const mockRepo = {
     findAll: jest.fn(),
@@ -30,8 +30,8 @@ describe("GetNewsUseCase", () => {
 
   const mockNews: News = {
     id: 1,
-    title: "Test News",
-    content: "Test content",
+    title: 'Test News',
+    content: 'Test content',
     category: NewsCategory.ANNOUNCEMENT,
     status: NewsStatus.PUBLISHED,
     audience: NewsAudience.ALL,
@@ -50,7 +50,7 @@ describe("GetNewsUseCase", () => {
     totalPages: 1,
   };
 
-  it("should return paginated news with default pagination", async () => {
+  it('should return paginated news with default pagination', async () => {
     mockRepo.findAll.mockResolvedValue(mockPaginatedResult);
 
     const query: NewsQueryDto = {};
@@ -66,7 +66,7 @@ describe("GetNewsUseCase", () => {
     expect(result).toEqual(mockPaginatedResult);
   });
 
-  it("should pass filters to repository", async () => {
+  it('should pass filters to repository', async () => {
     mockRepo.findAll.mockResolvedValue(mockPaginatedResult);
 
     const query: NewsQueryDto = {
@@ -87,7 +87,7 @@ describe("GetNewsUseCase", () => {
     });
   });
 
-  it("should handle empty results", async () => {
+  it('should handle empty results', async () => {
     const emptyResult: PaginatedNews = {
       data: [],
       total: 0,

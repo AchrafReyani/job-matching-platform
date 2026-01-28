@@ -9,9 +9,9 @@ import {
   UseGuards,
   Request,
   ParseIntPipe,
-} from "@nestjs/common";
-import { AdminGuard } from "../guards/admin.guard";
-import { GetAdminStatsUseCase } from "../usecase/get-admin-stats.usecase";
+} from '@nestjs/common';
+import { AdminGuard } from '../guards/admin.guard';
+import { GetAdminStatsUseCase } from '../usecase/get-admin-stats.usecase';
 import {
   GetUsersUseCase,
   GetUserByIdUseCase,
@@ -19,22 +19,22 @@ import {
   DeleteUserUseCase,
   DeleteAllJobSeekersUseCase,
   DeleteAllCompaniesUseCase,
-} from "../usecase/user-management.usecase";
+} from '../usecase/user-management.usecase';
 import {
   GetVacanciesUseCase,
   GetVacancyByIdUseCase,
   UpdateVacancyUseCase,
   DeleteVacancyUseCase,
   DeleteAllVacanciesUseCase,
-} from "../usecase/vacancy-management.usecase";
-import { UpdateUserDto } from "../dto/update-user.dto";
-import { UpdateVacancyDto } from "../dto/update-vacancy.dto";
+} from '../usecase/vacancy-management.usecase';
+import { UpdateUserDto } from '../dto/update-user.dto';
+import { UpdateVacancyDto } from '../dto/update-vacancy.dto';
 import {
   AuthenticatedRequest,
   getUserId,
-} from "../../common/interfaces/authenticated-request.interface";
+} from '../../common/interfaces/authenticated-request.interface';
 
-@Controller("admin")
+@Controller('admin')
 @UseGuards(AdminGuard)
 export class AdminController {
   constructor(
@@ -54,21 +54,21 @@ export class AdminController {
 
   // ==================== Dashboard Stats ====================
 
-  @Get("stats")
+  @Get('stats')
   async getStats() {
     return this.getAdminStatsUseCase.execute();
   }
 
   // ==================== User Management ====================
 
-  @Get("users")
+  @Get('users')
   async getUsers(
-    @Query("role") role?: "JOB_SEEKER" | "COMPANY",
-    @Query("search") search?: string,
-    @Query("sortBy") sortBy?: "createdAt" | "email" | "name",
-    @Query("sortOrder") sortOrder?: "asc" | "desc",
-    @Query("page") page?: string,
-    @Query("pageSize") pageSize?: string,
+    @Query('role') role?: 'JOB_SEEKER' | 'COMPANY',
+    @Query('search') search?: string,
+    @Query('sortBy') sortBy?: 'createdAt' | 'email' | 'name',
+    @Query('sortOrder') sortOrder?: 'asc' | 'desc',
+    @Query('page') page?: string,
+    @Query('pageSize') pageSize?: string,
   ) {
     return this.getUsersUseCase.execute({
       role,
@@ -80,33 +80,33 @@ export class AdminController {
     });
   }
 
-  @Get("users/:id")
-  async getUserById(@Param("id") id: string) {
+  @Get('users/:id')
+  async getUserById(@Param('id') id: string) {
     return this.getUserByIdUseCase.execute(id);
   }
 
-  @Patch("users/:id")
-  async updateUser(@Param("id") id: string, @Body() dto: UpdateUserDto) {
+  @Patch('users/:id')
+  async updateUser(@Param('id') id: string, @Body() dto: UpdateUserDto) {
     await this.updateUserUseCase.execute(id, dto);
-    return { message: "User updated successfully" };
+    return { message: 'User updated successfully' };
   }
 
-  @Delete("users/:id")
+  @Delete('users/:id')
   async deleteUser(
-    @Param("id") id: string,
+    @Param('id') id: string,
     @Request() req: AuthenticatedRequest,
   ) {
     await this.deleteUserUseCase.execute(id, getUserId(req));
-    return { message: "User deleted successfully" };
+    return { message: 'User deleted successfully' };
   }
 
-  @Delete("users/bulk/job-seekers")
+  @Delete('users/bulk/job-seekers')
   async deleteAllJobSeekers(@Request() req: AuthenticatedRequest) {
     const count = await this.deleteAllJobSeekersUseCase.execute(getUserId(req));
     return { message: `${count} job seekers deleted successfully`, count };
   }
 
-  @Delete("users/bulk/companies")
+  @Delete('users/bulk/companies')
   async deleteAllCompanies(@Request() req: AuthenticatedRequest) {
     const count = await this.deleteAllCompaniesUseCase.execute(getUserId(req));
     return { message: `${count} companies deleted successfully`, count };
@@ -114,14 +114,14 @@ export class AdminController {
 
   // ==================== Vacancy Management ====================
 
-  @Get("vacancies")
+  @Get('vacancies')
   async getVacancies(
-    @Query("companyId") companyId?: string,
-    @Query("search") search?: string,
-    @Query("sortBy") sortBy?: "createdAt" | "title" | "company",
-    @Query("sortOrder") sortOrder?: "asc" | "desc",
-    @Query("page") page?: string,
-    @Query("pageSize") pageSize?: string,
+    @Query('companyId') companyId?: string,
+    @Query('search') search?: string,
+    @Query('sortBy') sortBy?: 'createdAt' | 'title' | 'company',
+    @Query('sortOrder') sortOrder?: 'asc' | 'desc',
+    @Query('page') page?: string,
+    @Query('pageSize') pageSize?: string,
   ) {
     return this.getVacanciesUseCase.execute({
       companyId: companyId ? parseInt(companyId, 10) : undefined,
@@ -133,30 +133,30 @@ export class AdminController {
     });
   }
 
-  @Get("vacancies/:id")
-  async getVacancyById(@Param("id", ParseIntPipe) id: number) {
+  @Get('vacancies/:id')
+  async getVacancyById(@Param('id', ParseIntPipe) id: number) {
     return this.getVacancyByIdUseCase.execute(id);
   }
 
-  @Patch("vacancies/:id")
+  @Patch('vacancies/:id')
   async updateVacancy(
-    @Param("id", ParseIntPipe) id: number,
+    @Param('id', ParseIntPipe) id: number,
     @Body() dto: UpdateVacancyDto,
   ) {
     await this.updateVacancyUseCase.execute(id, dto);
-    return { message: "Vacancy updated successfully" };
+    return { message: 'Vacancy updated successfully' };
   }
 
-  @Delete("vacancies/:id")
+  @Delete('vacancies/:id')
   async deleteVacancy(
-    @Param("id", ParseIntPipe) id: number,
+    @Param('id', ParseIntPipe) id: number,
     @Request() req: AuthenticatedRequest,
   ) {
     await this.deleteVacancyUseCase.execute(id, getUserId(req));
-    return { message: "Vacancy deleted successfully" };
+    return { message: 'Vacancy deleted successfully' };
   }
 
-  @Delete("vacancies/bulk/all")
+  @Delete('vacancies/bulk/all')
   async deleteAllVacancies(@Request() req: AuthenticatedRequest) {
     const count = await this.deleteAllVacanciesUseCase.execute(getUserId(req));
     return { message: `${count} vacancies deleted successfully`, count };

@@ -11,13 +11,13 @@ import {
   UseGuards,
   Request,
   ForbiddenException,
-} from "@nestjs/common";
-import { JwtAuthGuard } from "../../auth/jwt-auth.guard";
+} from '@nestjs/common';
+import { JwtAuthGuard } from '../../auth/jwt-auth.guard';
 import {
   AuthenticatedRequest,
   getUserId,
-} from "../../common/interfaces/authenticated-request.interface";
-import { CreateNewsDto, UpdateNewsDto, NewsQueryDto } from "../dto";
+} from '../../common/interfaces/authenticated-request.interface';
+import { CreateNewsDto, UpdateNewsDto, NewsQueryDto } from '../dto';
 import {
   CreateNewsUseCase,
   UpdateNewsUseCase,
@@ -28,9 +28,9 @@ import {
   MarkNewsReadUseCase,
   GetNewsUnreadCountUseCase,
   PublishNewsUseCase,
-} from "../usecase";
+} from '../usecase';
 
-@Controller("news")
+@Controller('news')
 @UseGuards(JwtAuthGuard)
 export class NewsController {
   constructor(
@@ -47,7 +47,7 @@ export class NewsController {
 
   // ========== Admin Endpoints ==========
 
-  @Get("admin")
+  @Get('admin')
   async getNewsAdmin(
     @Request() req: AuthenticatedRequest,
     @Query() query: NewsQueryDto,
@@ -56,10 +56,10 @@ export class NewsController {
     return this.getNewsUseCase.execute(query);
   }
 
-  @Get("admin/:id")
+  @Get('admin/:id')
   async getNewsByIdAdmin(
     @Request() req: AuthenticatedRequest,
-    @Param("id", ParseIntPipe) id: number,
+    @Param('id', ParseIntPipe) id: number,
   ) {
     this.requireAdmin(req);
     return this.getNewsByIdUseCase.execute(id);
@@ -74,29 +74,29 @@ export class NewsController {
     return this.createNewsUseCase.execute(dto);
   }
 
-  @Patch(":id")
+  @Patch(':id')
   async updateNews(
     @Request() req: AuthenticatedRequest,
-    @Param("id", ParseIntPipe) id: number,
+    @Param('id', ParseIntPipe) id: number,
     @Body() dto: UpdateNewsDto,
   ) {
     this.requireAdmin(req);
     return this.updateNewsUseCase.execute(id, dto);
   }
 
-  @Delete(":id")
+  @Delete(':id')
   async deleteNews(
     @Request() req: AuthenticatedRequest,
-    @Param("id", ParseIntPipe) id: number,
+    @Param('id', ParseIntPipe) id: number,
   ) {
     this.requireAdmin(req);
     return this.deleteNewsUseCase.execute(id);
   }
 
-  @Post(":id/publish")
+  @Post(':id/publish')
   async publishNews(
     @Request() req: AuthenticatedRequest,
-    @Param("id", ParseIntPipe) id: number,
+    @Param('id', ParseIntPipe) id: number,
   ) {
     this.requireAdmin(req);
     return this.publishNewsUseCase.execute(id);
@@ -107,12 +107,12 @@ export class NewsController {
   @Get()
   async getNewsForUser(
     @Request() req: AuthenticatedRequest,
-    @Query("page", new ParseIntPipe({ optional: true })) page?: number,
-    @Query("limit", new ParseIntPipe({ optional: true })) limit?: number,
+    @Query('page', new ParseIntPipe({ optional: true })) page?: number,
+    @Query('limit', new ParseIntPipe({ optional: true })) limit?: number,
   ) {
     this.requireUserRole(req);
     const userId = getUserId(req);
-    const userRole = req.user.role as "JOB_SEEKER" | "COMPANY";
+    const userRole = req.user.role as 'JOB_SEEKER' | 'COMPANY';
     return this.getNewsForUserUseCase.execute(
       userId,
       userRole,
@@ -121,31 +121,31 @@ export class NewsController {
     );
   }
 
-  @Get("unread-count")
+  @Get('unread-count')
   async getUnreadCount(@Request() req: AuthenticatedRequest) {
     this.requireUserRole(req);
     const userId = getUserId(req);
-    const userRole = req.user.role as "JOB_SEEKER" | "COMPANY";
+    const userRole = req.user.role as 'JOB_SEEKER' | 'COMPANY';
     return this.getNewsUnreadCountUseCase.execute(userId, userRole);
   }
 
-  @Get(":id")
+  @Get(':id')
   async getNewsById(
     @Request() req: AuthenticatedRequest,
-    @Param("id", ParseIntPipe) id: number,
+    @Param('id', ParseIntPipe) id: number,
   ) {
     this.requireUserRole(req);
     return this.getNewsByIdUseCase.execute(id);
   }
 
-  @Post(":id/read")
+  @Post(':id/read')
   async markAsRead(
     @Request() req: AuthenticatedRequest,
-    @Param("id", ParseIntPipe) id: number,
+    @Param('id', ParseIntPipe) id: number,
   ) {
     this.requireUserRole(req);
     const userId = getUserId(req);
-    const userRole = req.user.role as "JOB_SEEKER" | "COMPANY";
+    const userRole = req.user.role as 'JOB_SEEKER' | 'COMPANY';
     await this.markNewsReadUseCase.execute(id, userId, userRole);
     return { success: true };
   }
@@ -153,14 +153,14 @@ export class NewsController {
   // ========== Helpers ==========
 
   private requireAdmin(req: AuthenticatedRequest): void {
-    if (req.user.role !== "ADMIN") {
-      throw new ForbiddenException("Admin access required");
+    if (req.user.role !== 'ADMIN') {
+      throw new ForbiddenException('Admin access required');
     }
   }
 
   private requireUserRole(req: AuthenticatedRequest): void {
-    if (req.user.role !== "JOB_SEEKER" && req.user.role !== "COMPANY") {
-      throw new ForbiddenException("User access required");
+    if (req.user.role !== 'JOB_SEEKER' && req.user.role !== 'COMPANY') {
+      throw new ForbiddenException('User access required');
     }
   }
 }

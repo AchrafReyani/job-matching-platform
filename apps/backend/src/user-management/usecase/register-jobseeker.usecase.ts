@@ -1,7 +1,7 @@
-import { Injectable, Inject, ConflictException } from "@nestjs/common";
-import * as bcrypt from "bcryptjs";
-import * as userManagementRepository from "../repository/user-management.repository";
-import { RegisterJobSeekerDto } from "../dto/register-jobseeker.dto";
+import { Injectable, Inject, ConflictException } from '@nestjs/common';
+import * as bcrypt from 'bcryptjs';
+import * as userManagementRepository from '../repository/user-management.repository';
+import { RegisterJobSeekerDto } from '../dto/register-jobseeker.dto';
 
 export interface RegisterResult {
   message: string;
@@ -20,7 +20,7 @@ export class RegisterJobSeekerUseCase {
     );
 
     if (existingUser) {
-      throw new ConflictException("Email already registered");
+      throw new ConflictException('Email already registered');
     }
 
     const passwordHash = await bcrypt.hash(dto.password, 10);
@@ -28,7 +28,7 @@ export class RegisterJobSeekerUseCase {
     const user = await this.userManagementRepository.createUser(
       dto.email,
       passwordHash,
-      "JOB_SEEKER",
+      'JOB_SEEKER',
     );
 
     await this.userManagementRepository.createJobSeekerProfile(user.id, {
@@ -37,6 +37,6 @@ export class RegisterJobSeekerUseCase {
       experienceSummary: dto.experienceSummary,
     });
 
-    return { message: "Job seeker registered successfully" };
+    return { message: 'Job seeker registered successfully' };
   }
 }

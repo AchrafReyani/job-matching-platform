@@ -1,19 +1,19 @@
-import { UnauthorizedException, BadRequestException } from "@nestjs/common";
-import * as bcrypt from "bcryptjs";
-import { ChangePasswordUseCase } from "./change-password.usecase";
-import type { UserRepository } from "../repository/user.repository";
+import { UnauthorizedException, BadRequestException } from '@nestjs/common';
+import * as bcrypt from 'bcryptjs';
+import { ChangePasswordUseCase } from './change-password.usecase';
+import type { UserRepository } from '../repository/user.repository';
 
-jest.mock("bcryptjs");
+jest.mock('bcryptjs');
 
-describe("ChangePasswordUseCase", () => {
+describe('ChangePasswordUseCase', () => {
   let useCase: ChangePasswordUseCase;
   let mockUserRepository: jest.Mocked<UserRepository>;
 
   const mockUser = {
-    id: "user-123",
-    email: "test@example.com",
-    passwordHash: "hashedPassword",
-    role: "JOB_SEEKER" as const,
+    id: 'user-123',
+    email: 'test@example.com',
+    passwordHash: 'hashedPassword',
+    role: 'JOB_SEEKER' as const,
     createdAt: new Date(),
     notificationPreferences: {},
   };
@@ -36,54 +36,54 @@ describe("ChangePasswordUseCase", () => {
     jest.clearAllMocks();
   });
 
-  it("should change password successfully", async () => {
+  it('should change password successfully', async () => {
     mockUserRepository.findById.mockResolvedValue(mockUser);
     (bcrypt.compare as jest.Mock)
       .mockResolvedValueOnce(true) // current password check
       .mockResolvedValueOnce(false); // new password different check
-    (bcrypt.hash as jest.Mock).mockResolvedValue("newHashedPassword");
+    (bcrypt.hash as jest.Mock).mockResolvedValue('newHashedPassword');
     mockUserRepository.updatePassword.mockResolvedValue(undefined);
 
     await expect(
       useCase.execute({
-        userId: "user-123",
-        currentPassword: "oldPassword",
-        newPassword: "newPassword123",
+        userId: 'user-123',
+        currentPassword: 'oldPassword',
+        newPassword: 'newPassword123',
       }),
     ).resolves.toBeUndefined();
 
     expect(mockUserRepository.updatePassword).toHaveBeenCalledWith(
-      "user-123",
-      "newHashedPassword",
+      'user-123',
+      'newHashedPassword',
     );
   });
 
-  it("should throw UnauthorizedException if user not found", async () => {
+  it('should throw UnauthorizedException if user not found', async () => {
     mockUserRepository.findById.mockResolvedValue(null);
 
     await expect(
       useCase.execute({
-        userId: "nonexistent",
-        currentPassword: "oldPassword",
-        newPassword: "newPassword123",
+        userId: 'nonexistent',
+        currentPassword: 'oldPassword',
+        newPassword: 'newPassword123',
       }),
     ).rejects.toThrow(UnauthorizedException);
   });
 
-  it("should throw UnauthorizedException if current password is incorrect", async () => {
+  it('should throw UnauthorizedException if current password is incorrect', async () => {
     mockUserRepository.findById.mockResolvedValue(mockUser);
     (bcrypt.compare as jest.Mock).mockResolvedValue(false);
 
     await expect(
       useCase.execute({
-        userId: "user-123",
-        currentPassword: "wrongPassword",
-        newPassword: "newPassword123",
+        userId: 'user-123',
+        currentPassword: 'wrongPassword',
+        newPassword: 'newPassword123',
       }),
     ).rejects.toThrow(UnauthorizedException);
   });
 
-  it("should throw BadRequestException if new password is same as current", async () => {
+  it('should throw BadRequestException if new password is same as current', async () => {
     mockUserRepository.findById.mockResolvedValue(mockUser);
     (bcrypt.compare as jest.Mock)
       .mockResolvedValueOnce(true) // current password check
@@ -91,9 +91,9 @@ describe("ChangePasswordUseCase", () => {
 
     await expect(
       useCase.execute({
-        userId: "user-123",
-        currentPassword: "samePassword",
-        newPassword: "samePassword",
+        userId: 'user-123',
+        currentPassword: 'samePassword',
+        newPassword: 'samePassword',
       }),
     ).rejects.toThrow(BadRequestException);
   });

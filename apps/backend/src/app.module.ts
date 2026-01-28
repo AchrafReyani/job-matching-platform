@@ -1,20 +1,20 @@
-import { Module } from "@nestjs/common";
-import { ScheduleModule } from "@nestjs/schedule";
-import { PrismaService } from "./prisma.service";
-import { AuthModule } from "./auth/auth.module";
-import { UserManagementModule } from "./user-management/user-management.module";
-import { UsersModule } from "./users/users.module";
-import { VacancyModule } from "./vacancy/vacancy.module";
-import { CompaniesModule } from "./companies/companies.module";
-import { ApplicationsModule } from "./applications/applications.module";
-import { MessagesModule } from "./messages/messages.module";
-import { ProfilesModule } from "./profiles/profiles.module";
-import { NotificationsModule } from "./notifications/notifications.module";
-import { DashboardModule } from "./dashboard/dashboard.module";
-import { AdminModule } from "./admin/admin.module";
-import { NewsModule } from "./news/news.module";
+import { Module } from '@nestjs/common';
+import { ScheduleModule } from '@nestjs/schedule';
+import { PrismaService } from './prisma.service';
+import { AuthModule } from './auth/auth.module';
+import { UserManagementModule } from './user-management/user-management.module';
+import { UsersModule } from './users/users.module';
+import { VacancyModule } from './vacancy/vacancy.module';
+import { CompaniesModule } from './companies/companies.module';
+import { ApplicationsModule } from './applications/applications.module';
+import { MessagesModule } from './messages/messages.module';
+import { ProfilesModule } from './profiles/profiles.module';
+import { NotificationsModule } from './notifications/notifications.module';
+import { DashboardModule } from './dashboard/dashboard.module';
+import { AdminModule } from './admin/admin.module';
+import { NewsModule } from './news/news.module';
 
-import { AppController } from "./app.controller";
+import { AppController } from './app.controller';
 
 @Module({
   imports: [

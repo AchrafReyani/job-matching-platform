@@ -1,6 +1,6 @@
-import { Injectable, Inject, NotFoundException } from "@nestjs/common";
-import { NewsRepository, NEWS_REPOSITORY } from "../repository/news.repository";
-import { News } from "@prisma/client";
+import { Injectable, Inject, NotFoundException } from '@nestjs/common';
+import { NewsRepository, NEWS_REPOSITORY } from '../repository/news.repository';
+import { News } from '@prisma/client';
 
 @Injectable()
 export class GetNewsByIdUseCase {
@@ -13,7 +13,7 @@ export class GetNewsByIdUseCase {
     const news = await this.newsRepository.findById(id);
 
     if (!news) {
-      throw new NotFoundException("News not found");
+      throw new NotFoundException('News not found');
     }
 
     return news;

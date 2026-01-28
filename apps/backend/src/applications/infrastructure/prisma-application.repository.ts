@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable } from '@nestjs/common';
 import {
   Application,
   ApplicationStatus,
@@ -7,12 +7,12 @@ import {
   JobSeeker,
   Message,
   Vacancy,
-} from "@prisma/client";
-import { PrismaService } from "../../prisma/prisma.service";
+} from '@prisma/client';
+import { PrismaService } from '../../prisma/prisma.service';
 import {
   COMPANY_BASIC_SELECT,
   JOB_SEEKER_BASIC_SELECT,
-} from "../../common/prisma/select-constants";
+} from '../../common/prisma/select-constants';
 import {
   ApplicationRepository,
   ApplicationWithRelations,
@@ -20,7 +20,7 @@ import {
   ApplicationWithVacancyAndJobSeeker,
   ArchiveMatchData,
   VacancyWithCompany,
-} from "../repository/application.repository";
+} from '../repository/application.repository';
 
 @Injectable()
 export class PrismaApplicationRepository implements ApplicationRepository {
@@ -31,7 +31,7 @@ export class PrismaApplicationRepository implements ApplicationRepository {
       data: {
         vacancyId,
         jobSeekerId,
-        status: "APPLIED",
+        status: 'APPLIED',
         appliedAt: new Date(),
       },
     });
@@ -80,7 +80,7 @@ export class PrismaApplicationRepository implements ApplicationRepository {
           },
         },
       },
-      orderBy: { appliedAt: "desc" },
+      orderBy: { appliedAt: 'desc' },
     });
   }
 
@@ -103,7 +103,7 @@ export class PrismaApplicationRepository implements ApplicationRepository {
           select: JOB_SEEKER_BASIC_SELECT,
         },
       },
-      orderBy: { appliedAt: "desc" },
+      orderBy: { appliedAt: 'desc' },
     });
   }
 
@@ -192,7 +192,7 @@ export class PrismaApplicationRepository implements ApplicationRepository {
   async getMessagesForApplication(applicationId: number): Promise<Message[]> {
     return this.prisma.message.findMany({
       where: { applicationId },
-      orderBy: { sentAt: "asc" },
+      orderBy: { sentAt: 'asc' },
     });
   }
 

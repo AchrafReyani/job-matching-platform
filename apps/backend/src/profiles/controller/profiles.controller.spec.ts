@@ -1,8 +1,8 @@
-import { Test, TestingModule } from "@nestjs/testing";
-import { ProfilesController } from "./profiles.controller";
-import { GetPublicProfileUseCase } from "../usecase/get-public-profile.usecase";
+import { Test, TestingModule } from '@nestjs/testing';
+import { ProfilesController } from './profiles.controller';
+import { GetPublicProfileUseCase } from '../usecase/get-public-profile.usecase';
 
-describe("ProfilesController", () => {
+describe('ProfilesController', () => {
   let controller: ProfilesController;
   const mockGetPublicProfileUseCase = { execute: jest.fn() };
 
@@ -24,19 +24,19 @@ describe("ProfilesController", () => {
     jest.clearAllMocks();
   });
 
-  describe("getProfile", () => {
-    it("should return user profile", async () => {
+  describe('getProfile', () => {
+    it('should return user profile', async () => {
       const mockProfile = {
-        userId: "user-1",
-        role: "JOB_SEEKER",
-        profile: { fullName: "John Doe" },
+        userId: 'user-1',
+        role: 'JOB_SEEKER',
+        profile: { fullName: 'John Doe' },
       };
       mockGetPublicProfileUseCase.execute.mockResolvedValue(mockProfile);
 
-      const result = await controller.getProfile("user-1");
+      const result = await controller.getProfile('user-1');
 
       expect(mockGetPublicProfileUseCase.execute).toHaveBeenCalledWith(
-        "user-1",
+        'user-1',
       );
       expect(result).toEqual(mockProfile);
     });

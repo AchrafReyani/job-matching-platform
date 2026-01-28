@@ -1,10 +1,10 @@
-import { Test, TestingModule } from "@nestjs/testing";
-import { NotFoundException, ForbiddenException } from "@nestjs/common";
-import { MarkNotificationReadUseCase } from "./mark-notification-read.usecase";
-import { NOTIFICATION_REPOSITORY } from "../repository/notification.repository";
-import { NotificationType } from "@prisma/client";
+import { Test, TestingModule } from '@nestjs/testing';
+import { NotFoundException, ForbiddenException } from '@nestjs/common';
+import { MarkNotificationReadUseCase } from './mark-notification-read.usecase';
+import { NOTIFICATION_REPOSITORY } from '../repository/notification.repository';
+import { NotificationType } from '@prisma/client';
 
-describe("MarkNotificationReadUseCase", () => {
+describe('MarkNotificationReadUseCase', () => {
   let useCase: MarkNotificationReadUseCase;
   const mockRepo = {
     findById: jest.fn(),
@@ -28,13 +28,13 @@ describe("MarkNotificationReadUseCase", () => {
     jest.clearAllMocks();
   });
 
-  it("should mark notification as read", async () => {
+  it('should mark notification as read', async () => {
     const notification = {
       id: 1,
-      userId: "user-1",
+      userId: 'user-1',
       type: NotificationType.NEW_APPLICATION,
-      title: "Test",
-      message: "Test message",
+      title: 'Test',
+      message: 'Test message',
       relatedId: null,
       isRead: false,
       createdAt: new Date(),
@@ -45,29 +45,29 @@ describe("MarkNotificationReadUseCase", () => {
     mockRepo.findById.mockResolvedValue(notification);
     mockRepo.markAsRead.mockResolvedValue(updatedNotification);
 
-    const result = await useCase.execute("user-1", 1);
+    const result = await useCase.execute('user-1', 1);
 
     expect(mockRepo.findById).toHaveBeenCalledWith(1);
     expect(mockRepo.markAsRead).toHaveBeenCalledWith(1);
     expect(result.isRead).toBe(true);
   });
 
-  it("should throw NotFoundException when notification does not exist", async () => {
+  it('should throw NotFoundException when notification does not exist', async () => {
     mockRepo.findById.mockResolvedValue(null);
 
-    await expect(useCase.execute("user-1", 999)).rejects.toThrow(
+    await expect(useCase.execute('user-1', 999)).rejects.toThrow(
       NotFoundException,
     );
     expect(mockRepo.markAsRead).not.toHaveBeenCalled();
   });
 
-  it("should throw ForbiddenException when notification belongs to another user", async () => {
+  it('should throw ForbiddenException when notification belongs to another user', async () => {
     const notification = {
       id: 1,
-      userId: "user-2",
+      userId: 'user-2',
       type: NotificationType.NEW_APPLICATION,
-      title: "Test",
-      message: "Test message",
+      title: 'Test',
+      message: 'Test message',
       relatedId: null,
       isRead: false,
       createdAt: new Date(),
@@ -75,7 +75,7 @@ describe("MarkNotificationReadUseCase", () => {
 
     mockRepo.findById.mockResolvedValue(notification);
 
-    await expect(useCase.execute("user-1", 1)).rejects.toThrow(
+    await expect(useCase.execute('user-1', 1)).rejects.toThrow(
       ForbiddenException,
     );
     expect(mockRepo.markAsRead).not.toHaveBeenCalled();

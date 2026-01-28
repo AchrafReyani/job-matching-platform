@@ -1,7 +1,7 @@
-import { Injectable, Inject, BadRequestException } from "@nestjs/common";
-import { NewsRepository, NEWS_REPOSITORY } from "../repository/news.repository";
-import { CreateNewsDto } from "../dto";
-import { News, NewsStatus } from "@prisma/client";
+import { Injectable, Inject, BadRequestException } from '@nestjs/common';
+import { NewsRepository, NEWS_REPOSITORY } from '../repository/news.repository';
+import { CreateNewsDto } from '../dto';
+import { News, NewsStatus } from '@prisma/client';
 
 @Injectable()
 export class CreateNewsUseCase {
@@ -15,14 +15,14 @@ export class CreateNewsUseCase {
 
     if (status === NewsStatus.SCHEDULED && !dto.scheduledAt) {
       throw new BadRequestException(
-        "Scheduled date is required for scheduled posts",
+        'Scheduled date is required for scheduled posts',
       );
     }
 
     const scheduledAt = dto.scheduledAt ? new Date(dto.scheduledAt) : undefined;
 
     if (scheduledAt && scheduledAt <= new Date()) {
-      throw new BadRequestException("Scheduled date must be in the future");
+      throw new BadRequestException('Scheduled date must be in the future');
     }
 
     const publishedAt =
@@ -32,7 +32,7 @@ export class CreateNewsUseCase {
       title: dto.title,
       content: dto.content,
       category: dto.category,
-      audience: dto.audience || "ALL",
+      audience: dto.audience || 'ALL',
       status,
       isPinned: dto.isPinned || false,
       scheduledAt,

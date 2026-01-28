@@ -4,14 +4,14 @@ import {
   NotFoundException,
   ForbiddenException,
   Optional,
-} from "@nestjs/common";
-import { Message, NotificationType } from "@prisma/client";
-import * as messageRepository from "../repository/message.repository";
-import { CreateMessageDto } from "../dto/create-message.dto";
-import type { NotificationRepository } from "../../notifications/repository/notification.repository";
-import { NOTIFICATION_REPOSITORY } from "../../notifications/repository/notification.repository";
-import type { UserRepository } from "../../users/repository/user.repository";
-import { USER_REPOSITORY } from "../../users/repository/user.repository";
+} from '@nestjs/common';
+import { Message, NotificationType } from '@prisma/client';
+import * as messageRepository from '../repository/message.repository';
+import { CreateMessageDto } from '../dto/create-message.dto';
+import type { NotificationRepository } from '../../notifications/repository/notification.repository';
+import { NOTIFICATION_REPOSITORY } from '../../notifications/repository/notification.repository';
+import type { UserRepository } from '../../users/repository/user.repository';
+import { USER_REPOSITORY } from '../../users/repository/user.repository';
 
 @Injectable()
 export class CreateMessageUseCase {
@@ -35,12 +35,12 @@ export class CreateMessageUseCase {
       );
 
     if (!application) {
-      throw new NotFoundException("Application not found");
+      throw new NotFoundException('Application not found');
     }
 
-    if (application.status !== "ACCEPTED") {
+    if (application.status !== 'ACCEPTED') {
       throw new ForbiddenException(
-        "Chat only available for accepted applications",
+        'Chat only available for accepted applications',
       );
     }
 
@@ -49,7 +49,7 @@ export class CreateMessageUseCase {
       application.vacancy.company.user.id === userId;
 
     if (!isParticipant) {
-      throw new ForbiddenException("You are not part of this chat");
+      throw new ForbiddenException('You are not part of this chat');
     }
 
     const message = await this.messageRepository.create(
@@ -81,7 +81,7 @@ export class CreateMessageUseCase {
         await this.notificationRepository.create({
           userId: recipientUserId,
           type: NotificationType.NEW_MESSAGE,
-          title: "New Message",
+          title: 'New Message',
           message: `${senderName} sent you a message`,
           relatedId: applicationId,
         });

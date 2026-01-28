@@ -58,10 +58,10 @@ export interface PaginatedResult<T> {
 }
 
 export interface UserFilter {
-  role?: "JOB_SEEKER" | "COMPANY";
+  role?: 'JOB_SEEKER' | 'COMPANY';
   search?: string;
-  sortBy?: "createdAt" | "email" | "name";
-  sortOrder?: "asc" | "desc";
+  sortBy?: 'createdAt' | 'email' | 'name';
+  sortOrder?: 'asc' | 'desc';
   page?: number;
   pageSize?: number;
 }
@@ -69,8 +69,8 @@ export interface UserFilter {
 export interface VacancyFilter {
   companyId?: number;
   search?: string;
-  sortBy?: "createdAt" | "title" | "company";
-  sortOrder?: "asc" | "desc";
+  sortBy?: 'createdAt' | 'title' | 'company';
+  sortOrder?: 'asc' | 'desc';
   page?: number;
   pageSize?: number;
 }
@@ -112,4 +112,4 @@ export interface AdminRepository {
   deleteAllVacancies(archivedBy: string): Promise<number>;
 }
 
-export const ADMIN_REPOSITORY = Symbol("AdminRepository");
+export const ADMIN_REPOSITORY = Symbol('AdminRepository');

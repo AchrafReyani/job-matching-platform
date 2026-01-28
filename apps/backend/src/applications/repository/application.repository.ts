@@ -6,13 +6,13 @@ import {
   ApplicationStatus,
   Message,
   ArchivedMatch,
-} from "@prisma/client";
+} from '@prisma/client';
 
 export type ApplicationWithRelations = Application & {
   vacancy: Vacancy & {
-    company: Pick<Company, "id" | "userId" | "companyName">;
+    company: Pick<Company, 'id' | 'userId' | 'companyName'>;
   };
-  jobSeeker: Pick<JobSeeker, "id" | "userId" | "fullName">;
+  jobSeeker: Pick<JobSeeker, 'id' | 'userId' | 'fullName'>;
 };
 
 export type ApplicationWithVacancy = Application & {
@@ -20,14 +20,14 @@ export type ApplicationWithVacancy = Application & {
 };
 
 export type VacancyWithCompany = Vacancy & {
-  company: Pick<Company, "id" | "userId" | "companyName">;
+  company: Pick<Company, 'id' | 'userId' | 'companyName'>;
 };
 
 export type ApplicationWithVacancyAndJobSeeker = Application & {
   vacancy: Vacancy & {
-    company: Pick<Company, "id" | "userId" | "companyName">;
+    company: Pick<Company, 'id' | 'userId' | 'companyName'>;
   };
-  jobSeeker: Pick<JobSeeker, "id" | "userId" | "fullName">;
+  jobSeeker: Pick<JobSeeker, 'id' | 'userId' | 'fullName'>;
 };
 
 export interface ArchiveMatchData {
@@ -74,4 +74,4 @@ export interface ApplicationRepository {
   deleteApplication(id: number): Promise<void>;
 }
 
-export const APPLICATION_REPOSITORY = Symbol("ApplicationRepository");
+export const APPLICATION_REPOSITORY = Symbol('ApplicationRepository');

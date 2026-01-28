@@ -4,16 +4,16 @@ import {
   Request,
   UseGuards,
   ForbiddenException,
-} from "@nestjs/common";
-import { JwtAuthGuard } from "../../auth/jwt-auth.guard";
-import { GetJobSeekerStatsUseCase } from "../usecase/get-job-seeker-stats.usecase";
-import { GetCompanyStatsUseCase } from "../usecase/get-company-stats.usecase";
+} from '@nestjs/common';
+import { JwtAuthGuard } from '../../auth/jwt-auth.guard';
+import { GetJobSeekerStatsUseCase } from '../usecase/get-job-seeker-stats.usecase';
+import { GetCompanyStatsUseCase } from '../usecase/get-company-stats.usecase';
 import {
   AuthenticatedRequest,
   getUserId,
-} from "../../common/interfaces/authenticated-request.interface";
+} from '../../common/interfaces/authenticated-request.interface';
 
-@Controller("dashboard")
+@Controller('dashboard')
 @UseGuards(JwtAuthGuard)
 export class DashboardController {
   constructor(
@@ -21,17 +21,17 @@ export class DashboardController {
     private readonly getCompanyStatsUseCase: GetCompanyStatsUseCase,
   ) {}
 
-  @Get("stats")
+  @Get('stats')
   async getStats(@Request() req: AuthenticatedRequest) {
     const userId = getUserId(req);
     const role = req.user.role;
 
-    if (role === "JOB_SEEKER") {
+    if (role === 'JOB_SEEKER') {
       return this.getJobSeekerStatsUseCase.execute(userId);
-    } else if (role === "COMPANY") {
+    } else if (role === 'COMPANY') {
       return this.getCompanyStatsUseCase.execute(userId);
     }
 
-    throw new ForbiddenException("Invalid role for dashboard");
+    throw new ForbiddenException('Invalid role for dashboard');
   }
 }

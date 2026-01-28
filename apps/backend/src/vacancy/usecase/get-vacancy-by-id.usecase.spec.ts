@@ -1,10 +1,10 @@
-import { Test, TestingModule } from "@nestjs/testing";
-import { GetVacancyByIdUseCase } from "./get-vacancy-by-id.usecase";
-import { Vacancy } from "@prisma/client";
-import * as vacancyRepository from "../repository/vacancy.repository";
-import { NotFoundException } from "@nestjs/common";
+import { Test, TestingModule } from '@nestjs/testing';
+import { GetVacancyByIdUseCase } from './get-vacancy-by-id.usecase';
+import { Vacancy } from '@prisma/client';
+import * as vacancyRepository from '../repository/vacancy.repository';
+import { NotFoundException } from '@nestjs/common';
 
-describe("GetVacancyByIdUseCase", () => {
+describe('GetVacancyByIdUseCase', () => {
   let useCase: GetVacancyByIdUseCase;
 
   const mockRepo = {
@@ -29,13 +29,13 @@ describe("GetVacancyByIdUseCase", () => {
     jest.clearAllMocks();
   });
 
-  it("should return the vacancy if found", async () => {
+  it('should return the vacancy if found', async () => {
     const mockVacancy: Vacancy = {
       id: 1,
       companyId: 1,
-      title: "Frontend Dev",
-      role: "Developer",
-      jobDescription: "Build UIs",
+      title: 'Frontend Dev',
+      role: 'Developer',
+      jobDescription: 'Build UIs',
       salaryRange: null,
       createdAt: new Date(),
     };
@@ -47,11 +47,11 @@ describe("GetVacancyByIdUseCase", () => {
     expect(result).toEqual(mockVacancy);
   });
 
-  it("should throw NotFoundException if vacancy is not found", async () => {
+  it('should throw NotFoundException if vacancy is not found', async () => {
     mockRepo.findById.mockResolvedValue(null);
 
     await expect(useCase.execute(999)).rejects.toThrow(
-      new NotFoundException("Vacancy with ID 999 not found"),
+      new NotFoundException('Vacancy with ID 999 not found'),
     );
 
     expect(mockRepo.findById).toHaveBeenCalledWith(999);
