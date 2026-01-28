@@ -16,13 +16,10 @@ import { RegisterJobSeekerUseCase } from '../usecase/register-jobseeker.usecase'
 import { RegisterCompanyUseCase } from '../usecase/register-company.usecase';
 import { GetProfileUseCase } from '../usecase/get-profile.usecase';
 import { UpdateProfileUseCase } from '../usecase/update-profile.usecase';
-
-interface AuthenticatedRequest extends Request {
-  user: {
-    userId: string;
-    role: string;
-  };
-}
+import {
+  AuthenticatedRequest,
+  getUserId,
+} from '../../common/interfaces/authenticated-request.interface';
 
 @Controller('auth')
 export class UserManagementController {
@@ -46,7 +43,7 @@ export class UserManagementController {
   @UseGuards(JwtAuthGuard)
   @Get('profile')
   async getProfile(@Request() req: AuthenticatedRequest) {
-    return this.getProfileUseCase.execute(req.user.userId);
+    return this.getProfileUseCase.execute(getUserId(req));
   }
 
   @UseGuards(JwtAuthGuard)
@@ -56,7 +53,7 @@ export class UserManagementController {
     @Body() dto: UpdateJobSeekerDto | UpdateCompanyDto,
   ) {
     return this.updateProfileUseCase.execute(
-      req.user.userId,
+      getUserId(req),
       req.user.role,
       dto,
     );

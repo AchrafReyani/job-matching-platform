@@ -5,6 +5,10 @@ import {
   CompanyPublicInfo,
   CompanyWithVacancies,
 } from '../repository/company.repository';
+import {
+  COMPANY_BASIC_SELECT,
+  VACANCY_BASIC_SELECT,
+} from '../../common/prisma/select-constants';
 
 @Injectable()
 export class PrismaCompanyRepository implements CompanyRepository {
@@ -13,7 +17,7 @@ export class PrismaCompanyRepository implements CompanyRepository {
   async findById(id: number): Promise<CompanyPublicInfo | null> {
     return this.prisma.company.findUnique({
       where: { id },
-      select: { id: true, companyName: true, userId: true },
+      select: COMPANY_BASIC_SELECT,
     });
   }
 
@@ -21,20 +25,11 @@ export class PrismaCompanyRepository implements CompanyRepository {
     return this.prisma.company.findUnique({
       where: { id },
       select: {
-        id: true,
-        companyName: true,
-        userId: true,
+        ...COMPANY_BASIC_SELECT,
         websiteUrl: true,
         description: true,
         Vacancy: {
-          select: {
-            id: true,
-            title: true,
-            salaryRange: true,
-            role: true,
-            jobDescription: true,
-            createdAt: true,
-          },
+          select: VACANCY_BASIC_SELECT,
           orderBy: { createdAt: 'desc' },
         },
       },
@@ -49,7 +44,7 @@ export class PrismaCompanyRepository implements CompanyRepository {
 
   async findAll(): Promise<CompanyPublicInfo[]> {
     return this.prisma.company.findMany({
-      select: { id: true, companyName: true, userId: true },
+      select: COMPANY_BASIC_SELECT,
     });
   }
 }

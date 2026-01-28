@@ -1,16 +1,20 @@
 'use client';
 
-interface EmptyStateProps {
+// Re-export from common EmptyState for backward compatibility
+import { EmptyState as CommonEmptyState } from '@/components/common/EmptyState';
+
+interface MessagesEmptyStateProps {
   title: string;
   description: string;
 }
 
-export function EmptyState({ title, description }: EmptyStateProps) {
+export function EmptyState({ title, description }: MessagesEmptyStateProps) {
   return (
-    <div className="flex flex-col items-center justify-center h-full text-center p-8">
-      <div className="text-6xl mb-4">💬</div>
-      <h2 className="text-xl font-semibold text-(--color-text) mb-2">{title}</h2>
-      <p className="text-(--color-muted)">{description}</p>
-    </div>
+    <CommonEmptyState
+      icon="💬"
+      title={title}
+      description={description}
+      className="h-full"
+    />
   );
 }

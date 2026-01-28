@@ -4,6 +4,9 @@ import { useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { DashboardLayout } from '@/components/layout/DashboardLayout';
 import { Card } from '@/components/ui/Card';
+import { LoadingContainer } from '@/components/ui/LoadingSpinner';
+import { StatusBadge } from '@/components/ui/StatusBadge';
+import { EmptyState } from '@/components/common/EmptyState';
 import type { Application } from '@/lib/applications/types';
 import { getMyApplications } from '@/lib/applications/api';
 
@@ -29,32 +32,17 @@ export default function JobSeekerApplicationsPage() {
     fetchApplications();
   }, [t]);
 
-  const getStatusClasses = (status: string) => {
-    switch (status) {
-      case 'ACCEPTED':
-        return 'bg-green-100 text-green-800';
-      case 'REJECTED':
-        return 'bg-red-100 text-red-800';
-      default:
-        return 'bg-yellow-100 text-yellow-800';
-    }
-  };
-
   return (
     <DashboardLayout requiredRole="JOB_SEEKER">
       <div className="space-y-6">
         <h1 className="text-2xl font-bold text-[var(--color-text)]">{t('title')}</h1>
 
         {loading ? (
-          <div className="flex justify-center py-10">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[var(--color-primary)]" />
-          </div>
+          <LoadingContainer />
         ) : error ? (
           <div className="text-red-500 text-center py-10">{error}</div>
         ) : applications.length === 0 ? (
-          <p className="text-[var(--color-text)] opacity-70 text-center py-10">
-            {t('noApplications')}
-          </p>
+          <EmptyState description={t('noApplications')} className="py-10" />
         ) : (
           <div className="space-y-4">
             {applications.map((app) => (
@@ -68,13 +56,10 @@ export default function JobSeekerApplicationsPage() {
                       {app.vacancy.company?.companyName ?? t('unknownCompany')}
                     </p>
                   </div>
-                  <span
-                    className={`px-3 py-1 rounded-full text-sm font-medium ${getStatusClasses(
-                      app.status
-                    )}`}
-                  >
-                    {t(`status.${app.status.toLowerCase()}`)}
-                  </span>
+                  <StatusBadge
+                    status={app.status}
+                    label={t(`status.${app.status.toLowerCase()}`)}
+                  />
                 </div>
                 <p className="text-sm text-[var(--color-text)] opacity-60 mt-2">
                   {t('appliedOn')} {new Date(app.appliedAt).toLocaleDateString()}

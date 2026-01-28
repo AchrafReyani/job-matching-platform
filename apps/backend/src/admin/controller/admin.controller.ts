@@ -29,14 +29,10 @@ import {
 } from '../usecase/vacancy-management.usecase';
 import { UpdateUserDto } from '../dto/update-user.dto';
 import { UpdateVacancyDto } from '../dto/update-vacancy.dto';
-
-interface AuthenticatedRequest extends Request {
-  user: {
-    userId: string;
-    sub?: string;
-    role: string;
-  };
-}
+import {
+  AuthenticatedRequest,
+  getUserId,
+} from '../../common/interfaces/authenticated-request.interface';
 
 @Controller('admin')
 @UseGuards(AdminGuard)
@@ -97,22 +93,19 @@ export class AdminController {
 
   @Delete('users/:id')
   async deleteUser(@Param('id') id: string, @Request() req: AuthenticatedRequest) {
-    const adminUserId = req.user.userId || req.user.sub;
-    await this.deleteUserUseCase.execute(id, adminUserId!);
+    await this.deleteUserUseCase.execute(id, getUserId(req));
     return { message: 'User deleted successfully' };
   }
 
   @Delete('users/bulk/job-seekers')
   async deleteAllJobSeekers(@Request() req: AuthenticatedRequest) {
-    const adminUserId = req.user.userId || req.user.sub;
-    const count = await this.deleteAllJobSeekersUseCase.execute(adminUserId!);
+    const count = await this.deleteAllJobSeekersUseCase.execute(getUserId(req));
     return { message: `${count} job seekers deleted successfully`, count };
   }
 
   @Delete('users/bulk/companies')
   async deleteAllCompanies(@Request() req: AuthenticatedRequest) {
-    const adminUserId = req.user.userId || req.user.sub;
-    const count = await this.deleteAllCompaniesUseCase.execute(adminUserId!);
+    const count = await this.deleteAllCompaniesUseCase.execute(getUserId(req));
     return { message: `${count} companies deleted successfully`, count };
   }
 
@@ -156,15 +149,13 @@ export class AdminController {
     @Param('id', ParseIntPipe) id: number,
     @Request() req: AuthenticatedRequest,
   ) {
-    const adminUserId = req.user.userId || req.user.sub;
-    await this.deleteVacancyUseCase.execute(id, adminUserId!);
+    await this.deleteVacancyUseCase.execute(id, getUserId(req));
     return { message: 'Vacancy deleted successfully' };
   }
 
   @Delete('vacancies/bulk/all')
   async deleteAllVacancies(@Request() req: AuthenticatedRequest) {
-    const adminUserId = req.user.userId || req.user.sub;
-    const count = await this.deleteAllVacanciesUseCase.execute(adminUserId!);
+    const count = await this.deleteAllVacanciesUseCase.execute(getUserId(req));
     return { message: `${count} vacancies deleted successfully`, count };
   }
 }

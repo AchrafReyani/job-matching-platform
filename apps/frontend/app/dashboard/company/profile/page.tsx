@@ -8,6 +8,7 @@ import ProfileDetailsCompany from '@/features/profile/components/ProfileDetailsC
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/Tabs';
+import { LoadingContainer } from '@/components/ui/LoadingSpinner';
 import { VacancyCard } from '@/features/vacancies/components';
 import { getProfile } from '@/lib/auth/api';
 import { getCompanyProfile } from '@/lib/companies/api';
@@ -53,9 +54,7 @@ export default function DashboardCompanyProfilePage() {
         </div>
 
         {loading ? (
-          <div className="flex justify-center py-10">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[var(--color-primary)]" />
-          </div>
+          <LoadingContainer />
         ) : profile ? (
           <Card className="p-6">
             <Tabs defaultValue="about">

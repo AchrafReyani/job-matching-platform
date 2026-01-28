@@ -21,14 +21,10 @@ import { GetApplicationsForCompanyUseCase } from '../usecase/get-applications-fo
 import { GetApplicationByIdUseCase } from '../usecase/get-application-by-id.usecase';
 import { UpdateApplicationStatusUseCase } from '../usecase/update-application-status.usecase';
 import { DeleteMatchUseCase } from '../usecase/delete-match.usecase';
-
-interface AuthenticatedRequest extends Request {
-  user: {
-    userId: string;
-    sub?: string;
-    role: string;
-  };
-}
+import {
+  AuthenticatedRequest,
+  getUserId,
+} from '../../common/interfaces/authenticated-request.interface';
 
 @Controller('applications')
 export class ApplicationsController {
@@ -47,7 +43,7 @@ export class ApplicationsController {
     @Param('id', ParseIntPipe) id: number,
     @Request() req: AuthenticatedRequest,
   ) {
-    return this.getApplicationByIdUseCase.execute(id, req.user.userId);
+    return this.getApplicationByIdUseCase.execute(id, getUserId(req));
   }
 
   @UseGuards(JwtAuthGuard)
@@ -59,8 +55,7 @@ export class ApplicationsController {
     if (req.user.role !== 'JOB_SEEKER') {
       throw new ForbiddenException('Only job seekers can apply');
     }
-    const userId = req.user.userId || req.user.sub;
-    return this.createApplicationUseCase.execute(userId!, dto.vacancyId);
+    return this.createApplicationUseCase.execute(getUserId(req), dto.vacancyId);
   }
 
   @UseGuards(JwtAuthGuard)
@@ -71,8 +66,7 @@ export class ApplicationsController {
         'Only job seekers can view their applications',
       );
     }
-    const userId = req.user.userId || req.user.sub;
-    return this.getApplicationsForJobSeekerUseCase.execute(userId!);
+    return this.getApplicationsForJobSeekerUseCase.execute(getUserId(req));
   }
 
   @UseGuards(JwtAuthGuard)
@@ -81,8 +75,7 @@ export class ApplicationsController {
     if (req.user.role !== 'COMPANY') {
       throw new ForbiddenException('Only companies can view applications');
     }
-    const userId = req.user.userId || req.user.sub;
-    return this.getApplicationsForCompanyUseCase.execute(userId!);
+    return this.getApplicationsForCompanyUseCase.execute(getUserId(req));
   }
 
   @UseGuards(JwtAuthGuard)
@@ -95,9 +88,8 @@ export class ApplicationsController {
     if (req.user.role !== 'COMPANY') {
       throw new ForbiddenException('Only companies can update applications');
     }
-    const userId = req.user.userId || req.user.sub;
     return this.updateApplicationStatusUseCase.execute(
-      userId!,
+      getUserId(req),
       id,
       dto.status as ApplicationStatus,
     );
@@ -109,8 +101,7 @@ export class ApplicationsController {
     @Request() req: AuthenticatedRequest,
     @Param('id', ParseIntPipe) id: number,
   ) {
-    const userId = req.user.userId || req.user.sub;
-    await this.deleteMatchUseCase.execute(userId!, id);
+    await this.deleteMatchUseCase.execute(getUserId(req), id);
     return { message: 'Match deleted successfully' };
   }
 }

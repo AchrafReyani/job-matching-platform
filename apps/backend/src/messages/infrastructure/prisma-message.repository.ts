@@ -7,6 +7,7 @@ import {
   ApplicationWithParticipants,
   ConversationSummary,
 } from '../repository/message.repository';
+import { USER_BASIC_SELECT } from '../../common/prisma/select-constants';
 
 @Injectable()
 export class PrismaMessageRepository implements MessageRepository {
@@ -34,11 +35,7 @@ export class PrismaMessageRepository implements MessageRepository {
       orderBy: { sentAt: 'asc' },
       include: {
         sender: {
-          select: {
-            id: true,
-            email: true,
-            role: true,
-          },
+          select: USER_BASIC_SELECT,
         },
       },
     });

@@ -7,6 +7,7 @@ import { DashboardLayout } from '@/components/layout/DashboardLayout';
 import ProfileDetailsJobSeeker from '@/features/profile/components/ProfileDetailsJobSeeker';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
+import { LoadingContainer } from '@/components/ui/LoadingSpinner';
 import { getProfile } from '@/lib/auth/api';
 import type { ProfileResponse } from '@/lib/auth/types';
 
@@ -38,9 +39,7 @@ export default function DashboardJobSeekerProfilePage() {
         </div>
 
         {loading ? (
-          <div className="flex justify-center py-10">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[var(--color-primary)]" />
-          </div>
+          <LoadingContainer />
         ) : profile ? (
           <Card className="p-6">
             <ProfileDetailsJobSeeker profile={profile} />

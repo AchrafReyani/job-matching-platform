@@ -12,7 +12,6 @@ import {
   ForbiddenException,
   NotFoundException,
 } from '@nestjs/common';
-import { Request as ExpressRequest } from 'express';
 import { JwtAuthGuard } from '../../auth/jwt-auth.guard';
 import { CreateVacancyDto } from '../dto/create-vacancy.dto';
 import { UpdateVacancyDto } from '../dto/update-vacancy.dto';
@@ -24,15 +23,10 @@ import { GetVacanciesUseCase } from '../usecase/get-vacancies.usecase';
 import { GetVacancyByIdUseCase } from '../usecase/get-vacancy-by-id.usecase';
 import { GetVacanciesByCompanyUseCase } from '../usecase/get-vacancies-by-company.usecase';
 import { PrismaService } from '../../prisma/prisma.service';
-
-interface AuthenticatedUser {
-  userId: string;
-  role: string;
-}
-
-interface AuthenticatedRequest extends ExpressRequest {
-  user: AuthenticatedUser;
-}
+import {
+  AuthenticatedRequest,
+  getUserId,
+} from '../../common/interfaces/authenticated-request.interface';
 
 @Controller('vacancies')
 export class VacancyController {
@@ -72,7 +66,7 @@ export class VacancyController {
     }
 
     const company = await this.prisma.company.findUnique({
-      where: { userId: req.user.userId },
+      where: { userId: getUserId(req) },
     });
     if (!company) throw new NotFoundException('Company not found');
 
@@ -91,7 +85,7 @@ export class VacancyController {
     }
 
     const company = await this.prisma.company.findUnique({
-      where: { userId: req.user.userId },
+      where: { userId: getUserId(req) },
     });
     if (!company) throw new NotFoundException('Company not found');
 
@@ -109,7 +103,7 @@ export class VacancyController {
     }
 
     const company = await this.prisma.company.findUnique({
-      where: { userId: req.user.userId },
+      where: { userId: getUserId(req) },
     });
     if (!company) throw new NotFoundException('Company not found');
 

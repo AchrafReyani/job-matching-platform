@@ -8,6 +8,7 @@ import { NotificationList } from '@/components/notifications/NotificationList';
 import { getDashboardStats } from '@/lib/dashboard/api';
 import { JobSeekerStats } from '@/lib/dashboard/types';
 import { Card } from '@/components/ui/Card';
+import { LoadingContainer } from '@/components/ui/LoadingSpinner';
 
 export default function JobSeekerDashboard() {
   const t = useTranslations('Dashboard.jobSeeker');
@@ -42,9 +43,7 @@ export default function JobSeekerDashboard() {
 
         {/* Stats Section */}
         {loading ? (
-          <div className="flex items-center justify-center py-8">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[var(--color-primary)]" />
-          </div>
+          <LoadingContainer />
         ) : error ? (
           <div className="text-center py-8 text-red-500">{error}</div>
         ) : stats ? (

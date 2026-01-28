@@ -14,14 +14,10 @@ import { GetNotificationsUseCase } from '../usecase/get-notifications.usecase';
 import { GetUnreadCountUseCase } from '../usecase/get-unread-count.usecase';
 import { MarkNotificationReadUseCase } from '../usecase/mark-notification-read.usecase';
 import { MarkAllNotificationsReadUseCase } from '../usecase/mark-all-notifications-read.usecase';
-
-interface AuthenticatedRequest extends Request {
-  user: {
-    userId: string;
-    sub?: string;
-    role: string;
-  };
-}
+import {
+  AuthenticatedRequest,
+  getUserId,
+} from '../../common/interfaces/authenticated-request.interface';
 
 @Controller('notifications')
 @UseGuards(JwtAuthGuard)
@@ -38,9 +34,8 @@ export class NotificationsController {
     @Request() req: AuthenticatedRequest,
     @Query() query: GetNotificationsDto,
   ) {
-    const userId = req.user.userId || req.user.sub;
     return this.getNotificationsUseCase.execute(
-      userId!,
+      getUserId(req),
       query.limit,
       query.offset,
     );
@@ -48,8 +43,7 @@ export class NotificationsController {
 
   @Get('unread-count')
   async getUnreadCount(@Request() req: AuthenticatedRequest) {
-    const userId = req.user.userId || req.user.sub;
-    return this.getUnreadCountUseCase.execute(userId!);
+    return this.getUnreadCountUseCase.execute(getUserId(req));
   }
 
   @Patch(':id/read')
@@ -57,13 +51,11 @@ export class NotificationsController {
     @Request() req: AuthenticatedRequest,
     @Param('id', ParseIntPipe) id: number,
   ) {
-    const userId = req.user.userId || req.user.sub;
-    return this.markNotificationReadUseCase.execute(userId!, id);
+    return this.markNotificationReadUseCase.execute(getUserId(req), id);
   }
 
   @Patch('read-all')
   async markAllAsRead(@Request() req: AuthenticatedRequest) {
-    const userId = req.user.userId || req.user.sub;
-    return this.markAllNotificationsReadUseCase.execute(userId!);
+    return this.markAllNotificationsReadUseCase.execute(getUserId(req));
   }
 }

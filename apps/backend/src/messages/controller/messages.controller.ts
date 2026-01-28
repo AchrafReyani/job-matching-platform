@@ -15,13 +15,10 @@ import { CreateMessageUseCase } from '../usecase/create-message.usecase';
 import { GetMessagesUseCase } from '../usecase/get-messages.usecase';
 import { GetConversationsUseCase } from '../usecase/get-conversations.usecase';
 import { MarkMessagesReadUseCase } from '../usecase/mark-messages-read.usecase';
-
-interface AuthenticatedRequest extends Request {
-  user: {
-    userId: string;
-    role: string;
-  };
-}
+import {
+  AuthenticatedRequest,
+  getUserId,
+} from '../../common/interfaces/authenticated-request.interface';
 
 @Controller('messages')
 @UseGuards(JwtAuthGuard)
@@ -38,12 +35,12 @@ export class MessagesController {
     @Request() req: AuthenticatedRequest,
     @Body() dto: CreateMessageDto,
   ) {
-    return this.createMessageUseCase.execute(req.user.userId, dto);
+    return this.createMessageUseCase.execute(getUserId(req), dto);
   }
 
   @Get('conversations')
   async getConversations(@Request() req: AuthenticatedRequest) {
-    return this.getConversationsUseCase.execute(req.user.userId);
+    return this.getConversationsUseCase.execute(getUserId(req));
   }
 
   @Get(':applicationId')
@@ -51,7 +48,7 @@ export class MessagesController {
     @Request() req: AuthenticatedRequest,
     @Param('applicationId', ParseIntPipe) applicationId: number,
   ) {
-    return this.getMessagesUseCase.execute(applicationId, req.user.userId);
+    return this.getMessagesUseCase.execute(applicationId, getUserId(req));
   }
 
   @Patch(':applicationId/read')
@@ -61,7 +58,7 @@ export class MessagesController {
   ) {
     const count = await this.markMessagesReadUseCase.execute(
       applicationId,
-      req.user.userId,
+      getUserId(req),
     );
     return { markedAsRead: count };
   }

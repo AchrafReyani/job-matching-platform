@@ -18,14 +18,10 @@ import { ChangePasswordUseCase } from '../usecase/change-password.usecase';
 import { GetNotificationPreferencesUseCase } from '../usecase/get-notification-preferences.usecase';
 import { UpdateNotificationPreferencesUseCase } from '../usecase/update-notification-preferences.usecase';
 import { DeleteAccountUseCase } from '../usecase/delete-account.usecase';
-
-interface AuthenticatedRequest extends Request {
-  user: {
-    userId: string;
-    sub?: string;
-    role: string;
-  };
-}
+import {
+  AuthenticatedRequest,
+  getUserId,
+} from '../../common/interfaces/authenticated-request.interface';
 
 @Controller('users/me')
 @UseGuards(JwtAuthGuard, ThrottlerGuard)
@@ -44,9 +40,8 @@ export class AccountController {
     @Request() req: AuthenticatedRequest,
     @Body() dto: ChangePasswordDto,
   ): Promise<void> {
-    const userId = req.user.userId || req.user.sub;
     await this.changePasswordUseCase.execute({
-      userId: userId!,
+      userId: getUserId(req),
       currentPassword: dto.currentPassword,
       newPassword: dto.newPassword,
     });
@@ -56,8 +51,7 @@ export class AccountController {
   async getNotificationPreferences(
     @Request() req: AuthenticatedRequest,
   ): Promise<NotificationPreferences> {
-    const userId = req.user.userId || req.user.sub;
-    return this.getNotificationPreferencesUseCase.execute(userId!);
+    return this.getNotificationPreferencesUseCase.execute(getUserId(req));
   }
 
   @Patch('notification-preferences')
@@ -65,8 +59,7 @@ export class AccountController {
     @Request() req: AuthenticatedRequest,
     @Body() dto: NotificationPreferences,
   ): Promise<NotificationPreferences> {
-    const userId = req.user.userId || req.user.sub;
-    return this.updateNotificationPreferencesUseCase.execute(userId!, dto);
+    return this.updateNotificationPreferencesUseCase.execute(getUserId(req), dto);
   }
 
   @Post('delete')
@@ -76,9 +69,8 @@ export class AccountController {
     @Request() req: AuthenticatedRequest,
     @Body() dto: DeleteAccountDto,
   ): Promise<void> {
-    const userId = req.user.userId || req.user.sub;
     await this.deleteAccountUseCase.execute({
-      userId: userId!,
+      userId: getUserId(req),
       password: dto.password,
       confirmation: dto.confirmation,
     });

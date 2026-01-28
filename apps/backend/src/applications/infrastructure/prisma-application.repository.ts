@@ -10,6 +10,10 @@ import {
 } from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
 import {
+  COMPANY_BASIC_SELECT,
+  JOB_SEEKER_BASIC_SELECT,
+} from '../../common/prisma/select-constants';
+import {
   ApplicationRepository,
   ApplicationWithRelations,
   ApplicationWithVacancy,
@@ -48,20 +52,12 @@ export class PrismaApplicationRepository implements ApplicationRepository {
         vacancy: {
           include: {
             company: {
-              select: {
-                id: true,
-                userId: true,
-                companyName: true,
-              },
+              select: COMPANY_BASIC_SELECT,
             },
           },
         },
         jobSeeker: {
-          select: {
-            id: true,
-            userId: true,
-            fullName: true,
-          },
+          select: JOB_SEEKER_BASIC_SELECT,
         },
       },
     });
@@ -74,20 +70,12 @@ export class PrismaApplicationRepository implements ApplicationRepository {
       where: { jobSeekerId },
       include: {
         jobSeeker: {
-          select: {
-            id: true,
-            userId: true,
-            fullName: true,
-          },
+          select: JOB_SEEKER_BASIC_SELECT,
         },
         vacancy: {
           include: {
             company: {
-              select: {
-                id: true,
-                userId: true,
-                companyName: true,
-              },
+              select: COMPANY_BASIC_SELECT,
             },
           },
         },
@@ -107,20 +95,12 @@ export class PrismaApplicationRepository implements ApplicationRepository {
         vacancy: {
           include: {
             company: {
-              select: {
-                id: true,
-                userId: true,
-                companyName: true,
-              },
+              select: COMPANY_BASIC_SELECT,
             },
           },
         },
         jobSeeker: {
-          select: {
-            id: true,
-            userId: true,
-            fullName: true,
-          },
+          select: JOB_SEEKER_BASIC_SELECT,
         },
       },
       orderBy: { appliedAt: 'desc' },
@@ -172,11 +152,7 @@ export class PrismaApplicationRepository implements ApplicationRepository {
       where: { id: vacancyId },
       include: {
         company: {
-          select: {
-            id: true,
-            userId: true,
-            companyName: true,
-          },
+          select: COMPANY_BASIC_SELECT,
         },
       },
     });
@@ -200,20 +176,12 @@ export class PrismaApplicationRepository implements ApplicationRepository {
         vacancy: {
           include: {
             company: {
-              select: {
-                id: true,
-                userId: true,
-                companyName: true,
-              },
+              select: COMPANY_BASIC_SELECT,
             },
           },
         },
         jobSeeker: {
-          select: {
-            id: true,
-            userId: true,
-            fullName: true,
-          },
+          select: JOB_SEEKER_BASIC_SELECT,
         },
       },
     });

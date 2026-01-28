@@ -8,14 +8,10 @@ import {
 import { JwtAuthGuard } from '../../auth/jwt-auth.guard';
 import { GetJobSeekerStatsUseCase } from '../usecase/get-job-seeker-stats.usecase';
 import { GetCompanyStatsUseCase } from '../usecase/get-company-stats.usecase';
-
-interface AuthenticatedRequest extends Request {
-  user: {
-    userId: string;
-    sub?: string;
-    role: string;
-  };
-}
+import {
+  AuthenticatedRequest,
+  getUserId,
+} from '../../common/interfaces/authenticated-request.interface';
 
 @Controller('dashboard')
 @UseGuards(JwtAuthGuard)
@@ -27,13 +23,13 @@ export class DashboardController {
 
   @Get('stats')
   async getStats(@Request() req: AuthenticatedRequest) {
-    const userId = req.user.userId || req.user.sub;
+    const userId = getUserId(req);
     const role = req.user.role;
 
     if (role === 'JOB_SEEKER') {
-      return this.getJobSeekerStatsUseCase.execute(userId!);
+      return this.getJobSeekerStatsUseCase.execute(userId);
     } else if (role === 'COMPANY') {
-      return this.getCompanyStatsUseCase.execute(userId!);
+      return this.getCompanyStatsUseCase.execute(userId);
     }
 
     throw new ForbiddenException('Invalid role for dashboard');

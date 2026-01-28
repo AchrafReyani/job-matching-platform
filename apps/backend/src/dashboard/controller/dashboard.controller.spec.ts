@@ -3,6 +3,7 @@ import { ForbiddenException } from '@nestjs/common';
 import { DashboardController } from './dashboard.controller';
 import { GetJobSeekerStatsUseCase } from '../usecase/get-job-seeker-stats.usecase';
 import { GetCompanyStatsUseCase } from '../usecase/get-company-stats.usecase';
+import { AuthenticatedRequest } from '../../common/interfaces/authenticated-request.interface';
 
 describe('DashboardController', () => {
   let controller: DashboardController;
@@ -45,8 +46,8 @@ describe('DashboardController', () => {
 
       mockGetJobSeekerStatsUseCase.execute.mockResolvedValue(mockStats);
 
-      const req = { user: { userId: 'user-1', role: 'JOB_SEEKER' } };
-      const result = await controller.getStats(req as any);
+      const req = { user: { userId: 'user-1', role: 'JOB_SEEKER' } } as AuthenticatedRequest;
+      const result = await controller.getStats(req);
 
       expect(mockGetJobSeekerStatsUseCase.execute).toHaveBeenCalledWith('user-1');
       expect(result).toEqual(mockStats);
@@ -64,17 +65,17 @@ describe('DashboardController', () => {
 
       mockGetCompanyStatsUseCase.execute.mockResolvedValue(mockStats);
 
-      const req = { user: { userId: 'user-1', role: 'COMPANY' } };
-      const result = await controller.getStats(req as any);
+      const req = { user: { userId: 'user-1', role: 'COMPANY' } } as AuthenticatedRequest;
+      const result = await controller.getStats(req);
 
       expect(mockGetCompanyStatsUseCase.execute).toHaveBeenCalledWith('user-1');
       expect(result).toEqual(mockStats);
     });
 
     it('should throw ForbiddenException for invalid role', async () => {
-      const req = { user: { userId: 'user-1', role: 'ADMIN' } };
+      const req = { user: { userId: 'user-1', role: 'ADMIN' } } as AuthenticatedRequest;
 
-      await expect(controller.getStats(req as any)).rejects.toThrow(ForbiddenException);
+      await expect(controller.getStats(req)).rejects.toThrow(ForbiddenException);
     });
   });
 });

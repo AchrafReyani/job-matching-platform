@@ -5,6 +5,7 @@ import { GetUnreadCountUseCase } from '../usecase/get-unread-count.usecase';
 import { MarkNotificationReadUseCase } from '../usecase/mark-notification-read.usecase';
 import { MarkAllNotificationsReadUseCase } from '../usecase/mark-all-notifications-read.usecase';
 import { NotificationType } from '@prisma/client';
+import { AuthenticatedRequest } from '../../common/interfaces/authenticated-request.interface';
 
 describe('NotificationsController', () => {
   let controller: NotificationsController;
@@ -65,8 +66,8 @@ describe('NotificationsController', () => {
 
       mockGetNotificationsUseCase.execute.mockResolvedValue(mockNotifications);
 
-      const req = { user: { userId: 'user-1' } };
-      const result = await controller.getNotifications(req as any, { limit: 20, offset: 0 });
+      const req = { user: { userId: 'user-1', role: 'JOB_SEEKER' } } as AuthenticatedRequest;
+      const result = await controller.getNotifications(req, { limit: 20, offset: 0 });
 
       expect(mockGetNotificationsUseCase.execute).toHaveBeenCalledWith('user-1', 20, 0);
       expect(result).toEqual(mockNotifications);
@@ -77,8 +78,8 @@ describe('NotificationsController', () => {
     it('should return unread count for the authenticated user', async () => {
       mockGetUnreadCountUseCase.execute.mockResolvedValue({ count: 5 });
 
-      const req = { user: { userId: 'user-1' } };
-      const result = await controller.getUnreadCount(req as any);
+      const req = { user: { userId: 'user-1', role: 'JOB_SEEKER' } } as AuthenticatedRequest;
+      const result = await controller.getUnreadCount(req);
 
       expect(mockGetUnreadCountUseCase.execute).toHaveBeenCalledWith('user-1');
       expect(result).toEqual({ count: 5 });
@@ -100,8 +101,8 @@ describe('NotificationsController', () => {
 
       mockMarkNotificationReadUseCase.execute.mockResolvedValue(mockNotification);
 
-      const req = { user: { userId: 'user-1' } };
-      const result = await controller.markAsRead(req as any, 1);
+      const req = { user: { userId: 'user-1', role: 'JOB_SEEKER' } } as AuthenticatedRequest;
+      const result = await controller.markAsRead(req, 1);
 
       expect(mockMarkNotificationReadUseCase.execute).toHaveBeenCalledWith('user-1', 1);
       expect(result).toEqual(mockNotification);
@@ -112,8 +113,8 @@ describe('NotificationsController', () => {
     it('should mark all notifications as read', async () => {
       mockMarkAllNotificationsReadUseCase.execute.mockResolvedValue({ markedCount: 3 });
 
-      const req = { user: { userId: 'user-1' } };
-      const result = await controller.markAllAsRead(req as any);
+      const req = { user: { userId: 'user-1', role: 'JOB_SEEKER' } } as AuthenticatedRequest;
+      const result = await controller.markAllAsRead(req);
 
       expect(mockMarkAllNotificationsReadUseCase.execute).toHaveBeenCalledWith('user-1');
       expect(result).toEqual({ markedCount: 3 });
