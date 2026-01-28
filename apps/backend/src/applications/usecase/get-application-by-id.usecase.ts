@@ -3,8 +3,8 @@ import {
   Inject,
   NotFoundException,
   ForbiddenException,
-} from '@nestjs/common';
-import * as applicationRepository from '../repository/application.repository';
+} from "@nestjs/common";
+import * as applicationRepository from "../repository/application.repository";
 
 @Injectable()
 export class GetApplicationByIdUseCase {
@@ -18,14 +18,14 @@ export class GetApplicationByIdUseCase {
     requesterUserId: string,
   ): Promise<applicationRepository.ApplicationWithRelations> {
     if (!applicationId || isNaN(applicationId)) {
-      throw new NotFoundException('Invalid application ID');
+      throw new NotFoundException("Invalid application ID");
     }
 
     const application =
       await this.applicationRepository.findByIdWithRelations(applicationId);
 
     if (!application) {
-      throw new NotFoundException('Application not found');
+      throw new NotFoundException("Application not found");
     }
 
     const isJobSeeker = application.jobSeeker.userId === requesterUserId;
@@ -33,7 +33,7 @@ export class GetApplicationByIdUseCase {
 
     if (!isJobSeeker && !isCompany) {
       throw new ForbiddenException(
-        'You are not allowed to view this application',
+        "You are not allowed to view this application",
       );
     }
 

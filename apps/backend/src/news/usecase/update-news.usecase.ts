@@ -1,7 +1,12 @@
-import { Injectable, Inject, NotFoundException, BadRequestException } from '@nestjs/common';
-import { NewsRepository, NEWS_REPOSITORY } from '../repository/news.repository';
-import { UpdateNewsDto } from '../dto';
-import { News, NewsStatus } from '@prisma/client';
+import {
+  Injectable,
+  Inject,
+  NotFoundException,
+  BadRequestException,
+} from "@nestjs/common";
+import { NewsRepository, NEWS_REPOSITORY } from "../repository/news.repository";
+import { UpdateNewsDto } from "../dto";
+import { News, NewsStatus } from "@prisma/client";
 
 @Injectable()
 export class UpdateNewsUseCase {
@@ -14,7 +19,7 @@ export class UpdateNewsUseCase {
     const existing = await this.newsRepository.findById(id);
 
     if (!existing) {
-      throw new NotFoundException('News not found');
+      throw new NotFoundException("News not found");
     }
 
     const updateData: Partial<News> = {};
@@ -34,7 +39,9 @@ export class UpdateNewsUseCase {
 
       if (dto.status === NewsStatus.SCHEDULED) {
         if (!dto.scheduledAt && !existing.scheduledAt) {
-          throw new BadRequestException('Scheduled date is required for scheduled posts');
+          throw new BadRequestException(
+            "Scheduled date is required for scheduled posts",
+          );
         }
       }
     }
@@ -42,7 +49,7 @@ export class UpdateNewsUseCase {
     if (dto.scheduledAt !== undefined) {
       const scheduledAt = new Date(dto.scheduledAt);
       if (scheduledAt <= new Date()) {
-        throw new BadRequestException('Scheduled date must be in the future');
+        throw new BadRequestException("Scheduled date must be in the future");
       }
       updateData.scheduledAt = scheduledAt;
     }

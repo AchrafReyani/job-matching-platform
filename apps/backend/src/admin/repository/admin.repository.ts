@@ -58,10 +58,10 @@ export interface PaginatedResult<T> {
 }
 
 export interface UserFilter {
-  role?: 'JOB_SEEKER' | 'COMPANY';
+  role?: "JOB_SEEKER" | "COMPANY";
   search?: string;
-  sortBy?: 'createdAt' | 'email' | 'name';
-  sortOrder?: 'asc' | 'desc';
+  sortBy?: "createdAt" | "email" | "name";
+  sortOrder?: "asc" | "desc";
   page?: number;
   pageSize?: number;
 }
@@ -69,8 +69,8 @@ export interface UserFilter {
 export interface VacancyFilter {
   companyId?: number;
   search?: string;
-  sortBy?: 'createdAt' | 'title' | 'company';
-  sortOrder?: 'asc' | 'desc';
+  sortBy?: "createdAt" | "title" | "company";
+  sortOrder?: "asc" | "desc";
   page?: number;
   pageSize?: number;
 }
@@ -83,21 +83,33 @@ export interface AdminRepository {
   getUserById(id: string): Promise<UserDetails | null>;
   updateUser(
     id: string,
-    data: { email?: string; name?: string; websiteUrl?: string; description?: string },
+    data: {
+      email?: string;
+      name?: string;
+      websiteUrl?: string;
+      description?: string;
+    },
   ): Promise<void>;
   deleteUser(id: string, archivedBy: string): Promise<void>;
   deleteAllJobSeekers(archivedBy: string): Promise<number>;
   deleteAllCompanies(archivedBy: string): Promise<number>;
 
   // Vacancy management
-  getVacancies(filter: VacancyFilter): Promise<PaginatedResult<VacancyListItem>>;
+  getVacancies(
+    filter: VacancyFilter,
+  ): Promise<PaginatedResult<VacancyListItem>>;
   getVacancyById(id: number): Promise<VacancyDetails | null>;
   updateVacancy(
     id: number,
-    data: { title?: string; salaryRange?: string; role?: string; jobDescription?: string },
+    data: {
+      title?: string;
+      salaryRange?: string;
+      role?: string;
+      jobDescription?: string;
+    },
   ): Promise<void>;
   deleteVacancy(id: number, archivedBy: string): Promise<void>;
   deleteAllVacancies(archivedBy: string): Promise<number>;
 }
 
-export const ADMIN_REPOSITORY = Symbol('AdminRepository');
+export const ADMIN_REPOSITORY = Symbol("AdminRepository");

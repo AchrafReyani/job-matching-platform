@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { DashboardLayout } from '@/components/layout/DashboardLayout';
@@ -23,7 +23,7 @@ export default function AdminNewsPage() {
     page: number;
   }>({ page: 1 });
 
-  const fetchNews = async () => {
+  const fetchNews = useCallback(async () => {
     setLoading(true);
     try {
       const data = await getNewsAdmin({
@@ -37,11 +37,11 @@ export default function AdminNewsPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [filters]);
 
   useEffect(() => {
     fetchNews();
-  }, [filters]);
+  }, [fetchNews]);
 
   const handleDelete = async (id: number) => {
     if (!confirm(t('admin.deleteConfirm'))) return;

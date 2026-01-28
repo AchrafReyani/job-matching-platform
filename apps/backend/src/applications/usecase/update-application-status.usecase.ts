@@ -4,14 +4,17 @@ import {
   NotFoundException,
   ForbiddenException,
   Optional,
-} from '@nestjs/common';
-import { Application, ApplicationStatus, NotificationType } from '@prisma/client';
-import * as applicationRepository from '../repository/application.repository';
-import type { NotificationRepository } from '../../notifications/repository/notification.repository';
-import { NOTIFICATION_REPOSITORY } from '../../notifications/repository/notification.repository';
-import type { UserRepository } from '../../users/repository/user.repository';
-import { USER_REPOSITORY } from '../../users/repository/user.repository';
-import type { NotificationPreferences } from '../../users/dto/update-notification-preferences.dto';
+} from "@nestjs/common";
+import {
+  Application,
+  ApplicationStatus,
+  NotificationType,
+} from "@prisma/client";
+import * as applicationRepository from "../repository/application.repository";
+import type { NotificationRepository } from "../../notifications/repository/notification.repository";
+import { NOTIFICATION_REPOSITORY } from "../../notifications/repository/notification.repository";
+import type { UserRepository } from "../../users/repository/user.repository";
+import { USER_REPOSITORY } from "../../users/repository/user.repository";
 
 @Injectable()
 export class UpdateApplicationStatusUseCase {
@@ -34,7 +37,7 @@ export class UpdateApplicationStatusUseCase {
     const company =
       await this.applicationRepository.findCompanyByUserId(userId);
     if (!company) {
-      throw new NotFoundException('Company profile not found');
+      throw new NotFoundException("Company profile not found");
     }
 
     const application =
@@ -42,11 +45,11 @@ export class UpdateApplicationStatusUseCase {
         applicationId,
       );
     if (!application) {
-      throw new NotFoundException('Application not found');
+      throw new NotFoundException("Application not found");
     }
 
     if (application.vacancy.companyId !== company.id) {
-      throw new ForbiddenException('Not allowed to update this application');
+      throw new ForbiddenException("Not allowed to update this application");
     }
 
     const updatedApplication = await this.applicationRepository.updateStatus(
@@ -57,9 +60,9 @@ export class UpdateApplicationStatusUseCase {
     // Create notification for job seeker (check preferences first)
     if (this.notificationRepository) {
       const notificationType =
-        status === 'ACCEPTED'
+        status === "ACCEPTED"
           ? NotificationType.APPLICATION_ACCEPTED
-          : status === 'REJECTED'
+          : status === "REJECTED"
             ? NotificationType.APPLICATION_REJECTED
             : null;
 
@@ -69,21 +72,23 @@ export class UpdateApplicationStatusUseCase {
         if (this.userRepository) {
           const prefs = await this.userRepository.getNotificationPreferences(
             application.jobSeeker.userId,
-          ) as NotificationPreferences;
+          );
 
-          if (status === 'ACCEPTED' && prefs.applicationAccepted === false) {
+          if (status === "ACCEPTED" && prefs.applicationAccepted === false) {
             shouldNotify = false;
           }
-          if (status === 'REJECTED' && prefs.applicationRejected === false) {
+          if (status === "REJECTED" && prefs.applicationRejected === false) {
             shouldNotify = false;
           }
         }
 
         if (shouldNotify) {
           const title =
-            status === 'ACCEPTED' ? 'Application Accepted' : 'Application Rejected';
+            status === "ACCEPTED"
+              ? "Application Accepted"
+              : "Application Rejected";
           const message =
-            status === 'ACCEPTED'
+            status === "ACCEPTED"
               ? `Your application to ${application.vacancy.title} at ${application.vacancy.company.companyName} was accepted!`
               : `Your application to ${application.vacancy.title} at ${application.vacancy.company.companyName} was not selected`;
 

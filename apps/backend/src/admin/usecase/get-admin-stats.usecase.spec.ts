@@ -1,8 +1,8 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { GetAdminStatsUseCase } from './get-admin-stats.usecase';
-import { ADMIN_REPOSITORY } from '../repository/admin.repository';
+import { Test, TestingModule } from "@nestjs/testing";
+import { GetAdminStatsUseCase } from "./get-admin-stats.usecase";
+import { ADMIN_REPOSITORY } from "../repository/admin.repository";
 
-describe('GetAdminStatsUseCase', () => {
+describe("GetAdminStatsUseCase", () => {
   let useCase: GetAdminStatsUseCase;
   const mockRepo = {
     getStats: jest.fn(),
@@ -26,7 +26,7 @@ describe('GetAdminStatsUseCase', () => {
     jest.clearAllMocks();
   });
 
-  it('should return admin stats', async () => {
+  it("should return admin stats", async () => {
     const mockStats = {
       totalJobSeekers: 100,
       totalCompanies: 50,

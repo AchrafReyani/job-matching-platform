@@ -1,6 +1,9 @@
-import { Injectable, Inject, NotFoundException } from '@nestjs/common';
-import type { DashboardRepository, JobSeekerStats } from '../repository/dashboard.repository';
-import { DASHBOARD_REPOSITORY } from '../repository/dashboard.repository';
+import { Injectable, Inject, NotFoundException } from "@nestjs/common";
+import type {
+  DashboardRepository,
+  JobSeekerStats,
+} from "../repository/dashboard.repository";
+import { DASHBOARD_REPOSITORY } from "../repository/dashboard.repository";
 
 @Injectable()
 export class GetJobSeekerStatsUseCase {
@@ -14,7 +17,7 @@ export class GetJobSeekerStatsUseCase {
       await this.dashboardRepository.findJobSeekerByUserId(userId);
 
     if (!jobSeeker) {
-      throw new NotFoundException('Job seeker profile not found');
+      throw new NotFoundException("Job seeker profile not found");
     }
 
     return this.dashboardRepository.getJobSeekerStats(jobSeeker.id);

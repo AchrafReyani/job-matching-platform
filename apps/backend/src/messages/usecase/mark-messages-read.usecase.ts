@@ -3,8 +3,8 @@ import {
   Inject,
   NotFoundException,
   ForbiddenException,
-} from '@nestjs/common';
-import * as messageRepository from '../repository/message.repository';
+} from "@nestjs/common";
+import * as messageRepository from "../repository/message.repository";
 
 @Injectable()
 export class MarkMessagesReadUseCase {
@@ -20,7 +20,7 @@ export class MarkMessagesReadUseCase {
       );
 
     if (!application) {
-      throw new NotFoundException('Application not found');
+      throw new NotFoundException("Application not found");
     }
 
     const isParticipant =
@@ -29,7 +29,7 @@ export class MarkMessagesReadUseCase {
 
     if (!isParticipant) {
       throw new ForbiddenException(
-        'You are not authorized to access this chat',
+        "You are not authorized to access this chat",
       );
     }
 

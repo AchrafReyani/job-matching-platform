@@ -1,4 +1,4 @@
-import { User, JobSeeker, Company, Role } from '@prisma/client';
+import { User, JobSeeker, Company, Role } from "@prisma/client";
 
 export type UserWithProfiles = User & {
   jobSeeker: JobSeeker | null;
@@ -31,4 +31,4 @@ export interface ProfileRepository {
   findUserWithProfiles(userId: string): Promise<UserWithProfiles | null>;
 }
 
-export const PROFILE_REPOSITORY = Symbol('ProfileRepository');
+export const PROFILE_REPOSITORY = Symbol("ProfileRepository");

@@ -36,6 +36,7 @@ services:
       - ./apps/backend/src:/app/src
       - ./apps/backend/prisma:/app/prisma
       - ./apps/backend/tsconfig.json:/app/tsconfig.json
+      - ./apps/backend/eslint.config.mjs:/app/eslint.config.mjs
       # Prevent overwriting node_modules from container
       - /app/node_modules
     depends_on:

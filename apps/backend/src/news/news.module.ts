@@ -1,8 +1,8 @@
-import { Module } from '@nestjs/common';
-import { PrismaModule } from '../prisma/prisma.module';
-import { NewsController } from './controller/news.controller';
-import { PrismaNewsRepository } from './infrastructure/prisma-news.repository';
-import { NEWS_REPOSITORY } from './repository/news.repository';
+import { Module } from "@nestjs/common";
+import { PrismaModule } from "../prisma/prisma.module";
+import { NewsController } from "./controller/news.controller";
+import { PrismaNewsRepository } from "./infrastructure/prisma-news.repository";
+import { NEWS_REPOSITORY } from "./repository/news.repository";
 import {
   CreateNewsUseCase,
   UpdateNewsUseCase,
@@ -14,8 +14,8 @@ import {
   GetNewsUnreadCountUseCase,
   PublishNewsUseCase,
   PublishScheduledNewsUseCase,
-} from './usecase';
-import { NewsSchedulerService } from './news-scheduler.service';
+} from "./usecase";
+import { NewsSchedulerService } from "./news-scheduler.service";
 
 @Module({
   imports: [PrismaModule],

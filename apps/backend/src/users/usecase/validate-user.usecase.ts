@@ -1,7 +1,7 @@
-import { Injectable, Inject } from '@nestjs/common';
-import { User } from '@prisma/client';
-import * as bcrypt from 'bcryptjs';
-import * as userRepository from '../repository/user.repository';
+import { Injectable, Inject } from "@nestjs/common";
+import { User } from "@prisma/client";
+import * as bcrypt from "bcryptjs";
+import * as userRepository from "../repository/user.repository";
 
 @Injectable()
 export class ValidateUserUseCase {

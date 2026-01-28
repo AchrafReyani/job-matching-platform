@@ -1,13 +1,18 @@
-import { Injectable, Inject, NotFoundException, BadRequestException } from '@nestjs/common';
+import {
+  Injectable,
+  Inject,
+  NotFoundException,
+  BadRequestException,
+} from "@nestjs/common";
 import type {
   AdminRepository,
   UserListItem,
   UserDetails,
   PaginatedResult,
   UserFilter,
-} from '../repository/admin.repository';
-import { ADMIN_REPOSITORY } from '../repository/admin.repository';
-import { UpdateUserDto } from '../dto/update-user.dto';
+} from "../repository/admin.repository";
+import { ADMIN_REPOSITORY } from "../repository/admin.repository";
+import { UpdateUserDto } from "../dto/update-user.dto";
 
 @Injectable()
 export class GetUsersUseCase {
@@ -31,7 +36,7 @@ export class GetUserByIdUseCase {
   async execute(id: string): Promise<UserDetails> {
     const user = await this.adminRepository.getUserById(id);
     if (!user) {
-      throw new NotFoundException('User not found');
+      throw new NotFoundException("User not found");
     }
     return user;
   }
@@ -47,11 +52,11 @@ export class UpdateUserUseCase {
   async execute(id: string, dto: UpdateUserDto): Promise<void> {
     const user = await this.adminRepository.getUserById(id);
     if (!user) {
-      throw new NotFoundException('User not found');
+      throw new NotFoundException("User not found");
     }
 
-    if (user.role === 'ADMIN') {
-      throw new BadRequestException('Cannot modify admin user');
+    if (user.role === "ADMIN") {
+      throw new BadRequestException("Cannot modify admin user");
     }
 
     await this.adminRepository.updateUser(id, dto);
@@ -68,15 +73,15 @@ export class DeleteUserUseCase {
   async execute(id: string, adminUserId: string): Promise<void> {
     const user = await this.adminRepository.getUserById(id);
     if (!user) {
-      throw new NotFoundException('User not found');
+      throw new NotFoundException("User not found");
     }
 
-    if (user.role === 'ADMIN') {
-      throw new BadRequestException('Cannot delete admin user');
+    if (user.role === "ADMIN") {
+      throw new BadRequestException("Cannot delete admin user");
     }
 
     if (id === adminUserId) {
-      throw new BadRequestException('Cannot delete yourself');
+      throw new BadRequestException("Cannot delete yourself");
     }
 
     await this.adminRepository.deleteUser(id, adminUserId);

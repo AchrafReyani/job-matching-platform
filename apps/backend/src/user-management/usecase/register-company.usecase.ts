@@ -1,7 +1,7 @@
-import { Injectable, Inject, ConflictException } from '@nestjs/common';
-import * as bcrypt from 'bcryptjs';
-import * as userManagementRepository from '../repository/user-management.repository';
-import { RegisterCompanyDto } from '../dto/register-company.dto';
+import { Injectable, Inject, ConflictException } from "@nestjs/common";
+import * as bcrypt from "bcryptjs";
+import * as userManagementRepository from "../repository/user-management.repository";
+import { RegisterCompanyDto } from "../dto/register-company.dto";
 
 export interface RegisterResult {
   message: string;
@@ -20,7 +20,7 @@ export class RegisterCompanyUseCase {
     );
 
     if (existingUser) {
-      throw new ConflictException('Email already registered');
+      throw new ConflictException("Email already registered");
     }
 
     const passwordHash = await bcrypt.hash(dto.password, 10);
@@ -28,7 +28,7 @@ export class RegisterCompanyUseCase {
     const user = await this.userManagementRepository.createUser(
       dto.email,
       passwordHash,
-      'COMPANY',
+      "COMPANY",
     );
 
     await this.userManagementRepository.createCompanyProfile(user.id, {
@@ -37,6 +37,6 @@ export class RegisterCompanyUseCase {
       description: dto.description,
     });
 
-    return { message: 'Company registered successfully' };
+    return { message: "Company registered successfully" };
   }
 }

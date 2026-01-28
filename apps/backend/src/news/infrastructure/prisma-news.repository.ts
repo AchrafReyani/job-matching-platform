@@ -1,11 +1,11 @@
-import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../../prisma/prisma.service';
+import { Injectable } from "@nestjs/common";
+import { PrismaService } from "../../prisma/prisma.service";
 import {
   NewsRepository,
   NewsFilters,
   PaginatedNews,
   NewsWithReadStatus,
-} from '../repository/news.repository';
+} from "../repository/news.repository";
 import {
   News,
   NewsRead,
@@ -13,7 +13,7 @@ import {
   NewsStatus,
   NewsAudience,
   Prisma,
-} from '@prisma/client';
+} from "@prisma/client";
 
 @Injectable()
 export class PrismaNewsRepository implements NewsRepository {
@@ -52,7 +52,7 @@ export class PrismaNewsRepository implements NewsRepository {
     const [data, total] = await Promise.all([
       this.prisma.news.findMany({
         where,
-        orderBy: [{ isPinned: 'desc' }, { createdAt: 'desc' }],
+        orderBy: [{ isPinned: "desc" }, { createdAt: "desc" }],
         skip: (filters.page - 1) * filters.limit,
         take: filters.limit,
       }),
@@ -69,14 +69,16 @@ export class PrismaNewsRepository implements NewsRepository {
   }
 
   async findPublishedForUser(
-    userRole: 'JOB_SEEKER' | 'COMPANY',
+    userRole: "JOB_SEEKER" | "COMPANY",
     userId: string,
     page: number,
     limit: number,
   ): Promise<PaginatedNews> {
     const audienceFilter: NewsAudience[] = [
       NewsAudience.ALL,
-      userRole === 'JOB_SEEKER' ? NewsAudience.JOB_SEEKER : NewsAudience.COMPANY,
+      userRole === "JOB_SEEKER"
+        ? NewsAudience.JOB_SEEKER
+        : NewsAudience.COMPANY,
     ];
 
     const where: Prisma.NewsWhereInput = {
@@ -87,7 +89,7 @@ export class PrismaNewsRepository implements NewsRepository {
     const [newsItems, total] = await Promise.all([
       this.prisma.news.findMany({
         where,
-        orderBy: [{ isPinned: 'desc' }, { publishedAt: 'desc' }],
+        orderBy: [{ isPinned: "desc" }, { publishedAt: "desc" }],
         skip: (page - 1) * limit,
         take: limit,
         include: {
@@ -147,11 +149,13 @@ export class PrismaNewsRepository implements NewsRepository {
 
   async getUnreadCount(
     userId: string,
-    userRole: 'JOB_SEEKER' | 'COMPANY',
+    userRole: "JOB_SEEKER" | "COMPANY",
   ): Promise<number> {
     const audienceFilter: NewsAudience[] = [
       NewsAudience.ALL,
-      userRole === 'JOB_SEEKER' ? NewsAudience.JOB_SEEKER : NewsAudience.COMPANY,
+      userRole === "JOB_SEEKER"
+        ? NewsAudience.JOB_SEEKER
+        : NewsAudience.COMPANY,
     ];
 
     const totalPublished = await this.prisma.news.count({

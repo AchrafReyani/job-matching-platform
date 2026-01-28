@@ -1,13 +1,13 @@
-import { User, JobSeeker, Company, Role } from '@prisma/client';
+import { User, JobSeeker, Company, Role } from "@prisma/client";
 
 export type UserWithProfiles = User & {
   jobSeeker: Pick<
     JobSeeker,
-    'id' | 'fullName' | 'portfolioUrl' | 'experienceSummary'
+    "id" | "fullName" | "portfolioUrl" | "experienceSummary"
   > | null;
   company: Pick<
     Company,
-    'id' | 'companyName' | 'websiteUrl' | 'description'
+    "id" | "companyName" | "websiteUrl" | "description"
   > | null;
 };
 
@@ -59,4 +59,4 @@ export interface UserManagementRepository {
   ): Promise<Company>;
 }
 
-export const USER_MANAGEMENT_REPOSITORY = Symbol('UserManagementRepository');
+export const USER_MANAGEMENT_REPOSITORY = Symbol("UserManagementRepository");

@@ -1,6 +1,6 @@
-import { IsEnum, IsOptional, IsInt, Min, Max } from 'class-validator';
-import { Type } from 'class-transformer';
-import { NewsCategory, NewsStatus, NewsAudience } from '@prisma/client';
+import { IsEnum, IsOptional, IsInt, Min, Max } from "class-validator";
+import { Type } from "class-transformer";
+import { NewsCategory, NewsStatus, NewsAudience } from "@prisma/client";
 
 export class NewsQueryDto {
   @IsEnum(NewsCategory)

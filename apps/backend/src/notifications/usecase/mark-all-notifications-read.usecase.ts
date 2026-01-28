@@ -1,6 +1,6 @@
-import { Injectable, Inject } from '@nestjs/common';
-import type { NotificationRepository } from '../repository/notification.repository';
-import { NOTIFICATION_REPOSITORY } from '../repository/notification.repository';
+import { Injectable, Inject } from "@nestjs/common";
+import type { NotificationRepository } from "../repository/notification.repository";
+import { NOTIFICATION_REPOSITORY } from "../repository/notification.repository";
 
 @Injectable()
 export class MarkAllNotificationsReadUseCase {

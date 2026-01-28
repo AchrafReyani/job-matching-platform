@@ -1,7 +1,7 @@
-import { Injectable, Inject, BadRequestException } from '@nestjs/common';
-import { Vacancy } from '@prisma/client';
-import * as vacancyRepository from '../repository/vacancy.repository';
-import { CreateVacancyDto } from '../dto/create-vacancy.dto';
+import { Injectable, Inject, BadRequestException } from "@nestjs/common";
+import { Vacancy } from "@prisma/client";
+import * as vacancyRepository from "../repository/vacancy.repository";
+import { CreateVacancyDto } from "../dto/create-vacancy.dto";
 
 @Injectable()
 export class CreateVacancyUseCase {
@@ -15,7 +15,7 @@ export class CreateVacancyUseCase {
 
     if (!title || !role || !jobDescription) {
       throw new BadRequestException(
-        'Missing required fields: title, role, and jobDescription are all required.',
+        "Missing required fields: title, role, and jobDescription are all required.",
       );
     }
 

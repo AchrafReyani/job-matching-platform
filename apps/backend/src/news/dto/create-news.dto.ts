@@ -6,8 +6,8 @@ import {
   IsDateString,
   MinLength,
   MaxLength,
-} from 'class-validator';
-import { NewsCategory, NewsStatus, NewsAudience } from '@prisma/client';
+} from "class-validator";
+import { NewsCategory, NewsStatus, NewsAudience } from "@prisma/client";
 
 export class CreateNewsDto {
   @IsString()

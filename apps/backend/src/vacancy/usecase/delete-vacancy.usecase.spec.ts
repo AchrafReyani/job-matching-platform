@@ -1,9 +1,9 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { DeleteVacancyUseCase } from './delete-vacancy.usecase';
-import { Vacancy } from '@prisma/client';
-import * as vacancyRepository from '../repository/vacancy.repository';
+import { Test, TestingModule } from "@nestjs/testing";
+import { DeleteVacancyUseCase } from "./delete-vacancy.usecase";
+import { Vacancy } from "@prisma/client";
+import * as vacancyRepository from "../repository/vacancy.repository";
 
-describe('DeleteVacancyUseCase', () => {
+describe("DeleteVacancyUseCase", () => {
   let useCase: DeleteVacancyUseCase;
   const mockRepo = {
     delete: jest.fn(),
@@ -27,13 +27,13 @@ describe('DeleteVacancyUseCase', () => {
     jest.clearAllMocks();
   });
 
-  it('should call repository.delete with correct id and companyId', async () => {
+  it("should call repository.delete with correct id and companyId", async () => {
     const mockVacancy: Vacancy = {
       id: 1,
       companyId: 123,
-      title: 'Test',
-      role: 'Dev',
-      jobDescription: 'Desc',
+      title: "Test",
+      role: "Dev",
+      jobDescription: "Desc",
       salaryRange: null,
       createdAt: new Date(),
     };

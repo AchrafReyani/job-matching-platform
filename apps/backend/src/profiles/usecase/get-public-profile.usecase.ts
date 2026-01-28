@@ -1,5 +1,5 @@
-import { Injectable, Inject, NotFoundException } from '@nestjs/common';
-import * as profileRepository from '../repository/profile.repository';
+import { Injectable, Inject, NotFoundException } from "@nestjs/common";
+import * as profileRepository from "../repository/profile.repository";
 
 @Injectable()
 export class GetPublicProfileUseCase {
@@ -12,10 +12,10 @@ export class GetPublicProfileUseCase {
     const user = await this.profileRepository.findUserWithProfiles(userId);
 
     if (!user) {
-      throw new NotFoundException('User not found');
+      throw new NotFoundException("User not found");
     }
 
-    if (user.role === 'JOB_SEEKER') {
+    if (user.role === "JOB_SEEKER") {
       return {
         userId: user.id,
         role: user.role,
@@ -27,7 +27,7 @@ export class GetPublicProfileUseCase {
       };
     }
 
-    if (user.role === 'COMPANY') {
+    if (user.role === "COMPANY") {
       return {
         userId: user.id,
         role: user.role,
@@ -39,6 +39,6 @@ export class GetPublicProfileUseCase {
       };
     }
 
-    throw new NotFoundException('Profile not found for this user');
+    throw new NotFoundException("Profile not found for this user");
   }
 }

@@ -1,8 +1,8 @@
-import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../../prisma/prisma.service';
-import { VacancyRepository } from '../repository/vacancy.repository';
-import { CreateVacancyDto } from '../dto/create-vacancy.dto';
-import { UpdateVacancyDto } from '../dto/update-vacancy.dto';
+import { Injectable } from "@nestjs/common";
+import { PrismaService } from "../../prisma/prisma.service";
+import { VacancyRepository } from "../repository/vacancy.repository";
+import { CreateVacancyDto } from "../dto/create-vacancy.dto";
+import { UpdateVacancyDto } from "../dto/update-vacancy.dto";
 
 @Injectable()
 export class PrismaVacancyRepository implements VacancyRepository {

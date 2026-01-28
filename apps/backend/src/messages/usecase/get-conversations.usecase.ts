@@ -1,5 +1,5 @@
-import { Injectable, Inject } from '@nestjs/common';
-import * as messageRepository from '../repository/message.repository';
+import { Injectable, Inject } from "@nestjs/common";
+import * as messageRepository from "../repository/message.repository";
 
 @Injectable()
 export class GetConversationsUseCase {

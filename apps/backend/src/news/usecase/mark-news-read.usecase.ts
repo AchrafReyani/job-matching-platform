@@ -1,6 +1,11 @@
-import { Injectable, Inject, NotFoundException, ForbiddenException } from '@nestjs/common';
-import { NewsRepository, NEWS_REPOSITORY } from '../repository/news.repository';
-import { NewsStatus, NewsAudience } from '@prisma/client';
+import {
+  Injectable,
+  Inject,
+  NotFoundException,
+  ForbiddenException,
+} from "@nestjs/common";
+import { NewsRepository, NEWS_REPOSITORY } from "../repository/news.repository";
+import { NewsStatus, NewsAudience } from "@prisma/client";
 
 @Injectable()
 export class MarkNewsReadUseCase {
@@ -12,24 +17,26 @@ export class MarkNewsReadUseCase {
   async execute(
     newsId: number,
     userId: string,
-    userRole: 'JOB_SEEKER' | 'COMPANY',
+    userRole: "JOB_SEEKER" | "COMPANY",
   ): Promise<void> {
     const news = await this.newsRepository.findById(newsId);
 
     if (!news) {
-      throw new NotFoundException('News not found');
+      throw new NotFoundException("News not found");
     }
 
     if (news.status !== NewsStatus.PUBLISHED) {
-      throw new NotFoundException('News not found');
+      throw new NotFoundException("News not found");
     }
 
     // Check audience permission
     if (news.audience !== NewsAudience.ALL) {
       const allowedAudience =
-        userRole === 'JOB_SEEKER' ? NewsAudience.JOB_SEEKER : NewsAudience.COMPANY;
+        userRole === "JOB_SEEKER"
+          ? NewsAudience.JOB_SEEKER
+          : NewsAudience.COMPANY;
       if (news.audience !== allowedAudience) {
-        throw new ForbiddenException('You do not have access to this news');
+        throw new ForbiddenException("You do not have access to this news");
       }
     }
 

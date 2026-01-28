@@ -1,6 +1,9 @@
-import { Injectable, Inject, NotFoundException } from '@nestjs/common';
-import type { DashboardRepository, CompanyStats } from '../repository/dashboard.repository';
-import { DASHBOARD_REPOSITORY } from '../repository/dashboard.repository';
+import { Injectable, Inject, NotFoundException } from "@nestjs/common";
+import type {
+  DashboardRepository,
+  CompanyStats,
+} from "../repository/dashboard.repository";
+import { DASHBOARD_REPOSITORY } from "../repository/dashboard.repository";
 
 @Injectable()
 export class GetCompanyStatsUseCase {
@@ -13,7 +16,7 @@ export class GetCompanyStatsUseCase {
     const company = await this.dashboardRepository.findCompanyByUserId(userId);
 
     if (!company) {
-      throw new NotFoundException('Company profile not found');
+      throw new NotFoundException("Company profile not found");
     }
 
     return this.dashboardRepository.getCompanyStats(company.id);

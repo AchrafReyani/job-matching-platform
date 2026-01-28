@@ -5,10 +5,10 @@ import {
   User,
   Vacancy,
   Company,
-} from '@prisma/client';
+} from "@prisma/client";
 
 export type MessageWithSender = Message & {
-  sender: Pick<User, 'id' | 'email' | 'role'>;
+  sender: Pick<User, "id" | "email" | "role">;
 };
 
 export type ApplicationWithParticipants = Application & {
@@ -44,7 +44,9 @@ export interface MessageRepository {
     applicationId: number,
   ): Promise<ApplicationWithParticipants | null>;
   markMessagesAsRead(applicationId: number, readerId: string): Promise<number>;
-  getConversationsWithUnreadCount(userId: string): Promise<ConversationSummary[]>;
+  getConversationsWithUnreadCount(
+    userId: string,
+  ): Promise<ConversationSummary[]>;
 }
 
-export const MESSAGE_REPOSITORY = Symbol('MessageRepository');
+export const MESSAGE_REPOSITORY = Symbol("MessageRepository");

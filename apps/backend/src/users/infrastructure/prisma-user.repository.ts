@@ -1,8 +1,8 @@
-import { Injectable } from '@nestjs/common';
-import { User, Role } from '@prisma/client';
-import { PrismaService } from '../../prisma/prisma.service';
-import { UserRepository } from '../repository/user.repository';
-import { NotificationPreferences } from '../dto/update-notification-preferences.dto';
+import { Injectable } from "@nestjs/common";
+import { User, Role } from "@prisma/client";
+import { PrismaService } from "../../prisma/prisma.service";
+import { UserRepository } from "../repository/user.repository";
+import { NotificationPreferences } from "../dto/update-notification-preferences.dto";
 
 @Injectable()
 export class PrismaUserRepository implements UserRepository {
@@ -33,7 +33,9 @@ export class PrismaUserRepository implements UserRepository {
     });
   }
 
-  async getNotificationPreferences(id: string): Promise<NotificationPreferences> {
+  async getNotificationPreferences(
+    id: string,
+  ): Promise<NotificationPreferences> {
     const user = await this.prisma.user.findUnique({
       where: { id },
       select: { notificationPreferences: true, role: true },
@@ -43,17 +45,18 @@ export class PrismaUserRepository implements UserRepository {
       return {};
     }
 
-    const prefs = user.notificationPreferences as NotificationPreferences | null;
+    const prefs =
+      user.notificationPreferences as NotificationPreferences | null;
 
     // Return defaults based on role if no preferences set
     if (!prefs || Object.keys(prefs).length === 0) {
-      if (user.role === 'JOB_SEEKER') {
+      if (user.role === "JOB_SEEKER") {
         return {
           applicationAccepted: true,
           applicationRejected: true,
           newMessages: true,
         };
-      } else if (user.role === 'COMPANY') {
+      } else if (user.role === "COMPANY") {
         return {
           newApplications: true,
           newMessages: true,
@@ -65,7 +68,10 @@ export class PrismaUserRepository implements UserRepository {
     return prefs || {};
   }
 
-  async updateNotificationPreferences(id: string, preferences: NotificationPreferences): Promise<void> {
+  async updateNotificationPreferences(
+    id: string,
+    preferences: NotificationPreferences,
+  ): Promise<void> {
     const currentPrefs = await this.getNotificationPreferences(id);
     const mergedPrefs = { ...currentPrefs, ...preferences };
 
@@ -112,14 +118,14 @@ export class PrismaUserRepository implements UserRepository {
       // Archive user data
       const profileData = user.jobSeeker
         ? {
-            type: 'JOB_SEEKER',
+            type: "JOB_SEEKER",
             fullName: user.jobSeeker.fullName,
             portfolioUrl: user.jobSeeker.portfolioUrl,
             experienceSummary: user.jobSeeker.experienceSummary,
           }
         : user.company
           ? {
-              type: 'COMPANY',
+              type: "COMPANY",
               companyName: user.company.companyName,
               websiteUrl: user.company.websiteUrl,
               description: user.company.description,

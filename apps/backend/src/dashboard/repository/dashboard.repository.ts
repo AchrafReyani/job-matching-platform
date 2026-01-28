@@ -21,4 +21,4 @@ export interface DashboardRepository {
   findCompanyByUserId(userId: string): Promise<{ id: number } | null>;
 }
 
-export const DASHBOARD_REPOSITORY = Symbol('DashboardRepository');
+export const DASHBOARD_REPOSITORY = Symbol("DashboardRepository");

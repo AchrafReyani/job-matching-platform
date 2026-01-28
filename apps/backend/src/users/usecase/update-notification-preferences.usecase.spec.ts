@@ -1,7 +1,7 @@
-import { UpdateNotificationPreferencesUseCase } from './update-notification-preferences.usecase';
-import type { UserRepository } from '../repository/user.repository';
+import { UpdateNotificationPreferencesUseCase } from "./update-notification-preferences.usecase";
+import type { UserRepository } from "../repository/user.repository";
 
-describe('UpdateNotificationPreferencesUseCase', () => {
+describe("UpdateNotificationPreferencesUseCase", () => {
   let useCase: UpdateNotificationPreferencesUseCase;
   let mockUserRepository: jest.Mocked<UserRepository>;
 
@@ -23,7 +23,7 @@ describe('UpdateNotificationPreferencesUseCase', () => {
     jest.clearAllMocks();
   });
 
-  it('should update notification preferences and return updated preferences', async () => {
+  it("should update notification preferences and return updated preferences", async () => {
     const newPrefs = { applicationAccepted: false };
     const updatedPrefs = {
       applicationAccepted: false,
@@ -31,20 +31,25 @@ describe('UpdateNotificationPreferencesUseCase', () => {
       newMessages: true,
     };
 
-    mockUserRepository.updateNotificationPreferences.mockResolvedValue(undefined);
-    mockUserRepository.getNotificationPreferences.mockResolvedValue(updatedPrefs);
+    mockUserRepository.updateNotificationPreferences.mockResolvedValue(
+      undefined,
+    );
+    mockUserRepository.getNotificationPreferences.mockResolvedValue(
+      updatedPrefs,
+    );
 
-    const result = await useCase.execute('user-123', newPrefs);
+    const result = await useCase.execute("user-123", newPrefs);
 
     expect(result).toEqual(updatedPrefs);
-    expect(mockUserRepository.updateNotificationPreferences).toHaveBeenCalledWith(
-      'user-123',
-      newPrefs,
+    expect(
+      mockUserRepository.updateNotificationPreferences,
+    ).toHaveBeenCalledWith("user-123", newPrefs);
+    expect(mockUserRepository.getNotificationPreferences).toHaveBeenCalledWith(
+      "user-123",
     );
-    expect(mockUserRepository.getNotificationPreferences).toHaveBeenCalledWith('user-123');
   });
 
-  it('should handle partial preference updates', async () => {
+  it("should handle partial preference updates", async () => {
     const newPrefs = { newMessages: false };
     const updatedPrefs = {
       newApplications: true,
@@ -52,10 +57,14 @@ describe('UpdateNotificationPreferencesUseCase', () => {
       applicationWithdrawn: true,
     };
 
-    mockUserRepository.updateNotificationPreferences.mockResolvedValue(undefined);
-    mockUserRepository.getNotificationPreferences.mockResolvedValue(updatedPrefs);
+    mockUserRepository.updateNotificationPreferences.mockResolvedValue(
+      undefined,
+    );
+    mockUserRepository.getNotificationPreferences.mockResolvedValue(
+      updatedPrefs,
+    );
 
-    const result = await useCase.execute('company-123', newPrefs);
+    const result = await useCase.execute("company-123", newPrefs);
 
     expect(result).toEqual(updatedPrefs);
   });

@@ -1,4 +1,4 @@
-import { Request } from 'express';
+import { Request } from "express";
 
 export interface AuthenticatedUser {
   userId?: string;
@@ -17,7 +17,7 @@ export interface AuthenticatedRequest extends Request {
 export function getUserId(req: AuthenticatedRequest): string {
   const userId = req.user.userId || req.user.sub;
   if (!userId) {
-    throw new Error('User ID not found in request');
+    throw new Error("User ID not found in request");
   }
   return userId;
 }

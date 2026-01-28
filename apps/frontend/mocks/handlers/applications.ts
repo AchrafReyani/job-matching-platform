@@ -5,7 +5,7 @@ import type {
   UpdateApplicationPayload,
 } from '../../lib/applications/types';
 
-let mockApplications: Application[] = [
+const mockApplications: Application[] = [
   {
     id: 1,
     status: 'APPLIED',

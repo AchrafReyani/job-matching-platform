@@ -1,6 +1,6 @@
-import { Injectable } from '@nestjs/common';
-import { User, JobSeeker, Company, Role } from '@prisma/client';
-import { PrismaService } from '../../prisma/prisma.service';
+import { Injectable } from "@nestjs/common";
+import { User, JobSeeker, Company, Role } from "@prisma/client";
+import { PrismaService } from "../../prisma/prisma.service";
 import {
   UserManagementRepository,
   UserWithProfiles,
@@ -8,7 +8,7 @@ import {
   CreateCompanyProfileData,
   UpdateJobSeekerProfileData,
   UpdateCompanyProfileData,
-} from '../repository/user-management.repository';
+} from "../repository/user-management.repository";
 
 @Injectable()
 export class PrismaUserManagementRepository

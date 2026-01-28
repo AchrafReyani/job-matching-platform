@@ -1,10 +1,10 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { UpdateVacancyUseCase } from './update-vacancy.usecase';
-import { Prisma } from '@prisma/client';
-import * as vacancyRepository from '../repository/vacancy.repository';
-import { UpdateVacancyDto } from '../dto/update-vacancy.dto';
+import { Test, TestingModule } from "@nestjs/testing";
+import { UpdateVacancyUseCase } from "./update-vacancy.usecase";
+import { Prisma } from "@prisma/client";
+import * as vacancyRepository from "../repository/vacancy.repository";
+import { UpdateVacancyDto } from "../dto/update-vacancy.dto";
 
-describe('UpdateVacancyUseCase', () => {
+describe("UpdateVacancyUseCase", () => {
   let useCase: UpdateVacancyUseCase;
 
   const mockRepo = {
@@ -29,12 +29,12 @@ describe('UpdateVacancyUseCase', () => {
     jest.clearAllMocks();
   });
 
-  it('should call update on the repository with correct params', async () => {
+  it("should call update on the repository with correct params", async () => {
     const dto: UpdateVacancyDto = {
-      title: 'Updated Title',
-      role: 'Updated Role',
-      jobDescription: 'Updated description',
-      salaryRange: 'Updated Range',
+      title: "Updated Title",
+      role: "Updated Role",
+      jobDescription: "Updated description",
+      salaryRange: "Updated Range",
     };
     const companyId = 5;
     const vacancyId = 1;

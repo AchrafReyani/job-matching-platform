@@ -1,13 +1,13 @@
-import { Injectable } from '@nestjs/common';
-import { Message } from '@prisma/client';
-import { PrismaService } from '../../prisma/prisma.service';
+import { Injectable } from "@nestjs/common";
+import { Message } from "@prisma/client";
+import { PrismaService } from "../../prisma/prisma.service";
 import {
   MessageRepository,
   MessageWithSender,
   ApplicationWithParticipants,
   ConversationSummary,
-} from '../repository/message.repository';
-import { USER_BASIC_SELECT } from '../../common/prisma/select-constants';
+} from "../repository/message.repository";
+import { USER_BASIC_SELECT } from "../../common/prisma/select-constants";
 
 @Injectable()
 export class PrismaMessageRepository implements MessageRepository {
@@ -32,7 +32,7 @@ export class PrismaMessageRepository implements MessageRepository {
   ): Promise<MessageWithSender[]> {
     return this.prisma.message.findMany({
       where: { applicationId },
-      orderBy: { sentAt: 'asc' },
+      orderBy: { sentAt: "asc" },
       include: {
         sender: {
           select: USER_BASIC_SELECT,
@@ -89,17 +89,14 @@ export class PrismaMessageRepository implements MessageRepository {
     // Find all accepted applications for this user
     const applications = await this.prisma.application.findMany({
       where: {
-        status: 'ACCEPTED',
-        OR: [
-          { jobSeeker: { userId } },
-          { vacancy: { company: { userId } } },
-        ],
+        status: "ACCEPTED",
+        OR: [{ jobSeeker: { userId } }, { vacancy: { company: { userId } } }],
       },
       include: {
         jobSeeker: { include: { user: true } },
         vacancy: { include: { company: { include: { user: true } } } },
         messages: {
-          orderBy: { sentAt: 'desc' },
+          orderBy: { sentAt: "desc" },
           take: 1,
         },
       },

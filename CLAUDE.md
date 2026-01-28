@@ -113,13 +113,36 @@ docker exec job_matching_backend npm run test:e2e
 cd apps/frontend && npm test
 ```
 
-## Before Committing
+## Before Committing - MANDATORY CHECKS
 
-1. All tests pass
-2. No TypeScript errors (`npm run build` succeeds)
-3. Browser verification complete
-4. i18n translations added for both EN and NL
-5. No hardcoded text in UI
+**Always run these commands and ensure they pass before committing:**
+
+### 1. Backend Lint (must pass with no errors)
+```bash
+docker-compose exec -T backend npm run lint
+```
+
+### 2. Backend Unit Tests (all must pass)
+```bash
+docker-compose exec -T backend npm test -- --no-coverage
+```
+
+### 3. Frontend Lint (must pass with no errors/warnings)
+```bash
+cd apps/frontend && npm run lint
+```
+
+### 4. Frontend Unit Tests (all must pass)
+```bash
+cd apps/frontend && npm test
+```
+
+### 5. Additional Checks
+- Browser verification complete (test with Chrome automation or manually)
+- i18n translations added for both EN and NL
+- No hardcoded text in UI
+
+**Do NOT commit until ALL lint and test commands pass successfully.**
 
 ## Git Conventions
 

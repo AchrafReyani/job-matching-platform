@@ -4,14 +4,13 @@ import {
   NotFoundException,
   ConflictException,
   Optional,
-} from '@nestjs/common';
-import { Application, NotificationType } from '@prisma/client';
-import * as applicationRepository from '../repository/application.repository';
-import type { NotificationRepository } from '../../notifications/repository/notification.repository';
-import { NOTIFICATION_REPOSITORY } from '../../notifications/repository/notification.repository';
-import type { UserRepository } from '../../users/repository/user.repository';
-import { USER_REPOSITORY } from '../../users/repository/user.repository';
-import type { NotificationPreferences } from '../../users/dto/update-notification-preferences.dto';
+} from "@nestjs/common";
+import { Application, NotificationType } from "@prisma/client";
+import * as applicationRepository from "../repository/application.repository";
+import type { NotificationRepository } from "../../notifications/repository/notification.repository";
+import { NOTIFICATION_REPOSITORY } from "../../notifications/repository/notification.repository";
+import type { UserRepository } from "../../users/repository/user.repository";
+import { USER_REPOSITORY } from "../../users/repository/user.repository";
 
 @Injectable()
 export class CreateApplicationUseCase {
@@ -27,15 +26,16 @@ export class CreateApplicationUseCase {
   ) {}
 
   async execute(userId: string, vacancyId: number): Promise<Application> {
-    const vacancy = await this.applicationRepository.findVacancyWithCompanyById(vacancyId);
+    const vacancy =
+      await this.applicationRepository.findVacancyWithCompanyById(vacancyId);
     if (!vacancy) {
-      throw new NotFoundException('Vacancy not found');
+      throw new NotFoundException("Vacancy not found");
     }
 
     const jobSeeker =
       await this.applicationRepository.findJobSeekerByUserId(userId);
     if (!jobSeeker) {
-      throw new NotFoundException('Job seeker profile not found');
+      throw new NotFoundException("Job seeker profile not found");
     }
 
     const existing = await this.applicationRepository.findExisting(
@@ -43,10 +43,13 @@ export class CreateApplicationUseCase {
       vacancyId,
     );
     if (existing) {
-      throw new ConflictException('You have already applied to this vacancy');
+      throw new ConflictException("You have already applied to this vacancy");
     }
 
-    const application = await this.applicationRepository.create(jobSeeker.id, vacancyId);
+    const application = await this.applicationRepository.create(
+      jobSeeker.id,
+      vacancyId,
+    );
 
     // Send notification to company (check preferences first)
     if (this.notificationRepository && vacancy.company?.userId) {
@@ -54,7 +57,7 @@ export class CreateApplicationUseCase {
       if (this.userRepository) {
         const prefs = await this.userRepository.getNotificationPreferences(
           vacancy.company.userId,
-        ) as NotificationPreferences;
+        );
         if (prefs.newApplications === false) {
           shouldNotify = false;
         }
@@ -64,7 +67,7 @@ export class CreateApplicationUseCase {
         await this.notificationRepository.create({
           userId: vacancy.company.userId,
           type: NotificationType.NEW_APPLICATION,
-          title: 'New Application',
+          title: "New Application",
           message: `${jobSeeker.fullName} applied to ${vacancy.title}`,
           relatedId: application.id,
         });

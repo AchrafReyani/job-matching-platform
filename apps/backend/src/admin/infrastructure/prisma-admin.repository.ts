@@ -1,5 +1,5 @@
-import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../../prisma/prisma.service';
+import { Injectable } from "@nestjs/common";
+import { PrismaService } from "../../prisma/prisma.service";
 import {
   AdminRepository,
   AdminStats,
@@ -10,7 +10,7 @@ import {
   PaginatedResult,
   UserFilter,
   VacancyFilter,
-} from '../repository/admin.repository';
+} from "../repository/admin.repository";
 
 @Injectable()
 export class PrismaAdminRepository implements AdminRepository {
@@ -33,15 +33,15 @@ export class PrismaAdminRepository implements AdminRepository {
       newUsersThisWeek,
       applicationsThisMonth,
     ] = await Promise.all([
-      this.prisma.user.count({ where: { role: 'JOB_SEEKER' } }),
-      this.prisma.user.count({ where: { role: 'COMPANY' } }),
+      this.prisma.user.count({ where: { role: "JOB_SEEKER" } }),
+      this.prisma.user.count({ where: { role: "COMPANY" } }),
       this.prisma.vacancy.count(),
       this.prisma.application.count(),
       this.prisma.vacancy.count(), // All vacancies are "active" - no status field
-      this.prisma.application.count({ where: { status: 'APPLIED' } }),
+      this.prisma.application.count({ where: { status: "APPLIED" } }),
       this.prisma.user.count({
         where: {
-          role: { in: ['JOB_SEEKER', 'COMPANY'] },
+          role: { in: ["JOB_SEEKER", "COMPANY"] },
           createdAt: { gte: oneWeekAgo },
         },
       }),
@@ -68,7 +68,7 @@ export class PrismaAdminRepository implements AdminRepository {
     const skip = (page - 1) * pageSize;
 
     const where: Record<string, unknown> = {
-      role: { not: 'ADMIN' },
+      role: { not: "ADMIN" },
     };
 
     if (filter.role) {
@@ -77,25 +77,25 @@ export class PrismaAdminRepository implements AdminRepository {
 
     if (filter.search) {
       where.OR = [
-        { email: { contains: filter.search, mode: 'insensitive' } },
+        { email: { contains: filter.search, mode: "insensitive" } },
         {
           jobSeeker: {
-            fullName: { contains: filter.search, mode: 'insensitive' },
+            fullName: { contains: filter.search, mode: "insensitive" },
           },
         },
         {
           company: {
-            companyName: { contains: filter.search, mode: 'insensitive' },
+            companyName: { contains: filter.search, mode: "insensitive" },
           },
         },
       ];
     }
 
     const orderBy: Record<string, string> = {};
-    if (filter.sortBy === 'createdAt') {
-      orderBy.createdAt = filter.sortOrder || 'desc';
-    } else if (filter.sortBy === 'email') {
-      orderBy.email = filter.sortOrder || 'asc';
+    if (filter.sortBy === "createdAt") {
+      orderBy.createdAt = filter.sortOrder || "desc";
+    } else if (filter.sortBy === "email") {
+      orderBy.email = filter.sortOrder || "asc";
     }
 
     const [users, total] = await Promise.all([
@@ -103,7 +103,8 @@ export class PrismaAdminRepository implements AdminRepository {
         where,
         skip,
         take: pageSize,
-        orderBy: Object.keys(orderBy).length > 0 ? orderBy : { createdAt: 'desc' },
+        orderBy:
+          Object.keys(orderBy).length > 0 ? orderBy : { createdAt: "desc" },
         include: {
           jobSeeker: { select: { fullName: true } },
           company: { select: { companyName: true } },
@@ -115,7 +116,7 @@ export class PrismaAdminRepository implements AdminRepository {
     const data: UserListItem[] = users.map((user) => ({
       id: user.id,
       email: user.email,
-      name: user.jobSeeker?.fullName || user.company?.companyName || '',
+      name: user.jobSeeker?.fullName || user.company?.companyName || "",
       role: user.role,
       createdAt: user.createdAt,
     }));
@@ -140,7 +141,7 @@ export class PrismaAdminRepository implements AdminRepository {
 
     if (!user) return null;
 
-    let profile: UserDetails['profile'] = null;
+    let profile: UserDetails["profile"] = null;
     if (user.jobSeeker) {
       profile = {
         name: user.jobSeeker.fullName,
@@ -166,7 +167,12 @@ export class PrismaAdminRepository implements AdminRepository {
 
   async updateUser(
     id: string,
-    data: { email?: string; name?: string; websiteUrl?: string; description?: string },
+    data: {
+      email?: string;
+      name?: string;
+      websiteUrl?: string;
+      description?: string;
+    },
   ): Promise<void> {
     const user = await this.prisma.user.findUnique({
       where: { id },
@@ -242,14 +248,14 @@ export class PrismaAdminRepository implements AdminRepository {
       // Archive user data
       const profileData = user.jobSeeker
         ? {
-            type: 'JOB_SEEKER',
+            type: "JOB_SEEKER",
             fullName: user.jobSeeker.fullName,
             portfolioUrl: user.jobSeeker.portfolioUrl,
             experienceSummary: user.jobSeeker.experienceSummary,
           }
         : user.company
           ? {
-              type: 'COMPANY',
+              type: "COMPANY",
               companyName: user.company.companyName,
               websiteUrl: user.company.websiteUrl,
               description: user.company.description,
@@ -379,7 +385,7 @@ export class PrismaAdminRepository implements AdminRepository {
 
   async deleteAllJobSeekers(archivedBy: string): Promise<number> {
     const jobSeekers = await this.prisma.user.findMany({
-      where: { role: 'JOB_SEEKER' },
+      where: { role: "JOB_SEEKER" },
       select: { id: true },
     });
 
@@ -392,7 +398,7 @@ export class PrismaAdminRepository implements AdminRepository {
 
   async deleteAllCompanies(archivedBy: string): Promise<number> {
     const companies = await this.prisma.user.findMany({
-      where: { role: 'COMPANY' },
+      where: { role: "COMPANY" },
       select: { id: true },
     });
 
@@ -403,7 +409,9 @@ export class PrismaAdminRepository implements AdminRepository {
     return companies.length;
   }
 
-  async getVacancies(filter: VacancyFilter): Promise<PaginatedResult<VacancyListItem>> {
+  async getVacancies(
+    filter: VacancyFilter,
+  ): Promise<PaginatedResult<VacancyListItem>> {
     const page = filter.page || 1;
     const pageSize = filter.pageSize || 10;
     const skip = (page - 1) * pageSize;
@@ -415,16 +423,16 @@ export class PrismaAdminRepository implements AdminRepository {
     }
 
     if (filter.search) {
-      where.title = { contains: filter.search, mode: 'insensitive' };
+      where.title = { contains: filter.search, mode: "insensitive" };
     }
 
     const orderBy: Record<string, unknown> = {};
-    if (filter.sortBy === 'createdAt') {
-      orderBy.createdAt = filter.sortOrder || 'desc';
-    } else if (filter.sortBy === 'title') {
-      orderBy.title = filter.sortOrder || 'asc';
-    } else if (filter.sortBy === 'company') {
-      orderBy.company = { companyName: filter.sortOrder || 'asc' };
+    if (filter.sortBy === "createdAt") {
+      orderBy.createdAt = filter.sortOrder || "desc";
+    } else if (filter.sortBy === "title") {
+      orderBy.title = filter.sortOrder || "asc";
+    } else if (filter.sortBy === "company") {
+      orderBy.company = { companyName: filter.sortOrder || "asc" };
     }
 
     const [vacancies, total] = await Promise.all([
@@ -432,7 +440,8 @@ export class PrismaAdminRepository implements AdminRepository {
         where,
         skip,
         take: pageSize,
-        orderBy: Object.keys(orderBy).length > 0 ? orderBy : { createdAt: 'desc' },
+        orderBy:
+          Object.keys(orderBy).length > 0 ? orderBy : { createdAt: "desc" },
         include: {
           company: { select: { companyName: true } },
           _count: { select: { applications: true } },
@@ -483,7 +492,12 @@ export class PrismaAdminRepository implements AdminRepository {
 
   async updateVacancy(
     id: number,
-    data: { title?: string; salaryRange?: string; role?: string; jobDescription?: string },
+    data: {
+      title?: string;
+      salaryRange?: string;
+      role?: string;
+      jobDescription?: string;
+    },
   ): Promise<void> {
     await this.prisma.vacancy.update({
       where: { id },

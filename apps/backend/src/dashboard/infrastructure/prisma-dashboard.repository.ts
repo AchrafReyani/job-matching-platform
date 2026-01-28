@@ -1,10 +1,10 @@
-import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../../prisma/prisma.service';
+import { Injectable } from "@nestjs/common";
+import { PrismaService } from "../../prisma/prisma.service";
 import {
   DashboardRepository,
   JobSeekerStats,
   CompanyStats,
-} from '../repository/dashboard.repository';
+} from "../repository/dashboard.repository";
 
 @Injectable()
 export class PrismaDashboardRepository implements DashboardRepository {
@@ -27,13 +27,13 @@ export class PrismaDashboardRepository implements DashboardRepository {
   async getJobSeekerStats(jobSeekerId: number): Promise<JobSeekerStats> {
     const [pending, accepted, rejected, totalSent] = await Promise.all([
       this.prisma.application.count({
-        where: { jobSeekerId, status: 'APPLIED' },
+        where: { jobSeekerId, status: "APPLIED" },
       }),
       this.prisma.application.count({
-        where: { jobSeekerId, status: 'ACCEPTED' },
+        where: { jobSeekerId, status: "ACCEPTED" },
       }),
       this.prisma.application.count({
-        where: { jobSeekerId, status: 'REJECTED' },
+        where: { jobSeekerId, status: "REJECTED" },
       }),
       this.prisma.application.count({
         where: { jobSeekerId },
@@ -70,13 +70,13 @@ export class PrismaDashboardRepository implements DashboardRepository {
         where: { vacancyId: { in: vacancyIds } },
       }),
       this.prisma.application.count({
-        where: { vacancyId: { in: vacancyIds }, status: 'APPLIED' },
+        where: { vacancyId: { in: vacancyIds }, status: "APPLIED" },
       }),
       this.prisma.application.count({
-        where: { vacancyId: { in: vacancyIds }, status: 'ACCEPTED' },
+        where: { vacancyId: { in: vacancyIds }, status: "ACCEPTED" },
       }),
       this.prisma.application.count({
-        where: { vacancyId: { in: vacancyIds }, status: 'REJECTED' },
+        where: { vacancyId: { in: vacancyIds }, status: "REJECTED" },
       }),
       this.prisma.application.count({
         where: {

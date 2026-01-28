@@ -1,5 +1,5 @@
-import { Injectable, Inject, NotFoundException } from '@nestjs/common';
-import * as companyRepository from '../repository/company.repository';
+import { Injectable, Inject, NotFoundException } from "@nestjs/common";
+import * as companyRepository from "../repository/company.repository";
 
 @Injectable()
 export class GetCompanyWithVacanciesUseCase {
@@ -12,7 +12,7 @@ export class GetCompanyWithVacanciesUseCase {
     const company = await this.companyRepository.findByIdWithVacancies(id);
 
     if (!company) {
-      throw new NotFoundException('Company not found');
+      throw new NotFoundException("Company not found");
     }
 
     return company;

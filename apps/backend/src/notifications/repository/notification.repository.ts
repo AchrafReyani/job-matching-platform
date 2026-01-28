@@ -1,4 +1,4 @@
-import { Notification, NotificationType } from '@prisma/client';
+import { Notification, NotificationType } from "@prisma/client";
 
 export interface CreateNotificationData {
   userId: string;
@@ -10,11 +10,15 @@ export interface CreateNotificationData {
 
 export interface NotificationRepository {
   create(data: CreateNotificationData): Promise<Notification>;
-  findByUserId(userId: string, limit?: number, offset?: number): Promise<Notification[]>;
+  findByUserId(
+    userId: string,
+    limit?: number,
+    offset?: number,
+  ): Promise<Notification[]>;
   findById(id: number): Promise<Notification | null>;
   countUnreadByUserId(userId: string): Promise<number>;
   markAsRead(id: number): Promise<Notification>;
   markAllAsReadByUserId(userId: string): Promise<number>;
 }
 
-export const NOTIFICATION_REPOSITORY = Symbol('NotificationRepository');
+export const NOTIFICATION_REPOSITORY = Symbol("NotificationRepository");

@@ -6,22 +6,22 @@ import {
   Put,
   UseGuards,
   Request,
-} from '@nestjs/common';
-import { JwtAuthGuard } from '../../auth/jwt-auth.guard';
-import { RegisterJobSeekerDto } from '../dto/register-jobseeker.dto';
-import { RegisterCompanyDto } from '../dto/register-company.dto';
-import { UpdateJobSeekerDto } from '../dto/update-jobseeker.dto';
-import { UpdateCompanyDto } from '../dto/update-company.dto';
-import { RegisterJobSeekerUseCase } from '../usecase/register-jobseeker.usecase';
-import { RegisterCompanyUseCase } from '../usecase/register-company.usecase';
-import { GetProfileUseCase } from '../usecase/get-profile.usecase';
-import { UpdateProfileUseCase } from '../usecase/update-profile.usecase';
+} from "@nestjs/common";
+import { JwtAuthGuard } from "../../auth/jwt-auth.guard";
+import { RegisterJobSeekerDto } from "../dto/register-jobseeker.dto";
+import { RegisterCompanyDto } from "../dto/register-company.dto";
+import { UpdateJobSeekerDto } from "../dto/update-jobseeker.dto";
+import { UpdateCompanyDto } from "../dto/update-company.dto";
+import { RegisterJobSeekerUseCase } from "../usecase/register-jobseeker.usecase";
+import { RegisterCompanyUseCase } from "../usecase/register-company.usecase";
+import { GetProfileUseCase } from "../usecase/get-profile.usecase";
+import { UpdateProfileUseCase } from "../usecase/update-profile.usecase";
 import {
   AuthenticatedRequest,
   getUserId,
-} from '../../common/interfaces/authenticated-request.interface';
+} from "../../common/interfaces/authenticated-request.interface";
 
-@Controller('auth')
+@Controller("auth")
 export class UserManagementController {
   constructor(
     private readonly registerJobSeekerUseCase: RegisterJobSeekerUseCase,
@@ -30,24 +30,24 @@ export class UserManagementController {
     private readonly updateProfileUseCase: UpdateProfileUseCase,
   ) {}
 
-  @Post('register/job-seeker')
+  @Post("register/job-seeker")
   registerJobSeeker(@Body() dto: RegisterJobSeekerDto) {
     return this.registerJobSeekerUseCase.execute(dto);
   }
 
-  @Post('register/company')
+  @Post("register/company")
   registerCompany(@Body() dto: RegisterCompanyDto) {
     return this.registerCompanyUseCase.execute(dto);
   }
 
   @UseGuards(JwtAuthGuard)
-  @Get('profile')
+  @Get("profile")
   async getProfile(@Request() req: AuthenticatedRequest) {
     return this.getProfileUseCase.execute(getUserId(req));
   }
 
   @UseGuards(JwtAuthGuard)
-  @Put('profile')
+  @Put("profile")
   async editProfile(
     @Request() req: AuthenticatedRequest,
     @Body() dto: UpdateJobSeekerDto | UpdateCompanyDto,

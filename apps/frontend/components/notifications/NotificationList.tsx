@@ -25,7 +25,7 @@ export function NotificationList({ limit = 10, showMarkAllRead = true }: Notific
       try {
         const data = await getNotifications(limit);
         setNotifications(data);
-      } catch (err) {
+      } catch {
         setError('Failed to load notifications');
       } finally {
         setLoading(false);

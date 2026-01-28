@@ -1,4 +1,10 @@
-import { News, NewsRead, NewsCategory, NewsStatus, NewsAudience } from '@prisma/client';
+import {
+  News,
+  NewsRead,
+  NewsCategory,
+  NewsStatus,
+  NewsAudience,
+} from "@prisma/client";
 
 export interface NewsWithReadStatus extends News {
   isRead?: boolean;
@@ -40,7 +46,7 @@ export interface NewsRepository {
   findAll(filters: NewsFilters): Promise<PaginatedNews>;
 
   findPublishedForUser(
-    userRole: 'JOB_SEEKER' | 'COMPANY',
+    userRole: "JOB_SEEKER" | "COMPANY",
     userId: string,
     page: number,
     limit: number,
@@ -54,11 +60,14 @@ export interface NewsRepository {
 
   isRead(newsId: number, userId: string): Promise<boolean>;
 
-  getUnreadCount(userId: string, userRole: 'JOB_SEEKER' | 'COMPANY'): Promise<number>;
+  getUnreadCount(
+    userId: string,
+    userRole: "JOB_SEEKER" | "COMPANY",
+  ): Promise<number>;
 
   findScheduledToPublish(): Promise<News[]>;
 
   publishScheduled(ids: number[]): Promise<void>;
 }
 
-export const NEWS_REPOSITORY = Symbol('NEWS_REPOSITORY');
+export const NEWS_REPOSITORY = Symbol("NEWS_REPOSITORY");

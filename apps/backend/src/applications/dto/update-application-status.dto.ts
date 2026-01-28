@@ -1,7 +1,7 @@
-import { IsOptional, IsString } from 'class-validator';
+import { IsOptional, IsString } from "class-validator";
 
 export class UpdateApplicationDto {
   @IsOptional()
   @IsString()
-  status?: 'APPLIED' | 'ACCEPTED' | 'REJECTED';
+  status?: "APPLIED" | "ACCEPTED" | "REJECTED";
 }

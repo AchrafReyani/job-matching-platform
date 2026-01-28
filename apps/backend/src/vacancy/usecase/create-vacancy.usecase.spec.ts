@@ -1,11 +1,11 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { CreateVacancyUseCase } from './create-vacancy.usecase';
-import { BadRequestException } from '@nestjs/common';
-import { Vacancy } from '@prisma/client';
-import * as vacancyRepository from '../repository/vacancy.repository';
-import { CreateVacancyDto } from '../dto/create-vacancy.dto';
+import { Test, TestingModule } from "@nestjs/testing";
+import { CreateVacancyUseCase } from "./create-vacancy.usecase";
+import { BadRequestException } from "@nestjs/common";
+import { Vacancy } from "@prisma/client";
+import * as vacancyRepository from "../repository/vacancy.repository";
+import { CreateVacancyDto } from "../dto/create-vacancy.dto";
 
-describe('CreateVacancyUseCase', () => {
+describe("CreateVacancyUseCase", () => {
   let useCase: CreateVacancyUseCase;
   const mockRepo = {
     create: jest.fn(),
@@ -29,12 +29,12 @@ describe('CreateVacancyUseCase', () => {
     jest.clearAllMocks();
   });
 
-  it('should call repository.create with correct arguments', async () => {
+  it("should call repository.create with correct arguments", async () => {
     const dto: CreateVacancyDto = {
-      title: 'Frontend Developer',
-      role: 'Frontend',
-      jobDescription: 'Build awesome UIs',
-      salaryRange: '50k-70k',
+      title: "Frontend Developer",
+      role: "Frontend",
+      jobDescription: "Build awesome UIs",
+      salaryRange: "50k-70k",
     };
     const mockVacancy: Vacancy = {
       id: 1,
@@ -53,11 +53,11 @@ describe('CreateVacancyUseCase', () => {
     expect(result).toEqual(mockVacancy);
   });
 
-  it('should throw BadRequestException if title, role, or jobDescription is missing', async () => {
+  it("should throw BadRequestException if title, role, or jobDescription is missing", async () => {
     const incompleteDto = {
-      title: '',
-      role: '',
-      jobDescription: '',
+      title: "",
+      role: "",
+      jobDescription: "",
     } as CreateVacancyDto;
 
     await expect(useCase.execute(123, incompleteDto)).rejects.toThrow(

@@ -1,9 +1,9 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { GetApplicationsForJobSeekerUseCase } from './get-applications-for-jobseeker.usecase';
-import { NotFoundException } from '@nestjs/common';
-import * as applicationRepository from '../repository/application.repository';
+import { Test, TestingModule } from "@nestjs/testing";
+import { GetApplicationsForJobSeekerUseCase } from "./get-applications-for-jobseeker.usecase";
+import { NotFoundException } from "@nestjs/common";
+import * as applicationRepository from "../repository/application.repository";
 
-describe('GetApplicationsForJobSeekerUseCase', () => {
+describe("GetApplicationsForJobSeekerUseCase", () => {
   let useCase: GetApplicationsForJobSeekerUseCase;
   const mockRepo = {
     findJobSeekerByUserId: jest.fn(),
@@ -30,25 +30,25 @@ describe('GetApplicationsForJobSeekerUseCase', () => {
     jest.clearAllMocks();
   });
 
-  it('should return applications for job seeker', async () => {
+  it("should return applications for job seeker", async () => {
     const applications = [
-      { id: 1, status: 'APPLIED' },
-      { id: 2, status: 'ACCEPTED' },
+      { id: 1, status: "APPLIED" },
+      { id: 2, status: "ACCEPTED" },
     ];
     mockRepo.findJobSeekerByUserId.mockResolvedValue({ id: 10 });
     mockRepo.findByJobSeekerId.mockResolvedValue(applications);
 
-    const result = await useCase.execute('user-1');
+    const result = await useCase.execute("user-1");
 
-    expect(mockRepo.findJobSeekerByUserId).toHaveBeenCalledWith('user-1');
+    expect(mockRepo.findJobSeekerByUserId).toHaveBeenCalledWith("user-1");
     expect(mockRepo.findByJobSeekerId).toHaveBeenCalledWith(10);
     expect(result).toEqual(applications);
   });
 
-  it('should throw NotFoundException if job seeker not found', async () => {
+  it("should throw NotFoundException if job seeker not found", async () => {
     mockRepo.findJobSeekerByUserId.mockResolvedValue(null);
 
-    await expect(useCase.execute('user-1')).rejects.toThrow(NotFoundException);
+    await expect(useCase.execute("user-1")).rejects.toThrow(NotFoundException);
     expect(mockRepo.findByJobSeekerId).not.toHaveBeenCalled();
   });
 });

@@ -1,8 +1,8 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { GetUnreadCountUseCase } from './get-unread-count.usecase';
-import { NOTIFICATION_REPOSITORY } from '../repository/notification.repository';
+import { Test, TestingModule } from "@nestjs/testing";
+import { GetUnreadCountUseCase } from "./get-unread-count.usecase";
+import { NOTIFICATION_REPOSITORY } from "../repository/notification.repository";
 
-describe('GetUnreadCountUseCase', () => {
+describe("GetUnreadCountUseCase", () => {
   let useCase: GetUnreadCountUseCase;
   const mockRepo = {
     countUnreadByUserId: jest.fn(),
@@ -23,21 +23,21 @@ describe('GetUnreadCountUseCase', () => {
     jest.clearAllMocks();
   });
 
-  it('should return unread count for user', async () => {
+  it("should return unread count for user", async () => {
     mockRepo.countUnreadByUserId.mockResolvedValue(5);
 
-    const result = await useCase.execute('user-1');
+    const result = await useCase.execute("user-1");
 
-    expect(mockRepo.countUnreadByUserId).toHaveBeenCalledWith('user-1');
+    expect(mockRepo.countUnreadByUserId).toHaveBeenCalledWith("user-1");
     expect(result).toEqual({ count: 5 });
   });
 
-  it('should return zero when user has no unread notifications', async () => {
+  it("should return zero when user has no unread notifications", async () => {
     mockRepo.countUnreadByUserId.mockResolvedValue(0);
 
-    const result = await useCase.execute('user-2');
+    const result = await useCase.execute("user-2");
 
-    expect(mockRepo.countUnreadByUserId).toHaveBeenCalledWith('user-2');
+    expect(mockRepo.countUnreadByUserId).toHaveBeenCalledWith("user-2");
     expect(result).toEqual({ count: 0 });
   });
 });

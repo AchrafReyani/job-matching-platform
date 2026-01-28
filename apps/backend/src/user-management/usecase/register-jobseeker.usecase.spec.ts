@@ -1,12 +1,12 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { RegisterJobSeekerUseCase } from './register-jobseeker.usecase';
-import { ConflictException } from '@nestjs/common';
-import * as userManagementRepository from '../repository/user-management.repository';
-import * as bcrypt from 'bcryptjs';
+import { Test, TestingModule } from "@nestjs/testing";
+import { RegisterJobSeekerUseCase } from "./register-jobseeker.usecase";
+import { ConflictException } from "@nestjs/common";
+import * as userManagementRepository from "../repository/user-management.repository";
+import * as bcrypt from "bcryptjs";
 
-jest.mock('bcryptjs');
+jest.mock("bcryptjs");
 
-describe('RegisterJobSeekerUseCase', () => {
+describe("RegisterJobSeekerUseCase", () => {
   let useCase: RegisterJobSeekerUseCase;
   const mockRepo = {
     findUserByEmail: jest.fn(),
@@ -32,48 +32,48 @@ describe('RegisterJobSeekerUseCase', () => {
     jest.clearAllMocks();
   });
 
-  it('should register a job seeker successfully', async () => {
+  it("should register a job seeker successfully", async () => {
     mockRepo.findUserByEmail.mockResolvedValue(null);
-    (bcrypt.hash as jest.Mock).mockResolvedValue('hashed-password');
+    (bcrypt.hash as jest.Mock).mockResolvedValue("hashed-password");
     mockRepo.createUser.mockResolvedValue({
-      id: 'user-1',
-      email: 'test@example.com',
+      id: "user-1",
+      email: "test@example.com",
     });
     mockRepo.createJobSeekerProfile.mockResolvedValue({
       id: 1,
-      fullName: 'John Doe',
+      fullName: "John Doe",
     });
 
     const dto = {
-      email: 'test@example.com',
-      password: 'password123',
-      fullName: 'John Doe',
-      portfolioUrl: 'https://portfolio.com',
+      email: "test@example.com",
+      password: "password123",
+      fullName: "John Doe",
+      portfolioUrl: "https://portfolio.com",
     };
     const result = await useCase.execute(dto);
 
-    expect(mockRepo.findUserByEmail).toHaveBeenCalledWith('test@example.com');
-    expect(bcrypt.hash).toHaveBeenCalledWith('password123', 10);
+    expect(mockRepo.findUserByEmail).toHaveBeenCalledWith("test@example.com");
+    expect(bcrypt.hash).toHaveBeenCalledWith("password123", 10);
     expect(mockRepo.createUser).toHaveBeenCalledWith(
-      'test@example.com',
-      'hashed-password',
-      'JOB_SEEKER',
+      "test@example.com",
+      "hashed-password",
+      "JOB_SEEKER",
     );
-    expect(mockRepo.createJobSeekerProfile).toHaveBeenCalledWith('user-1', {
-      fullName: 'John Doe',
-      portfolioUrl: 'https://portfolio.com',
+    expect(mockRepo.createJobSeekerProfile).toHaveBeenCalledWith("user-1", {
+      fullName: "John Doe",
+      portfolioUrl: "https://portfolio.com",
       experienceSummary: undefined,
     });
-    expect(result).toEqual({ message: 'Job seeker registered successfully' });
+    expect(result).toEqual({ message: "Job seeker registered successfully" });
   });
 
-  it('should throw ConflictException if email already registered', async () => {
-    mockRepo.findUserByEmail.mockResolvedValue({ id: 'existing-user' });
+  it("should throw ConflictException if email already registered", async () => {
+    mockRepo.findUserByEmail.mockResolvedValue({ id: "existing-user" });
 
     const dto = {
-      email: 'existing@example.com',
-      password: 'password123',
-      fullName: 'John Doe',
+      email: "existing@example.com",
+      password: "password123",
+      fullName: "John Doe",
     };
     await expect(useCase.execute(dto)).rejects.toThrow(ConflictException);
     expect(mockRepo.createUser).not.toHaveBeenCalled();

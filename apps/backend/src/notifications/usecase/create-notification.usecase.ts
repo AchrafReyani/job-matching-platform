@@ -1,7 +1,10 @@
-import { Injectable, Inject } from '@nestjs/common';
-import { Notification } from '@prisma/client';
-import type { NotificationRepository, CreateNotificationData } from '../repository/notification.repository';
-import { NOTIFICATION_REPOSITORY } from '../repository/notification.repository';
+import { Injectable, Inject } from "@nestjs/common";
+import { Notification } from "@prisma/client";
+import type {
+  NotificationRepository,
+  CreateNotificationData,
+} from "../repository/notification.repository";
+import { NOTIFICATION_REPOSITORY } from "../repository/notification.repository";
 
 @Injectable()
 export class CreateNotificationUseCase {

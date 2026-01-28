@@ -1,6 +1,6 @@
-import { Injectable, Inject, NotFoundException } from '@nestjs/common';
-import { Vacancy } from '@prisma/client';
-import * as vacancyRepository from '../repository/vacancy.repository';
+import { Injectable, Inject, NotFoundException } from "@nestjs/common";
+import { Vacancy } from "@prisma/client";
+import * as vacancyRepository from "../repository/vacancy.repository";
 
 @Injectable()
 export class GetVacancyByIdUseCase {
