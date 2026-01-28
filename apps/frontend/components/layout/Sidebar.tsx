@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { SidebarItem } from './SidebarItem';
 import { getUnreadCount } from '@/lib/notifications/api';
+import { getNewsUnreadCount } from '@/lib/news/api';
 import { logout } from '@/lib/auth/logout';
 import { Button } from '@/components/ui/Button';
 
@@ -56,9 +57,16 @@ const UsersIcon = () => (
   </svg>
 );
 
+const NewsIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
+    <path strokeLinecap="round" strokeLinejoin="round" d="M12 7.5h1.5m-1.5 3h1.5m-7.5 3h7.5m-7.5 3h7.5m3-9h3.375c.621 0 1.125.504 1.125 1.125V18a2.25 2.25 0 01-2.25 2.25M16.5 7.5V18a2.25 2.25 0 002.25 2.25M16.5 7.5V4.875c0-.621-.504-1.125-1.125-1.125H4.125C3.504 3.75 3 4.254 3 4.875V18a2.25 2.25 0 002.25 2.25h13.5M6 7.5h3v3H6v-3z" />
+  </svg>
+);
+
 export function Sidebar({ role, userName }: SidebarProps) {
   const t = useTranslations('Sidebar');
   const [unreadCount, setUnreadCount] = useState(0);
+  const [hasUnreadNews, setHasUnreadNews] = useState(false);
   const basePath = role === 'ADMIN'
     ? '/dashboard/admin'
     : role === 'JOB_SEEKER'
@@ -78,19 +86,33 @@ export function Sidebar({ role, userName }: SidebarProps) {
       }
     };
 
+    const fetchNewsUnreadCount = async () => {
+      try {
+        const response = await getNewsUnreadCount();
+        setHasUnreadNews(response.count > 0);
+      } catch {
+        // Silently fail
+      }
+    };
+
     fetchUnreadCount();
+    fetchNewsUnreadCount();
     // Refresh count every 30 seconds
-    const interval = setInterval(fetchUnreadCount, 30000);
+    const interval = setInterval(() => {
+      fetchUnreadCount();
+      fetchNewsUnreadCount();
+    }, 30000);
     return () => clearInterval(interval);
   }, [role]);
 
-  type SidebarItemData = { href: string; icon: React.ReactNode; label: string; badge?: number };
+  type SidebarItemData = { href: string; icon: React.ReactNode; label: string; badge?: number; showDot?: boolean };
 
   const jobSeekerItems: SidebarItemData[] = [
     { href: `${basePath}`, icon: <DashboardIcon />, label: t('dashboard'), badge: unreadCount },
     { href: `${basePath}/vacancies`, icon: <VacanciesIcon />, label: t('vacancies') },
     { href: `${basePath}/applications`, icon: <ApplicationsIcon />, label: t('applications') },
     { href: `${basePath}/messages`, icon: <MessagesIcon />, label: t('messages') },
+    { href: `${basePath}/news`, icon: <NewsIcon />, label: t('news'), showDot: hasUnreadNews },
     { href: `${basePath}/profile`, icon: <ProfileIcon />, label: t('profile') },
     { href: '/dashboard/settings', icon: <SettingsIcon />, label: t('settings') },
   ];
@@ -100,6 +122,7 @@ export function Sidebar({ role, userName }: SidebarProps) {
     { href: `${basePath}/vacancies`, icon: <VacanciesIcon />, label: t('myVacancies') },
     { href: `${basePath}/applications`, icon: <ApplicationsIcon />, label: t('applications') },
     { href: `${basePath}/messages`, icon: <MessagesIcon />, label: t('messages') },
+    { href: `${basePath}/news`, icon: <NewsIcon />, label: t('news'), showDot: hasUnreadNews },
     { href: `${basePath}/profile`, icon: <ProfileIcon />, label: t('profile') },
     { href: '/dashboard/settings', icon: <SettingsIcon />, label: t('settings') },
   ];
@@ -108,6 +131,7 @@ export function Sidebar({ role, userName }: SidebarProps) {
     { href: `${basePath}`, icon: <DashboardIcon />, label: t('dashboard') },
     { href: `${basePath}/users`, icon: <UsersIcon />, label: t('users') },
     { href: `${basePath}/vacancies`, icon: <VacanciesIcon />, label: t('vacancies') },
+    { href: `${basePath}/news`, icon: <NewsIcon />, label: t('news') },
     { href: '/dashboard/settings', icon: <SettingsIcon />, label: t('settings') },
   ];
 
@@ -134,6 +158,7 @@ export function Sidebar({ role, userName }: SidebarProps) {
             icon={item.icon}
             label={item.label}
             badge={item.badge}
+            showDot={item.showDot}
           />
         ))}
       </nav>

@@ -375,10 +375,91 @@
     "myVacancies": "Mijn Vacatures",
     "applications": "Sollicitaties",
     "messages": "Berichten",
+    "news": "Nieuws",
     "profile": "Profiel",
     "settings": "Instellingen",
     "users": "Gebruikers",
     "logout": "Uitloggen"
+  },
+  "News": {
+    "title": "Nieuws",
+    "subtitle": "Blijf op de hoogte van de laatste aankondigingen",
+    "latestNews": "Laatste Nieuws",
+    "viewAll": "Bekijk Alles",
+    "noNews": "Nog geen nieuws",
+    "pinned": "Vastgezet",
+    "unread": "Ongelezen",
+    "readMore": "Lees meer",
+    "categories": {
+      "RELEASE": "Release",
+      "BUG_FIX": "Bug Fix",
+      "ANNOUNCEMENT": "Aankondiging",
+      "MAINTENANCE": "Onderhoud",
+      "FEATURE_UPDATE": "Functie Update",
+      "SECURITY": "Beveiliging",
+      "TIPS_AND_TRICKS": "Tips & Tricks",
+      "EVENT": "Evenement"
+    },
+    "status": {
+      "DRAFT": "Concept",
+      "PUBLISHED": "Gepubliceerd",
+      "SCHEDULED": "Gepland"
+    },
+    "audience": {
+      "ALL": "Alle Gebruikers",
+      "JOB_SEEKER": "Werkzoekenden",
+      "COMPANY": "Bedrijven"
+    },
+    "admin": {
+      "title": "Nieuwsbeheer",
+      "subtitle": "Maak en beheer nieuwsberichten",
+      "createNews": "Nieuws Maken",
+      "editNews": "Nieuws Bewerken",
+      "deleteConfirm": "Weet je zeker dat je dit nieuwsbericht wilt verwijderen?",
+      "publishConfirm": "Dit nieuwsbericht nu publiceren?",
+      "noNews": "Nog geen nieuwsberichten. Maak je eerste!",
+      "filters": {
+        "category": "Categorie",
+        "status": "Status",
+        "audience": "Doelgroep",
+        "all": "Alle"
+      },
+      "table": {
+        "title": "Titel",
+        "category": "Categorie",
+        "status": "Status",
+        "audience": "Doelgroep",
+        "published": "Gepubliceerd",
+        "actions": "Acties"
+      },
+      "form": {
+        "title": "Titel",
+        "titlePlaceholder": "Voer nieuwstitel in",
+        "content": "Inhoud",
+        "contentPlaceholder": "Schrijf je nieuwsinhoud hier... (Markdown ondersteund)",
+        "category": "Categorie",
+        "audience": "Doelgroep",
+        "status": "Status",
+        "scheduledAt": "Geplande Datum & Tijd",
+        "isPinned": "Vastzetten bovenaan",
+        "saveDraft": "Opslaan als Concept",
+        "publish": "Nu Publiceren",
+        "schedule": "Plannen",
+        "update": "Bijwerken",
+        "createSuccess": "Nieuws succesvol aangemaakt!",
+        "updateSuccess": "Nieuws succesvol bijgewerkt!",
+        "createError": "Nieuws aanmaken mislukt",
+        "updateError": "Nieuws bijwerken mislukt",
+        "deleteError": "Nieuws verwijderen mislukt",
+        "publishSuccess": "Nieuws succesvol gepubliceerd!",
+        "publishError": "Nieuws publiceren mislukt"
+      }
+    },
+    "pagination": {
+      "showing": "Toont {from} tot {to} van {total}",
+      "previous": "Vorige",
+      "next": "Volgende"
+    }
   },
   "Settings": {
     "title": "Instellingen",

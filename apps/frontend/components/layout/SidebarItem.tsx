@@ -9,9 +9,10 @@ interface SidebarItemProps {
   icon: ReactNode;
   label: string;
   badge?: number;
+  showDot?: boolean;
 }
 
-export function SidebarItem({ href, icon, label, badge }: SidebarItemProps) {
+export function SidebarItem({ href, icon, label, badge, showDot }: SidebarItemProps) {
   const pathname = usePathname();
   const isActive = pathname === href;
 
@@ -38,6 +39,14 @@ export function SidebarItem({ href, icon, label, badge }: SidebarItemProps) {
         >
           {badge > 99 ? '99+' : badge}
         </span>
+      )}
+      {showDot && (
+        <span
+          className={`
+            w-2 h-2 rounded-full
+            ${isActive ? 'bg-[var(--color-bg)]' : 'bg-[var(--color-primary)]'}
+          `}
+        />
       )}
     </Link>
   );

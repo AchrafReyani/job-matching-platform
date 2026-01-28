@@ -12,7 +12,7 @@
     "experimentalDecorators": true,
     "declaration": true,
     "removeComments": true,
-    "isolatedModules": true,
+    "isolatedModules": false,
     "strict": true,
     "strictPropertyInitialization": false,
     "skipLibCheck": true,

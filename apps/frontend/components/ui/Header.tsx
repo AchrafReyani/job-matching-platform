@@ -1,26 +1,13 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
-import { Button } from './Button';
-import { getToken } from '@/lib/api';
-import { logout } from '@/lib/auth/logout';
 import { ThemeToggle } from './ThemeToggle';
 import { LanguageSwitcher } from './LanguageSwitcher';
 
 export function Header() {
   const router = useRouter();
   const t = useTranslations('Header');
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-  useEffect(() => {
-    const updateLoginState = () => setIsLoggedIn(!!getToken());
-    updateLoginState();
-
-    window.addEventListener('tokenChanged', updateLoginState);
-    return () => window.removeEventListener('tokenChanged', updateLoginState);
-  }, []);
 
   return (
     <header
@@ -42,16 +29,6 @@ export function Header() {
 
       {/* Right-side nav */}
       <nav className="flex items-center gap-3">
-        {isLoggedIn && (
-          <Button
-            variant="destructive"
-            className="text-sm px-3 py-1"
-            onClick={logout}
-          >
-            {t('logout')}
-          </Button>
-        )}
-
         <LanguageSwitcher />
         <ThemeToggle />
       </nav>

@@ -1,4 +1,4 @@
-import { PrismaClient, Role, ApplicationStatus } from '@prisma/client';
+import { PrismaClient, Role, ApplicationStatus, NewsCategory, NewsStatus, NewsAudience } from '@prisma/client';
 import * as bcrypt from 'bcryptjs';
 
 const prisma = new PrismaClient();
@@ -7,6 +7,8 @@ async function main() {
   console.log('Seeding database...');
 
   // Clear existing data (in reverse order of dependencies)
+  await prisma.newsRead.deleteMany();
+  await prisma.news.deleteMany();
   await prisma.message.deleteMany();
   await prisma.application.deleteMany();
   await prisma.vacancy.deleteMany();
@@ -455,6 +457,205 @@ async function main() {
         sentAt: new Date('2025-10-18T15:10:00Z'),
       },
     ],
+  });
+
+  // ============================================
+  // CREATE NEWS POSTS
+  // ============================================
+
+  // Published news - visible to all users
+  await prisma.news.create({
+    data: {
+      title: 'Welcome to JobMatch 2.0!',
+      content: `# Welcome to JobMatch 2.0
+
+We're excited to announce the launch of our completely redesigned platform!
+
+## What's New
+
+- **Modern Interface**: Cleaner, faster, and more intuitive
+- **Real-time Messaging**: Chat instantly with companies and candidates
+- **Smart Matching**: Improved algorithms to find your perfect match
+
+## Getting Started
+
+If you're new here, check out our guide to get the most out of JobMatch.
+
+Thank you for being part of our community!`,
+      category: NewsCategory.RELEASE,
+      status: NewsStatus.PUBLISHED,
+      audience: NewsAudience.ALL,
+      isPinned: true,
+      publishedAt: new Date('2026-01-15T10:00:00Z'),
+    },
+  });
+
+  await prisma.news.create({
+    data: {
+      title: 'New Feature: Application Tracking',
+      content: `We've added a new application tracking feature to help you stay organized!
+
+## Features
+
+- **Status Updates**: See your application status at a glance
+- **Timeline View**: Track every step of your job search journey
+- **Notifications**: Get notified when something changes
+
+Try it out in your Applications page today!`,
+      category: NewsCategory.FEATURE_UPDATE,
+      status: NewsStatus.PUBLISHED,
+      audience: NewsAudience.JOB_SEEKER,
+      isPinned: false,
+      publishedAt: new Date('2026-01-20T14:00:00Z'),
+    },
+  });
+
+  await prisma.news.create({
+    data: {
+      title: 'Company Dashboard Improvements',
+      content: `We've made significant improvements to the Company Dashboard!
+
+## What's Changed
+
+- **Better Analytics**: See detailed statistics about your vacancies
+- **Quick Actions**: Manage applications with fewer clicks
+- **Bulk Operations**: Handle multiple candidates at once
+
+Log in to your dashboard to explore these improvements.`,
+      category: NewsCategory.FEATURE_UPDATE,
+      status: NewsStatus.PUBLISHED,
+      audience: NewsAudience.COMPANY,
+      isPinned: false,
+      publishedAt: new Date('2026-01-22T09:00:00Z'),
+    },
+  });
+
+  await prisma.news.create({
+    data: {
+      title: 'Security Update: Two-Factor Authentication',
+      content: `We've enhanced our security measures to better protect your account.
+
+## Important Security Updates
+
+- **Two-Factor Authentication**: Now available for all accounts
+- **Session Management**: View and manage active sessions
+- **Password Requirements**: Updated to industry standards
+
+We recommend enabling 2FA for added security.`,
+      category: NewsCategory.SECURITY,
+      status: NewsStatus.PUBLISHED,
+      audience: NewsAudience.ALL,
+      isPinned: false,
+      publishedAt: new Date('2026-01-25T11:00:00Z'),
+    },
+  });
+
+  await prisma.news.create({
+    data: {
+      title: 'Bug Fix: Profile Image Upload',
+      content: `We've fixed an issue that was causing profile image uploads to fail.
+
+**What was fixed:**
+- Images larger than 2MB can now be uploaded
+- Better error messages when upload fails
+- Fixed cropping tool on mobile devices
+
+Thank you to everyone who reported this issue!`,
+      category: NewsCategory.BUG_FIX,
+      status: NewsStatus.PUBLISHED,
+      audience: NewsAudience.ALL,
+      isPinned: false,
+      publishedAt: new Date('2026-01-26T16:00:00Z'),
+    },
+  });
+
+  await prisma.news.create({
+    data: {
+      title: 'Tips: How to Stand Out as a Job Seeker',
+      content: `Here are some tips to help you stand out in your job applications:
+
+## Profile Tips
+
+- **Complete your profile**: Profiles with all sections filled get 3x more views
+- **Add a portfolio**: Showcase your best work
+- **Keep it updated**: Regular updates show you're active
+
+## Application Tips
+
+- **Personalize each application**: Mention specific things about the company
+- **Be responsive**: Quick responses show you're interested
+- **Follow up**: A polite follow-up can make a difference
+
+Good luck with your job search!`,
+      category: NewsCategory.TIPS_AND_TRICKS,
+      status: NewsStatus.PUBLISHED,
+      audience: NewsAudience.JOB_SEEKER,
+      isPinned: false,
+      publishedAt: new Date('2026-01-27T10:00:00Z'),
+    },
+  });
+
+  // Draft news - only visible to admins
+  await prisma.news.create({
+    data: {
+      title: 'Upcoming: Resume Builder Feature',
+      content: `Coming soon: Build your resume directly on JobMatch!
+
+This is a draft announcement - do not publish yet.`,
+      category: NewsCategory.ANNOUNCEMENT,
+      status: NewsStatus.DRAFT,
+      audience: NewsAudience.ALL,
+      isPinned: false,
+    },
+  });
+
+  // Scheduled news - will be auto-published
+  await prisma.news.create({
+    data: {
+      title: 'Scheduled Maintenance: January 30th',
+      content: `We will be performing scheduled maintenance on January 30th, 2026.
+
+## Maintenance Window
+
+- **Date**: January 30th, 2026
+- **Time**: 2:00 AM - 4:00 AM UTC
+- **Expected Downtime**: 30 minutes
+
+During this time, some features may be unavailable. We apologize for any inconvenience.`,
+      category: NewsCategory.MAINTENANCE,
+      status: NewsStatus.SCHEDULED,
+      audience: NewsAudience.ALL,
+      isPinned: false,
+      scheduledAt: new Date('2026-01-29T10:00:00Z'),
+    },
+  });
+
+  // Event announcement
+  await prisma.news.create({
+    data: {
+      title: 'Virtual Career Fair: February 2026',
+      content: `Join us for our first Virtual Career Fair!
+
+## Event Details
+
+- **Date**: February 15th, 2026
+- **Time**: 10:00 AM - 4:00 PM UTC
+- **Format**: Online video sessions
+
+## Participating Companies
+
+Over 50 companies will be joining, including:
+- Tech giants and startups
+- Finance and consulting firms
+- Healthcare and biotech companies
+
+Register now to reserve your spot!`,
+      category: NewsCategory.EVENT,
+      status: NewsStatus.PUBLISHED,
+      audience: NewsAudience.ALL,
+      isPinned: false,
+      publishedAt: new Date('2026-01-28T08:00:00Z'),
+    },
   });
 
   console.log('Seeding completed successfully!');

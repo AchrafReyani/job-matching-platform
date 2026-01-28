@@ -19,6 +19,7 @@ model User {
   company       Company?
   messages      Message[]
   notifications Notification[]
+  newsRead      NewsRead[]
 }
 
 enum Role {
@@ -173,4 +174,56 @@ model ArchivedMatch {
   deletedBy         String
   deletedByRole     String
   archivedAt        DateTime @default(now())
+}
+
+// News Feature
+enum NewsCategory {
+  RELEASE
+  BUG_FIX
+  ANNOUNCEMENT
+  MAINTENANCE
+  FEATURE_UPDATE
+  SECURITY
+  TIPS_AND_TRICKS
+  EVENT
+}
+
+enum NewsStatus {
+  DRAFT
+  PUBLISHED
+  SCHEDULED
+}
+
+enum NewsAudience {
+  ALL
+  JOB_SEEKER
+  COMPANY
+}
+
+model News {
+  id          Int           @id @default(autoincrement())
+  title       String
+  content     String
+  category    NewsCategory
+  status      NewsStatus    @default(DRAFT)
+  audience    NewsAudience  @default(ALL)
+  isPinned    Boolean       @default(false)
+  scheduledAt DateTime?
+  publishedAt DateTime?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  readBy      NewsRead[]
+}
+
+model NewsRead {
+  id        Int      @id @default(autoincrement())
+  newsId    Int
+  userId    String
+  readAt    DateTime @default(now())
+
+  news      News     @relation(fields: [newsId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([newsId, userId])
 }
