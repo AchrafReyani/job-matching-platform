@@ -35,6 +35,7 @@ services:
       # Mount source code for hot-reload
       - ./apps/backend/src:/app/src
       - ./apps/backend/prisma:/app/prisma
+      - ./apps/backend/test:/app/test
       - ./apps/backend/tsconfig.json:/app/tsconfig.json
       - ./apps/backend/eslint.config.mjs:/app/eslint.config.mjs
       # Prevent overwriting node_modules from container
