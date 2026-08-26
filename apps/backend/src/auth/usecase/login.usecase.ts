@@ -19,7 +19,8 @@ export class LoginUseCase {
   async execute(dto: LoginDto): Promise<LoginResult> {
     const user = await this.authRepository.findUserByEmail(dto.email);
 
-    if (!user) {
+    // Users created through LINE login have no password.
+    if (!user || !user.passwordHash) {
       throw new UnauthorizedException('Invalid credentials');
     }
 

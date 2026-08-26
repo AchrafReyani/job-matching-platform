@@ -62,6 +62,30 @@ export async function login(
 }
 
 /* ---------------------------------------------
+   LINE LOGIN (via renkei, brokered by the backend)
+---------------------------------------------- */
+
+export type LineSignupRole = 'job-seeker' | 'company';
+
+/**
+ * Where the browser goes to start a LINE login. The backend redirects to
+ * renkei -> LINE -> back to the backend, which finally lands on
+ * /login/line#token=... on this site. The role only matters for first-time
+ * LINE users; existing accounts keep their stored role.
+ */
+export function lineLoginUrl(role: LineSignupRole): string {
+  const base = process.env.NEXT_PUBLIC_API_URL as string;
+  return `${base}/auth/line/start?role=${role}`;
+}
+
+/** Reads the access token the backend put in the URL fragment after a LINE login. */
+export function readTokenFromFragment(hash: string): string | null {
+  const params = new URLSearchParams(hash.replace(/^#/, ''));
+  const token = params.get('token');
+  return token && token.length > 0 ? token : null;
+}
+
+/* ---------------------------------------------
    PROFILE (Protected — now uses authRequest)
 ---------------------------------------------- */
 

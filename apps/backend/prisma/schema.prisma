@@ -10,7 +10,8 @@ generator client {
 model User {
   id                      String   @id @default(uuid())
   email                   String   @unique
-  passwordHash            String
+  passwordHash            String?
+  lineSub                 String?  @unique
   role                    Role
   createdAt               DateTime @default(now())
   notificationPreferences Json     @default("{}")

@@ -44,7 +44,15 @@
     "goBack": "Ga terug",
     "invalidCredentials": "Ongeldige e-mail of wachtwoord",
     "alreadyHaveAccount": "Heb je al een account?",
-    "loginHere": "Log hier in"
+    "loginHere": "Log hier in",
+    "or": "of",
+    "lineLogin": "Inloggen met LINE",
+    "lineAsJobSeeker": "Doorgaan met LINE als werkzoekende",
+    "lineAsCompany": "Doorgaan met LINE als bedrijf",
+    "lineRegister": "Liever registreren met LINE",
+    "lineFinishing": "LINE-login afronden...",
+    "lineError": "Inloggen met LINE is mislukt. Probeer het opnieuw.",
+    "lineHint": "Eerste keer? Kies een rol. Heb je hier al een LINE-account, dan gebruiken we die."
   },
   "Register": {
     "jobSeeker": {

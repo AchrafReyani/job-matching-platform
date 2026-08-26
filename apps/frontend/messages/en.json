@@ -44,7 +44,15 @@
     "goBack": "Go back",
     "invalidCredentials": "Invalid email or password",
     "alreadyHaveAccount": "Already have an account?",
-    "loginHere": "Login here"
+    "loginHere": "Login here",
+    "or": "or",
+    "lineLogin": "Log in with LINE",
+    "lineAsJobSeeker": "Continue with LINE as a job seeker",
+    "lineAsCompany": "Continue with LINE as a company",
+    "lineRegister": "Register with LINE instead",
+    "lineFinishing": "Finishing LINE login...",
+    "lineError": "LINE login failed. Please try again.",
+    "lineHint": "First time? Pick a role. If you already have a LINE account here, we use your existing one."
   },
   "Register": {
     "jobSeeker": {
