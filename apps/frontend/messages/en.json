@@ -138,7 +138,11 @@
       "description": "Description",
       "name": "Name",
       "portfolio": "Portfolio",
-      "experience": "Experience"
+      "experience": "Experience",
+      "lineFriendLabel": "LINE Official Account",
+      "lineFriendYes": "Added as friend",
+      "lineFriendNo": "Not added yet",
+      "lineFriendUnknown": "Unknown"
     },
     "form": {
       "companyName": "Company Name",

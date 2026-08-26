@@ -67,6 +67,7 @@ export class PrismaUserManagementRepository
         role: true,
         passwordHash: true,
         lineSub: true,
+        lineFriend: true,
         createdAt: true,
         notificationPreferences: true,
         jobSeeker: {
