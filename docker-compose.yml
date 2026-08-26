@@ -38,6 +38,7 @@ services:
       - ./apps/backend/test:/app/test
       - ./apps/backend/tsconfig.json:/app/tsconfig.json
       - ./apps/backend/eslint.config.mjs:/app/eslint.config.mjs
+      - ./apps/backend/.prettierrc:/app/.prettierrc
       # Prevent overwriting node_modules from container
       - /app/node_modules
     depends_on:
