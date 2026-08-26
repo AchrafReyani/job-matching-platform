@@ -13,7 +13,8 @@ export class ValidateUserUseCase {
   async execute(email: string, password: string): Promise<User | null> {
     const user = await this.userRepository.findByEmail(email);
 
-    if (!user) {
+    // LINE-only accounts have no password to validate.
+    if (!user || !user.passwordHash) {
       return null;
     }
 

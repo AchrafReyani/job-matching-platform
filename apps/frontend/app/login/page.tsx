@@ -3,7 +3,8 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
-import { login, getProfile } from '@/lib/auth/api';
+import { login, getProfile, lineLoginUrl } from '@/lib/auth/api';
+import type { LineSignupRole } from '@/lib/auth/api';
 import { saveToken, getToken, clearToken } from '@/lib/api';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
@@ -16,6 +17,19 @@ export default function LoginPage() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+
+  // The backend sends the browser back to /login?error=line when a LINE login fails.
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('error') === 'line') {
+      setError(t('lineError'));
+      window.history.replaceState(null, '', window.location.pathname);
+    }
+  }, [t]);
+
+  const startLineLogin = (role: LineSignupRole) => {
+    window.location.assign(lineLoginUrl(role));
+  };
 
   useEffect(() => {
     const checkExistingSession = async () => {
@@ -105,6 +119,32 @@ export default function LoginPage() {
             {loading ? t('loggingIn') : t('login')}
           </Button>
         </form>
+
+        <div className="my-6 flex items-center gap-3 text-xs uppercase text-(--color-muted)">
+          <span className="h-px flex-1 bg-(--color-muted)" />
+          {t('or')}
+          <span className="h-px flex-1 bg-(--color-muted)" />
+        </div>
+
+        <div className="flex flex-col gap-3" aria-label={t('lineLogin')}>
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => startLineLogin('job-seeker')}
+          >
+            {t('lineAsJobSeeker')}
+          </Button>
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => startLineLogin('company')}
+          >
+            {t('lineAsCompany')}
+          </Button>
+          <p className="text-xs text-center text-(--color-muted)">
+            {t('lineHint')}
+          </p>
+        </div>
 
         <div className="mt-6 text-center text-sm text-(--color-text)">
           <p>

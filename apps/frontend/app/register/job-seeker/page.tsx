@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
-import { registerJobSeeker, login } from '@/lib/auth/api';
+import { registerJobSeeker, login, lineLoginUrl } from '@/lib/auth/api';
 import { saveToken } from '@/lib/api';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
@@ -89,6 +89,15 @@ export default function RegisterJobSeekerPage() {
             {loading ? t('registering') : t('register')}
           </Button>
         </form>
+
+        <div className="mt-4 text-center text-sm">
+          <a
+            href={lineLoginUrl('job-seeker')}
+            className="text-(--color-primary) hover:underline font-medium"
+          >
+            {tAuth('lineRegister')}
+          </a>
+        </div>
 
         <div className="mt-6 text-center text-sm text-(--color-text)">
           <p>

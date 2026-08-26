@@ -4,6 +4,8 @@ import {
   login,
   getProfile,
   updateProfile,
+  lineLoginUrl,
+  readTokenFromFragment,
 } from './api';
 
 process.env.NEXT_PUBLIC_API_URL =
@@ -105,6 +107,29 @@ describe('getProfile', () => {
     });
     const res = await getProfile();
     expect(res.id).toBe('user-1');
+  });
+});
+
+describe('lineLoginUrl', () => {
+  it('points at the backend start endpoint with the chosen role', () => {
+    const base = process.env.NEXT_PUBLIC_API_URL;
+    expect(lineLoginUrl('job-seeker')).toBe(`${base}/auth/line/start?role=job-seeker`);
+    expect(lineLoginUrl('company')).toBe(`${base}/auth/line/start?role=company`);
+  });
+});
+
+describe('readTokenFromFragment', () => {
+  it('extracts the token from the URL fragment', () => {
+    expect(readTokenFromFragment('#token=abc.def.ghi')).toBe('abc.def.ghi');
+    expect(readTokenFromFragment('token=abc')).toBe('abc');
+    expect(readTokenFromFragment('#token=a%2Bb')).toBe('a+b');
+  });
+
+  it('returns null when there is no token', () => {
+    expect(readTokenFromFragment('')).toBeNull();
+    expect(readTokenFromFragment('#')).toBeNull();
+    expect(readTokenFromFragment('#token=')).toBeNull();
+    expect(readTokenFromFragment('#other=1')).toBeNull();
   });
 });
 

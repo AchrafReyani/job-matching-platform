@@ -13,6 +13,7 @@ describe('ChangePasswordUseCase', () => {
     id: 'user-123',
     email: 'test@example.com',
     passwordHash: 'hashedPassword',
+    lineSub: null,
     role: 'JOB_SEEKER' as const,
     createdAt: new Date(),
     notificationPreferences: {},

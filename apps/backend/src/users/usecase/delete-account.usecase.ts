@@ -37,11 +37,11 @@ export class DeleteAccountUseCase {
       throw new BadRequestException('Admin accounts cannot be self-deleted');
     }
 
-    // Verify password
-    const isPasswordValid = await bcrypt.compare(
-      input.password,
-      user.passwordHash,
-    );
+    // Verify password. LINE-only accounts have none; the DELETE confirmation
+    // is the only check we can ask of them.
+    const isPasswordValid = user.passwordHash
+      ? await bcrypt.compare(input.password, user.passwordHash)
+      : true;
     if (!isPasswordValid) {
       throw new UnauthorizedException('Password is incorrect');
     }

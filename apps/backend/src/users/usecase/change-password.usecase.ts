@@ -27,6 +27,13 @@ export class ChangePasswordUseCase {
       throw new UnauthorizedException('User not found');
     }
 
+    // Accounts created through LINE login have no password to change.
+    if (!user.passwordHash) {
+      throw new BadRequestException(
+        'This account signs in with LINE and has no password',
+      );
+    }
+
     // Verify current password
     const isCurrentPasswordValid = await bcrypt.compare(
       input.currentPassword,
