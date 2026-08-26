@@ -1,31 +1,43 @@
-'use client';
+"use client";
 
-import { useTranslations } from 'next-intl';
-import ProfileField from '@/components/common/ProfileField';
-import type { ProfileResponse } from '@/lib/auth/types';
+import { useTranslations } from "next-intl";
+import ProfileField from "@/components/common/ProfileField";
+import type { ProfileResponse } from "@/lib/auth/types";
+import LineFriendBadge from "@/features/profile/components/LineFriendBadge";
 
-export default function ProfileDetailsCompany({ profile }: { profile: ProfileResponse }) {
-  const t = useTranslations('Profile.details');
+export default function ProfileDetailsCompany({
+  profile,
+}: {
+  profile: ProfileResponse;
+}) {
+  const t = useTranslations("Profile.details");
   const company = profile.company;
 
-  if (!company) return <p className="text-[var(--color-text)] opacity-70">{t('noCompanyProfile')}</p>;
+  if (!company)
+    return (
+      <p className="text-[var(--color-text)] opacity-70">
+        {t("noCompanyProfile")}
+      </p>
+    );
 
   return (
     <div className="space-y-3">
-      <ProfileField label={t('email')} value={profile.email} />
+      <ProfileField label={t("email")} value={profile.email} />
       <ProfileField
-        label={t('createdAt')}
+        label={t("createdAt")}
         value={new Date(profile.createdAt).toLocaleString()}
       />
 
       <div className="mt-4 border-t border-[var(--color-secondary)] pt-3">
-        <h2 className="font-semibold text-lg mb-2 text-[var(--color-text)]">{t('companyInfo')}</h2>
+        <h2 className="font-semibold text-lg mb-2 text-[var(--color-text)]">
+          {t("companyInfo")}
+        </h2>
 
-        <ProfileField label={t('companyName')} value={company.companyName} />
+        <ProfileField label={t("companyName")} value={company.companyName} />
 
         {company.websiteUrl && (
           <p className="text-[var(--color-text)]">
-            <strong>{t('website')}:</strong>{' '}
+            <strong>{t("website")}:</strong>{" "}
             <a
               href={company.websiteUrl}
               target="_blank"
@@ -38,9 +50,11 @@ export default function ProfileDetailsCompany({ profile }: { profile: ProfileRes
         )}
 
         {company.description && (
-          <ProfileField label={t('description')} value={company.description} />
+          <ProfileField label={t("description")} value={company.description} />
         )}
       </div>
+
+      <LineFriendBadge profile={profile} />
     </div>
   );
 }

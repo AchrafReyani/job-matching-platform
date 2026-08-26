@@ -138,7 +138,11 @@
       "description": "Omschrijving",
       "name": "Naam",
       "portfolio": "Portfolio",
-      "experience": "Ervaring"
+      "experience": "Ervaring",
+      "lineFriendLabel": "LINE Official Account",
+      "lineFriendYes": "Toegevoegd als vriend",
+      "lineFriendNo": "Nog niet toegevoegd",
+      "lineFriendUnknown": "Onbekend"
     },
     "form": {
       "companyName": "Bedrijfsnaam",

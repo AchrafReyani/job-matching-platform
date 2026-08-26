@@ -25,6 +25,7 @@ export class PrismaAuthRepository implements AuthRepository {
           email: data.email,
           lineSub: data.lineSub,
           role: data.role,
+          lineFriend: data.lineFriend ?? null,
         },
       });
 
@@ -39,6 +40,13 @@ export class PrismaAuthRepository implements AuthRepository {
       }
 
       return user;
+    });
+  }
+
+  async setLineFriend(userId: string, friend: boolean): Promise<void> {
+    await this.prisma.user.update({
+      where: { id: userId },
+      data: { lineFriend: friend },
     });
   }
 }

@@ -12,6 +12,7 @@ model User {
   email                   String   @unique
   passwordHash            String?
   lineSub                 String?  @unique
+  lineFriend              Boolean?
   role                    Role
   createdAt               DateTime @default(now())
   notificationPreferences Json     @default("{}")

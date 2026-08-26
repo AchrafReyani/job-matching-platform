@@ -5,8 +5,11 @@ export interface LoginResponse {
 export interface ProfileResponse {
   id: string;
   email: string;
-  role: 'JOB_SEEKER' | 'COMPANY' | 'ADMIN';
+  role: "JOB_SEEKER" | "COMPANY" | "ADMIN";
   createdAt: string;
+  lineSub?: string | null;
+  /** Whether the user has added the LINE Official Account as a friend. */
+  lineFriend?: boolean | null;
   jobSeeker?: {
     id: number;
     fullName?: string;
@@ -34,5 +37,4 @@ export interface UpdateCompanyProfile {
 }
 
 export type UpdateProfileRequest =
-  | UpdateJobSeekerProfile
-  | UpdateCompanyProfile;
+  UpdateJobSeekerProfile | UpdateCompanyProfile;

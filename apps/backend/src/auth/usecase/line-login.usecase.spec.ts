@@ -1,6 +1,6 @@
-import { Test, TestingModule } from '@nestjs/testing';
 import { ConflictException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { Test, TestingModule } from '@nestjs/testing';
 import * as authRepository from '../repository/auth.repository';
 import { LineLoginUseCase, placeholderEmail } from './line-login.usecase';
 
@@ -10,6 +10,7 @@ describe('LineLoginUseCase', () => {
     findUserByEmail: jest.fn(),
     findUserByLineSub: jest.fn(),
     createLineUser: jest.fn(),
+    setLineFriend: jest.fn(),
   };
   const mockJwtService = {
     sign: jest.fn(),
@@ -58,7 +59,7 @@ describe('LineLoginUseCase', () => {
     expect(result).toEqual({ access_token: 'jwt-token' });
   });
 
-  it('creates a job seeker on first login using the LINE display name', async () => {
+  it('creates a job seeker on first login using the LINE display name and friend status', async () => {
     mockRepo.findUserByLineSub.mockResolvedValue(null);
     mockRepo.findUserByEmail.mockResolvedValue(null);
     mockRepo.createLineUser.mockResolvedValue({
@@ -68,7 +69,7 @@ describe('LineLoginUseCase', () => {
     mockJwtService.sign.mockReturnValue('jwt-token');
 
     const result = await useCase.execute({
-      claims,
+      claims: { ...claims, lineFriend: true },
       requestedRole: 'JOB_SEEKER',
     });
 
@@ -77,6 +78,7 @@ describe('LineLoginUseCase', () => {
       email: 'renkei-sub-1@line.jobmatch.local',
       role: 'JOB_SEEKER',
       displayName: 'Achraf',
+      lineFriend: true,
     });
     expect(mockJwtService.sign).toHaveBeenCalledWith({
       sub: 'user-2',
@@ -101,6 +103,39 @@ describe('LineLoginUseCase', () => {
     );
   });
 
+  it('refreshes friend status on a returning login when the token disagrees', async () => {
+    mockRepo.findUserByLineSub.mockResolvedValue({
+      id: 'user-1',
+      role: 'JOB_SEEKER',
+      lineFriend: false,
+    });
+    mockJwtService.sign.mockReturnValue('jwt-token');
+
+    await useCase.execute({
+      claims: { ...claims, lineFriend: true },
+      requestedRole: 'JOB_SEEKER',
+    });
+
+    expect(mockRepo.setLineFriend).toHaveBeenCalledWith('user-1', true);
+  });
+
+  it('does not touch friend status when the token matches or omits it', async () => {
+    mockRepo.findUserByLineSub.mockResolvedValue({
+      id: 'user-1',
+      role: 'JOB_SEEKER',
+      lineFriend: true,
+    });
+    mockJwtService.sign.mockReturnValue('jwt-token');
+
+    await useCase.execute({
+      claims: { ...claims, lineFriend: true },
+      requestedRole: 'JOB_SEEKER',
+    });
+    await useCase.execute({ claims, requestedRole: 'JOB_SEEKER' }); // no lineFriend in claims
+
+    expect(mockRepo.setLineFriend).not.toHaveBeenCalled();
+  });
+
   it('falls back to a placeholder email and name when renkei provides none', async () => {
     mockRepo.findUserByLineSub.mockResolvedValue(null);
     mockRepo.findUserByEmail.mockResolvedValue(null);
@@ -120,6 +155,7 @@ describe('LineLoginUseCase', () => {
       email: placeholderEmail('ABC'),
       role: 'JOB_SEEKER',
       displayName: 'LINE user',
+      lineFriend: undefined,
     });
     expect(placeholderEmail('ABC')).toBe('line-abc@line.invalid');
   });
