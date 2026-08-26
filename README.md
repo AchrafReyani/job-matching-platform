@@ -79,6 +79,20 @@ be found in the `/docs` folder.
 
 ------------------------------------------------------------------------
 
+## 🤝 Contributing
+
+Contributions are welcome! See **[CONTRIBUTING.md](CONTRIBUTING.md)** for a
+one-command local setup (`docker compose up`), the test/lint commands, and
+project conventions. Good first issues are labelled
+[`good first issue`](https://github.com/AchrafReyani/job-matching-platform/labels/good%20first%20issue).
+
+Optional: the backend can offer **"Continue with LINE"** via
+[renkei](https://github.com/AchrafReyani/renkei) (a self-hosted OIDC broker
+for LINE Login). It stays disabled unless the `RENKEI_*` env vars are set —
+see `apps/backend/.env.example`.
+
+------------------------------------------------------------------------
+
 ## 📜 License
 
 Licensed under the **Apache-2.0 License**.
