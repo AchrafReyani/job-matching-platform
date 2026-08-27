@@ -1,5 +1,4 @@
 import { sendMessage, getMessages } from './api';
-import * as apiUtils from '../api';
 
 process.env.NEXT_PUBLIC_API_URL =
   process.env.NEXT_PUBLIC_API_URL || 'http://localhost';
@@ -38,7 +37,6 @@ afterAll(() => {
 // Mock localStorage for auth token
 beforeEach(() => {
   mockFetch.mockReset();
-  getTokenSpy = jest.spyOn(apiUtils, 'getToken').mockReturnValue('test-token');
 
   const fakeStorage: FakeStorage = {
     store: {},
@@ -67,10 +65,6 @@ beforeEach(() => {
   const mockWindow = { dispatchEvent: dispatchEventMock } as unknown as
     Window & typeof globalThis;
   global.window = mockWindow;
-});
-
-afterEach(() => {
-  getTokenSpy?.mockRestore();
 });
 
 describe('messages API', () => {
