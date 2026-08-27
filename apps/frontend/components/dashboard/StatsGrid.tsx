@@ -1,14 +1,16 @@
 'use client';
 
-import { StatCard } from './StatCard';
+import { StatCard, StatCardSkeleton } from './StatCard';
 import { JobSeekerStats, CompanyStats } from '@/lib/dashboard/types';
 
 interface JobSeekerStatsGridProps {
-  stats: JobSeekerStats;
+  stats?: JobSeekerStats;
+  loading?: boolean;
 }
 
 interface CompanyStatsGridProps {
-  stats: CompanyStats;
+  stats?: CompanyStats;
+  loading?: boolean;
 }
 
 // Icons
@@ -54,7 +56,54 @@ const NewIcon = () => (
   </svg>
 );
 
-export function JobSeekerStatsGrid({ stats }: JobSeekerStatsGridProps) {
+export function JobSeekerStatsGridSkeleton() {
+  return (
+    <div data-testid="job-seeker-stats-skeleton" className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <StatCardSkeleton />
+      <StatCardSkeleton />
+      <StatCardSkeleton />
+      <StatCardSkeleton />
+    </div>
+  );
+}
+
+export function CompanyStatsGridSkeleton() {
+  return (
+    <div data-testid="company-stats-skeleton" className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <StatCardSkeleton />
+      <StatCardSkeleton />
+      <StatCardSkeleton />
+      <StatCardSkeleton />
+      <StatCardSkeleton />
+      <StatCardSkeleton />
+    </div>
+  );
+}
+
+export function AdminStatsGridSkeleton() {
+  return (
+    <div data-testid="admin-stats-skeleton" className="space-y-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <StatCardSkeleton />
+        <StatCardSkeleton />
+        <StatCardSkeleton />
+        <StatCardSkeleton />
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <StatCardSkeleton />
+        <StatCardSkeleton />
+        <StatCardSkeleton />
+        <StatCardSkeleton />
+      </div>
+    </div>
+  );
+}
+
+export function JobSeekerStatsGrid({ stats, loading = false }: JobSeekerStatsGridProps) {
+  if (loading || !stats) {
+    return <JobSeekerStatsGridSkeleton />;
+  }
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
       <StatCard
@@ -85,7 +134,11 @@ export function JobSeekerStatsGrid({ stats }: JobSeekerStatsGridProps) {
   );
 }
 
-export function CompanyStatsGrid({ stats }: CompanyStatsGridProps) {
+export function CompanyStatsGrid({ stats, loading = false }: CompanyStatsGridProps) {
+  if (loading || !stats) {
+    return <CompanyStatsGridSkeleton />;
+  }
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       <StatCard
