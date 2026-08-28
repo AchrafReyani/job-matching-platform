@@ -4,7 +4,7 @@
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import "@testing-library/jest-dom";
-import LoginPage from "../page"; // adjust path to match your actual file location
+import LoginPage from "../page";
 
 // Mocks
 
@@ -99,6 +99,7 @@ describe("LoginPage", () => {
     render(<LoginPage />);
 
     expect(await screen.findByText("LINE login failed")).toBeInTheDocument();
+    expect(window.location.search).toBe("");
   });
 
   it("does not redirect on mount when there is no existing token", async () => {
