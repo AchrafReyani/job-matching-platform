@@ -1,5 +1,6 @@
 # JobMatch --- Modern Job Matching Platform
 
+[![CI](https://github.com/AchrafReyani/job-matching-platform/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/AchrafReyani/job-matching-platform/actions/workflows/ci.yml)
 ![License](https://img.shields.io/badge/license-Apache--2.0-blue)
 ![Vercel](https://img.shields.io/badge/frontend-Vercel-black)
 ![Render](https://img.shields.io/badge/backend-Render-orange)
