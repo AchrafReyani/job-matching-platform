@@ -18,7 +18,6 @@ const mockFetch: jest.MockedFunction<typeof fetch> = jest.fn<
   Parameters<typeof fetch>
 >();
 const originalFetch = global.fetch;
-let getTokenSpy: jest.SpyInstance;
 
 const createJsonResponse = <T,>(data: T, status = 200): Response =>
   new Response(JSON.stringify(data), {
