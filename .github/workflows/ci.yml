@@ -1,0 +1,154 @@
+name: CI
+
+# One workflow, one verdict.
+#
+# Runs on every pull request (including PRs from forks) and on pushes to main.
+# The final `ci-ready` job is the single required status check for `main`:
+# if it is green, the PR is merge-ready; if it is red, expand the failing job
+# to see which lint/test/build step needs attention.
+#
+# Fork PRs run with a read-only GITHUB_TOKEN and no repository secrets, so
+# nothing here may depend on secrets.
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+# Cancel superseded runs for the same PR / branch.
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+env:
+  NODE_VERSION: 20
+
+jobs:
+  frontend:
+    name: Frontend (lint · types · test · build)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/frontend
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+          cache-dependency-path: apps/frontend/package-lock.json
+
+      - name: Install
+        run: npm ci
+
+      - name: Lint (0 errors, 0 warnings)
+        run: npm run lint -- --max-warnings=0
+
+      - name: Type-check
+        run: npx tsc --noEmit
+
+      - name: Unit tests
+        run: npx jest --ci
+
+      - name: Build
+        run: npm run build
+
+  backend:
+    name: Backend (lint · build · unit tests)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/backend
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+          cache-dependency-path: apps/backend/package-lock.json
+
+      - name: Install
+        run: npm ci
+
+      - name: Generate Prisma client
+        run: npx prisma generate
+
+      - name: Lint (0 errors, 0 warnings)
+        run: npm run lint -- --max-warnings=0
+
+      - name: Build (type-check)
+        run: npm run build
+
+      - name: Unit tests
+        run: npx jest --ci
+
+  backend-e2e:
+    name: Backend E2E (Postgres)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/backend
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: test
+          POSTGRES_PASSWORD: testpass
+          POSTGRES_DB: jobmatching_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    env:
+      DATABASE_URL: postgresql://test:testpass@localhost:5432/jobmatching_test
+      JWT_SECRET: test-jwt-secret-for-e2e-testing
+      PORT: 3001
+      FRONTEND_URL: http://localhost:3000
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+          cache-dependency-path: apps/backend/package-lock.json
+
+      - name: Install
+        run: npm ci
+
+      - name: Generate Prisma client
+        run: npx prisma generate
+
+      - name: Run database migrations
+        run: npx prisma migrate deploy
+
+      - name: E2E tests
+        run: npm run test:e2e
+
+  # Single aggregate status. This is the only check that needs to be marked
+  # "required" in branch protection — it is green iff every job above passed.
+  ci-ready:
+    name: ci-ready
+    runs-on: ubuntu-latest
+    needs: [frontend, backend, backend-e2e]
+    if: always()
+    steps:
+      - name: Evaluate job results
+        env:
+          RESULTS: ${{ toJSON(needs) }}
+        run: |
+          echo "$RESULTS" | jq .
+          if echo "$RESULTS" | jq -e 'to_entries | map(.value.result) | all(. == "success")' > /dev/null; then
+            echo "✅ All CI jobs passed — this change is merge-ready."
+          else
+            echo "❌ One or more CI jobs did not succeed. Expand the failing job above for details."
+            exit 1
+          fi
