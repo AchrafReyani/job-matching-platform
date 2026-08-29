@@ -28,7 +28,7 @@
 
 <!-- Example: `Closes #123` -->
 
-> ⚠️ Every PR should address an open issue. If one doesn't exist yet, please [create one](../issues/new/choose) first so the change can be discussed before implementation.
+> ⚠️ Every PR should address an open issue. If one doesn't exist yet, please [create one](https://github.com/AchrafReyani/job-matching-platform/issues/new/choose) first so the change can be discussed before implementation.
 
 ## 🛠️ Changes Made
 
@@ -94,7 +94,7 @@
 
 <!-- Mark each item as done. PRs that skip required items will be sent back for revision. -->
 
-- [ ] I have read and followed [CONTRIBUTING.md](CONTRIBUTING.md).
+- [ ] I have read and followed [CONTRIBUTING.md](https://github.com/AchrafReyani/job-matching-platform/blob/main/CONTRIBUTING.md).
 - [ ] I have performed a **self-review** of my own code.
 - [ ] My changes are **scoped to this issue** — no unrelated changes are included.
 - [ ] **Documentation** has been updated if my changes affect public APIs, config, or user-facing behavior.
