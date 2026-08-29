@@ -1,6 +1,3 @@
-process.env.TEST_ENV = 'unit';
-process.env.NEXT_PUBLIC_API_URL = 'http://localhost:3001';
-
 import {
   getAdminStats,
   getUsers,
@@ -102,7 +99,7 @@ describe('Admin API - Stats', () => {
     const result = await getAdminStats();
 
     const [url, options] = mockFetch.mock.calls[0];
-    expect(url).toBe('http://localhost:3001/admin/stats');
+    expect(url).toBe('http://localhost/admin/stats');
     expect(options?.headers).toBeDefined();
     expect(result).toEqual(mockStats);
   });
@@ -123,7 +120,7 @@ describe('Admin API - User Management', () => {
       const result = await getUsers();
 
       const [url] = mockFetch.mock.calls[0];
-      expect(url).toBe('http://localhost:3001/admin/users');
+      expect(url).toBe('http://localhost/admin/users');
       expect(result.data).toHaveLength(1);
     });
 
@@ -148,7 +145,7 @@ describe('Admin API - User Management', () => {
       const result = await getUserById('user-1');
 
       const [url] = mockFetch.mock.calls[0];
-      expect(url).toBe('http://localhost:3001/admin/users/user-1');
+      expect(url).toBe('http://localhost/admin/users/user-1');
       expect(result).toEqual(mockUser);
     });
   });
@@ -160,7 +157,7 @@ describe('Admin API - User Management', () => {
       await updateUser('user-1', { email: 'new@example.com', name: 'New Name' });
 
       const [url, options] = mockFetch.mock.calls[0];
-      expect(url).toBe('http://localhost:3001/admin/users/user-1');
+      expect(url).toBe('http://localhost/admin/users/user-1');
       expect(options?.method).toBe('PATCH');
       expect(options?.body).toBe(JSON.stringify({ email: 'new@example.com', name: 'New Name' }));
     });
@@ -173,7 +170,7 @@ describe('Admin API - User Management', () => {
       await deleteUser('user-1');
 
       const [url, options] = mockFetch.mock.calls[0];
-      expect(url).toBe('http://localhost:3001/admin/users/user-1');
+      expect(url).toBe('http://localhost/admin/users/user-1');
       expect(options?.method).toBe('DELETE');
     });
   });
@@ -185,7 +182,7 @@ describe('Admin API - User Management', () => {
       const result = await deleteAllJobSeekers();
 
       const [url, options] = mockFetch.mock.calls[0];
-      expect(url).toBe('http://localhost:3001/admin/users/bulk/job-seekers');
+      expect(url).toBe('http://localhost/admin/users/bulk/job-seekers');
       expect(options?.method).toBe('DELETE');
       expect(result.count).toBe(5);
     });
@@ -198,7 +195,7 @@ describe('Admin API - User Management', () => {
       const result = await deleteAllCompanies();
 
       const [url, options] = mockFetch.mock.calls[0];
-      expect(url).toBe('http://localhost:3001/admin/users/bulk/companies');
+      expect(url).toBe('http://localhost/admin/users/bulk/companies');
       expect(options?.method).toBe('DELETE');
       expect(result.count).toBe(3);
     });
@@ -220,7 +217,7 @@ describe('Admin API - Vacancy Management', () => {
       const result = await getVacancies();
 
       const [url] = mockFetch.mock.calls[0];
-      expect(url).toBe('http://localhost:3001/admin/vacancies');
+      expect(url).toBe('http://localhost/admin/vacancies');
       expect(result.data).toHaveLength(1);
     });
 
@@ -244,7 +241,7 @@ describe('Admin API - Vacancy Management', () => {
       const result = await getVacancyById(1);
 
       const [url] = mockFetch.mock.calls[0];
-      expect(url).toBe('http://localhost:3001/admin/vacancies/1');
+      expect(url).toBe('http://localhost/admin/vacancies/1');
       expect(result).toEqual(mockVacancy);
     });
   });
@@ -256,7 +253,7 @@ describe('Admin API - Vacancy Management', () => {
       await updateVacancy(1, { title: 'New Title', salaryRange: '$100k-$150k' });
 
       const [url, options] = mockFetch.mock.calls[0];
-      expect(url).toBe('http://localhost:3001/admin/vacancies/1');
+      expect(url).toBe('http://localhost/admin/vacancies/1');
       expect(options?.method).toBe('PATCH');
       expect(options?.body).toBe(JSON.stringify({ title: 'New Title', salaryRange: '$100k-$150k' }));
     });
@@ -269,7 +266,7 @@ describe('Admin API - Vacancy Management', () => {
       await deleteVacancy(1);
 
       const [url, options] = mockFetch.mock.calls[0];
-      expect(url).toBe('http://localhost:3001/admin/vacancies/1');
+      expect(url).toBe('http://localhost/admin/vacancies/1');
       expect(options?.method).toBe('DELETE');
     });
   });
@@ -281,7 +278,7 @@ describe('Admin API - Vacancy Management', () => {
       const result = await deleteAllVacancies();
 
       const [url, options] = mockFetch.mock.calls[0];
-      expect(url).toBe('http://localhost:3001/admin/vacancies/bulk/all');
+      expect(url).toBe('http://localhost/admin/vacancies/bulk/all');
       expect(options?.method).toBe('DELETE');
       expect(result.count).toBe(10);
     });

@@ -93,7 +93,7 @@ describe('request()', () => {
     const result = await request('/test');
 
     const [url, options] = mockFetch.mock.calls[0];
-    expect(url).toBe('http://localhost:3001/test');
+    expect(url).toBe('http://localhost/test');
     const headers = new Headers(options?.headers ?? {});
     expect(headers.get('Content-Type')).toBe('application/json');
 

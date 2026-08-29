@@ -33,6 +33,10 @@
     "typescript": "^5"
   },
   "devDependencies": {
+    "@testing-library/dom": "^10.4.1",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.2",
+    "@testing-library/user-event": "^14.6.6",
     "@types/jest": "^30.0.0",
     "@types/whatwg-fetch": "^0.0.33",
     "dotenv": "^17.2.3",
