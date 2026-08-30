@@ -20,7 +20,7 @@ body:
     id: area
     attributes:
       label: Affected Area
-      description: Select all that apply (at least one required).
+      description: Select all that apply.
       options:
         - label: Frontend
         - label: Backend
@@ -154,7 +154,7 @@ body:
       label: Pre-Submission Checklist
       description: Please confirm all of the following before submitting.
       options:
-        - label: I have search the existing issues to make sure this feature hasn't already been requested.
+        - label: I have searched the existing issues and confirmed this feature hasn't already been requested.
           required: true
         - label: I have described the **problem** clearly, not just the solution.
           required: true

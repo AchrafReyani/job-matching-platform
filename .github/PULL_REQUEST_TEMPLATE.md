@@ -53,9 +53,9 @@
 
 ## ⚙️ Configuration & Migrations
 <!-- Check the boxes that apply. If N/A, just leave it unchecked or check the last one. -->
-- [ ] This PR requires new **environment variables**. (I have updated `.env.example` and documented them).
-- [ ] This PR includes **database migrations**. (I have verified them locally).
-- [ ] N/A - No new env vars or migrations.
+- [ ] This PR requires new **environment variables** (I have updated `.env.example` and documented them).
+- [ ] This PR includes **database migrations** (I have verified them locally).
+- [ ] N/A — No new environment variables or migrations.
 
 ## 🧪 Testing
 
@@ -95,6 +95,7 @@
 <!-- Mark each item as done. PRs that skip required items will be sent back for revision. -->
 
 - [ ] I have read and followed [CONTRIBUTING.md](https://github.com/AchrafReyani/job-matching-platform/blob/main/CONTRIBUTING.md).
+- [ ] **Lint and tests pass** locally in every package I touched (`npm run lint` and `npm test` in `apps/frontend` and/or `apps/backend` — see [CONTRIBUTING.md](https://github.com/AchrafReyani/job-matching-platform/blob/main/CONTRIBUTING.md#tests-lint-types-run-before-every-pr)).
 - [ ] I have performed a **self-review** of my own code.
 - [ ] My changes are **scoped to this issue** — no unrelated changes are included.
 - [ ] **Documentation** has been updated if my changes affect public APIs, config, or user-facing behavior.

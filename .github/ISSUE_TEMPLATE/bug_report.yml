@@ -12,7 +12,7 @@ body:
 
         Please fill in as much detail as possible so we can reproduce and fix the issue quickly.
 
-        > **Before submitting**, please search the existing issues to make sure this bug hasn't already been requested.
+        > **Before submitting**, please search the existing issues to make sure this bug hasn't already been reported.
 
   # Affected area
 
@@ -221,7 +221,7 @@ body:
       label: ✅ Pre-Submission Checklist
       description: Please confirm all of the following before submitting.
       options:
-        - label: I have search the existing issues to make sure this feature hasn't already been requested.
+        - label: I have searched the existing issues and confirmed this bug hasn't already been reported.
           required: true
         - label: I am on the latest version of the project.
           required: true
