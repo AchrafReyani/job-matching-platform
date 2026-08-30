@@ -115,7 +115,7 @@ export default function LoginPage() {
             </p>
           )}
 
-          <Button type="submit" disabled={loading}>
+          <Button type="submit" loading={loading} disabled={loading}>
             {loading ? t('loggingIn') : t('login')}
           </Button>
         </form>

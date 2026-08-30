@@ -85,7 +85,7 @@ export default function RegisterJobSeekerPage() {
             </p>
           )}
 
-          <Button type="submit" disabled={loading}>
+          <Button type="submit" loading={loading} disabled={loading}>
             {loading ? t('registering') : t('register')}
           </Button>
         </form>
