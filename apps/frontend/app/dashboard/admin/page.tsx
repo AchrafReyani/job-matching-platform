@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { DashboardLayout } from '@/components/layout/DashboardLayout';
 import { StatCard } from '@/components/dashboard/StatCard';
+import { AdminStatsGridSkeleton } from '@/components/dashboard/StatsGrid';
 import { getAdminStats } from '@/lib/admin/api';
 import { AdminStats } from '@/lib/admin/types';
 import Link from 'next/link';
@@ -76,19 +77,13 @@ export default function AdminDashboardPage() {
           </p>
         </div>
 
-        {loading && (
-          <div className="text-center py-8">
-            <p className="text-[var(--color-text)]">{t('loadingStats')}</p>
-          </div>
-        )}
-
-        {error && (
+        {loading ? (
+          <AdminStatsGridSkeleton />
+        ) : error ? (
           <div className="bg-red-100 text-red-700 p-4 rounded-lg">
             {error}
           </div>
-        )}
-
-        {stats && (
+        ) : stats ? (
           <>
             {/* Main Stats */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -174,7 +169,7 @@ export default function AdminDashboardPage() {
               </Link>
             </div>
           </>
-        )}
+        ) : null}
       </div>
     </DashboardLayout>
   );

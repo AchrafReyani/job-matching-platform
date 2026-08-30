@@ -63,6 +63,28 @@ npx tsc --noEmit
 npm run lint
 ```
 
+## CI — what runs on your pull request
+
+Every pull request — including PRs from forks, from any GitHub account — gets
+the same automated check for free. The single **`CI`** workflow
+(`.github/workflows/ci.yml`) runs three jobs in parallel and rolls them up
+into one status called **`ci-ready`**:
+
+| Job              | What it runs                                                            |
+| ---------------- | ----------------------------------------------------------------------- |
+| `frontend`       | `npm run lint --max-warnings=0` · `tsc --noEmit` · `jest` · `next build` |
+| `backend`        | `prisma generate` · `npm run lint --max-warnings=0` · `nest build` · `jest` |
+| `backend-e2e`    | `prisma migrate deploy` + `npm run test:e2e` against a Postgres service  |
+
+- **`ci-ready` green ⇒ your PR is merge-ready.** It is the only required
+  status check on `main`.
+- **`ci-ready` red ⇒** open the failing job in the *Checks* tab; the step name
+  tells you which of the commands above to run locally.
+- CI runs on a fresh Linux checkout with **no secrets**, so it cannot depend on
+  `.env` values — everything it needs is in the workflow file.
+- The Vercel check that may also appear on PRs is a preview deployment, not a
+  test; it is not required for merging.
+
 ## Conventions
 
 - **Clean architecture** on the backend: a controller calls a use case,

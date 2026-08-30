@@ -3,12 +3,11 @@
 import { useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { DashboardLayout } from '@/components/layout/DashboardLayout';
-import { CompanyStatsGrid } from '@/components/dashboard/StatsGrid';
+import { CompanyStatsGrid, CompanyStatsGridSkeleton } from '@/components/dashboard/StatsGrid';
 import { NotificationList } from '@/components/notifications/NotificationList';
 import { getDashboardStats } from '@/lib/dashboard/api';
 import { CompanyStats } from '@/lib/dashboard/types';
 import { Card } from '@/components/ui/Card';
-import { LoadingContainer } from '@/components/ui/LoadingSpinner';
 
 export default function CompanyDashboard() {
   const t = useTranslations('Dashboard.company');
@@ -43,7 +42,7 @@ export default function CompanyDashboard() {
 
         {/* Stats Section */}
         {loading ? (
-          <LoadingContainer />
+          <CompanyStatsGridSkeleton />
         ) : error ? (
           <div className="text-center py-8 text-red-500">{error}</div>
         ) : stats ? (

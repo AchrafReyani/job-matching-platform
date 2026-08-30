@@ -5,7 +5,6 @@ import {
   updateApplication,
   getApplicationById,
 } from './api';
-import * as apiUtils from '../api';
 
 process.env.NEXT_PUBLIC_API_URL =
   process.env.NEXT_PUBLIC_API_URL || 'http://localhost';
@@ -25,7 +24,6 @@ const mockFetch: jest.MockedFunction<typeof fetch> = jest.fn<
   Parameters<typeof fetch>
 >();
 const originalFetch = global.fetch;
-let getTokenSpy: jest.SpyInstance;
 
 beforeAll(() => {
   global.fetch = mockFetch;
@@ -37,7 +35,6 @@ afterAll(() => {
 
 beforeEach(() => {
   mockFetch.mockReset();
-  getTokenSpy = jest.spyOn(apiUtils, 'getToken').mockReturnValue('test-token');
 
   const fakeStorage: FakeStorage = {
     store: {},
@@ -54,10 +51,6 @@ beforeEach(() => {
   const mockWindow = { dispatchEvent: dispatchEventMock } as unknown as
     Window & typeof globalThis;
   global.window = mockWindow;
-});
-
-afterEach(() => {
-  getTokenSpy?.mockRestore();
 });
 
 describe('createApplication', () => {
