@@ -1,0 +1,164 @@
+name: 🚀 Feature Request
+description: Propose a new feature or meaningful improvement to the project.
+title: "[Feature]: "
+labels:
+  - enhancement
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for suggesting an improvement! 💡
+
+        Great feature requests start with the problem you're trying to solve. Help us understand the pain point before proposing a solution.
+
+        > **Before submitting**, please search the existing issues to make sure this feature hasn't already been requested.
+
+  # Affected area
+
+  - type: checkboxes
+    id: area
+    attributes:
+      label: Affected Area
+      description: Select all that apply.
+      options:
+        - label: Frontend
+        - label: Backend
+        - label: Documentation
+        - label: CI/CD
+        - label: Tooling
+
+  # Problem → solution → alternatives
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: 🤔 Problem Statement
+      description: |
+        What problem are you trying to solve? Who is affected and how?
+        Avoid jumping straight to a solution — help us understand the pain point first.
+      placeholder: |
+        As a job seeker, I find it difficult to… because…
+        This causes frustration when…
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: 💡 Proposed Solution
+      description: |
+        Describe the feature or change you'd like to see. Be as specific as possible.
+        Include user flows, API shapes, or UI sketches where relevant.
+      placeholder: |
+        I would like the platform to…
+        The new endpoint could accept…
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: 🔄 Alternatives Considered
+      description: |
+        What other solutions or workarounds have you considered?
+        Why is your proposed solution better?
+      placeholder: |
+        I considered using X but it doesn't work because…
+        The existing Y feature is close but lacks…
+    validations:
+      required: true
+
+  # Impact & scope
+
+  - type: textarea
+    id: benefits
+    attributes:
+      label: ✨ Benefits
+      description: Who benefits from this feature and how? (users, maintainers, performance, DX…)
+      placeholder: |
+        - Job seekers can filter results faster
+        - Reduces API round-trips by X%
+        - Simplifies onboarding for new contributors
+    validations:
+      required: true
+
+  - type: textarea
+    id: drawbacks
+    attributes:
+      label: ⚠️ Possible Drawbacks
+      description: |
+        Are there any trade-offs, risks, or known limitations with this approach?
+        Honest assessment helps us evaluate the request fairly.
+      placeholder: |
+        - Increases bundle size by ~X KB
+        - Requires a database migration
+        - May conflict with the existing role-based access model
+    validations:
+      required: false
+
+  - type: input
+    id: persona
+    attributes:
+      label: Target Audience
+      description: Which specific user persona or role benefits most from this?
+      placeholder: "e.g. Job seekers, Employers, Admins, Unauthenticated users"
+    validations:
+      required: false
+
+  # Design & complexity
+
+  - type: textarea
+    id: mockups
+    attributes:
+      label: 🎨 Mockups or Designs
+      description: |
+        Attach wireframes, screenshots, Figma links, or ASCII diagrams that illustrate your idea.
+        GitHub supports direct image paste into this field.
+      placeholder: "Drag & drop an image, paste a Figma link, or sketch it in ASCII…"
+    validations:
+      required: false
+
+  - type: dropdown
+    id: complexity
+    attributes:
+      label: Estimated Complexity
+      description: How much effort do you think this will take to implement?
+      options:
+        - Small (a few hours / quick win)
+        - Medium (a few days / standard feature)
+        - Large (weeks / requires architectural changes)
+        - Unknown / needs investigation
+    validations:
+      required: false
+
+  # Additional context
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: 📎 Additional Context
+      description: Any other context, related issues, prior art from other projects, or references.
+      placeholder: |
+        Related issues: #123
+        Similar feature: https://example.com
+        Design discussion: https://...
+    validations:
+      required: false
+
+  # Checklist
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Pre-Submission Checklist
+      description: Please confirm all of the following before submitting.
+      options:
+        - label: I have searched the existing issues and confirmed this feature hasn't already been requested.
+          required: true
+        - label: I have described the **problem** clearly, not just the solution.
+          required: true
+        - label: I have considered the drawbacks of my proposal.
+          required: true
+        - label: I am willing to help implement this feature or assist with testing.
+          required: false

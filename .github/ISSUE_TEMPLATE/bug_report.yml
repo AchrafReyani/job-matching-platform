@@ -1,0 +1,231 @@
+name: 🐛 Bug Report
+description: Report a reproducible bug so we can fix it.
+title: "[Bug]: "
+labels:
+  - bug
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for taking the time to report a bug! 🙏
+
+        Please fill in as much detail as possible so we can reproduce and fix the issue quickly.
+
+        > **Before submitting**, please search the existing issues to make sure this bug hasn't already been reported.
+
+  # Affected area
+
+  - type: checkboxes
+    id: area
+    attributes:
+      label: Affected Area
+      options:
+        - label: Frontend
+        - label: Backend
+        - label: Documentation
+        - label: CI/CD
+        - label: Tooling
+
+  # Bug description
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: A clear and concise summary of the bug.
+      placeholder: "When I do X, Y happens instead of Z."
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected-behavior
+    attributes:
+      label: 🟢 Expected Behavior
+      description: What should happen? Describe the behaviour you were expecting.
+      placeholder: "The app should display the job listing / return a 200 OK…"
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual-behavior
+    attributes:
+      label: 🔴 Actual Behavior
+      description: What actually happens instead?
+      placeholder: "The app crashes with a 500 error / returns an empty array…"
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps-to-reproduce
+    attributes:
+      label: Steps to Reproduce
+      description: Provide the exact steps needed to reliably reproduce the bug.
+      placeholder: |
+        1. Go to '…'
+        2. Click on '…'
+        3. Scroll down to '…'
+        4. See error
+    validations:
+      required: true
+
+  # Frequency & regression
+
+  - type: dropdown
+    id: frequency
+    attributes:
+      label: How often does this happen?
+      options:
+        - Always (100%)
+        - Often (> 50%)
+        - Sometimes (10–50%)
+        - Rarely (< 10%)
+        - Only happened once
+    validations:
+      required: true
+
+  - type: dropdown
+    id: regression
+    attributes:
+      label: Is this a regression?
+      description: Did this work correctly in a previous version?
+      options:
+        - "Yes – it worked before"
+        - "No – it never worked"
+        - Not sure
+    validations:
+      required: true
+
+  # Logs & screenshots
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant Logs or Stack Traces
+      description: |
+        Paste console output, server logs, or stack traces here.
+        Even partial logs help — include them even if you don't fully understand them.
+      placeholder: |
+        Error: Cannot read properties of undefined (reading 'id')
+            at JobService.findOne (apps/backend/src/jobs/jobs.service.ts:42:18)
+      render: shell
+    validations:
+      required: false
+
+  - type: textarea
+    id: screenshots
+    attributes:
+      label: Screenshots or Recordings
+      description: |
+        Paste screenshots, screen recordings that illustrate the bug.
+        GitHub supports direct image/video paste into this field.
+      placeholder: "Drag & drop images here, or paste a URL."
+    validations:
+      required: false
+
+  # Environment
+
+  - type: markdown
+    attributes:
+      value: "### Environment"
+
+  - type: input
+    id: project-version
+    attributes:
+      label: Project Version / Commit / Tag
+      description: |
+        Provide the exact version so maintainers know which code you're running.
+        Examples: `v1.4.2` · `main (abc1234)` · `Docker: ghcr.io/org/app:sha-abc1234`
+        Run `git rev-parse --short HEAD` to get the commit SHA.
+      placeholder: "e.g. v1.4.2  /  main (abc1234)  /  ghcr.io/org/app:sha-abc1234"
+    validations:
+      required: true
+
+  - type: input
+    id: operating-system
+    attributes:
+      label: Operating System
+      description: Enter the operating system and version you're using.
+      placeholder: "e.g. Windows 11 24H2, macOS 15.6, Ubuntu 24.04 LTS"
+    validations:
+      required: true
+
+  - type: input
+    id: browser
+    attributes:
+      label: Browser (frontend bugs only)
+      description: Leave blank for backend-only issues.
+      placeholder: "e.g. Chrome 126.0.6478.127"
+    validations:
+      required: false
+
+  - type: input
+    id: node-version
+    attributes:
+      label: Node.js Version
+      description: Run `node --version` and paste the output.
+      placeholder: "e.g. node v22.3.0"
+    validations:
+      required: true
+
+  - type: input
+    id: package-manager-version
+    attributes:
+      label: Package Manager Version
+      description: "Run `npm --version` and paste the output."
+      placeholder: "e.g. npm 9.1.0"
+    validations:
+      required: false
+
+  # Reproduction & context
+
+  - type: input
+    id: reproduction
+    attributes:
+      label: Minimal Reproduction
+      description: |
+        Link to a minimal repository, CodeSandbox, or StackBlitz that isolates the bug.
+        A minimal reproduction greatly increases the chances of a quick fix.
+      placeholder: "GitHub repository, StackBlitz, or CodeSandbox URL"
+    validations:
+      required: false
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: 📎 Additional Context
+      description: Anything else that might help — related issues, workarounds, configuration differences, deployment context, etc.
+      placeholder: |
+        Related issues: #123
+        Temporary workaround: ...
+        Environment differences (env vars, feature flags): ...
+    validations:
+      required: false
+
+  # Possible cause & checklist
+
+  - type: textarea
+    id: root-cause
+    attributes:
+      label: Possible Cause
+      description: If you have a hunch about what's causing this, share it here. Even a partial guess saves maintainers significant investigation time.
+      placeholder: |
+        I think this might be caused by…
+        Possibly the JWT refresh logic in auth.service.ts…
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: ✅ Pre-Submission Checklist
+      description: Please confirm all of the following before submitting.
+      options:
+        - label: I have searched the existing issues and confirmed this bug hasn't already been reported.
+          required: true
+        - label: I am on the latest version of the project.
+          required: true
+        - label: I can reliably reproduce this bug with the steps above.
+          required: true
+        - label: I am willing to submit a pull request to help fix this.
+          required: false
