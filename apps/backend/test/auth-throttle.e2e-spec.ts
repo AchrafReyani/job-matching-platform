@@ -31,6 +31,7 @@ describe('Auth Rate Limiting (e2e)', () => {
 
       // 5 attempts allowed within the window
       for (let i = 0; i < 5; i++) {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
         const res = await request(app.getHttpServer())
           .post('/auth/login')
           .send(payload);
@@ -38,6 +39,7 @@ describe('Auth Rate Limiting (e2e)', () => {
       }
 
       // 6th attempt should be rate limited
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       const response = await request(app.getHttpServer())
         .post('/auth/login')
         .send(payload)
