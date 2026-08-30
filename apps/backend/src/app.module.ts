@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { ScheduleModule } from '@nestjs/schedule';
 import { PrismaService } from './prisma.service';
 import { AuthModule } from './auth/auth.module';
@@ -13,6 +13,7 @@ import { NotificationsModule } from './notifications/notifications.module';
 import { DashboardModule } from './dashboard/dashboard.module';
 import { AdminModule } from './admin/admin.module';
 import { NewsModule } from './news/news.module';
+import { LoggingMiddleware } from './common/middleware/logging.middleware';
 
 import { AppController } from './app.controller';
 
@@ -36,4 +37,10 @@ import { AppController } from './app.controller';
   providers: [PrismaService],
   exports: [PrismaService],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    if (process.env.NODE_ENV !== 'test') {
+      consumer.apply(LoggingMiddleware).forRoutes('*');
+    }
+  }
+}
