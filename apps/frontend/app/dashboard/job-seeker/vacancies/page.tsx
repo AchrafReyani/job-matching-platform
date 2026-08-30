@@ -145,6 +145,7 @@ export default function JobSeekerVacanciesPage() {
                   <div className="mt-4 flex gap-3">
                     <Button
                       onClick={() => handleApply(vacancy.id)}
+                      loading={submitting === vacancy.id}
                       disabled={submitting === vacancy.id}
                     >
                       {submitting === vacancy.id ? t('applying') : t('apply')}
