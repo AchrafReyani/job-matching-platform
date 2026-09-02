@@ -4,11 +4,15 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { login, getProfile, lineLoginUrl } from '@/lib/auth/api';
-import type { LineSignupRole } from '@/lib/auth/api';
 import { saveToken, getToken, clearToken } from '@/lib/api';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
+import { LineLoginButton } from 'renkei-next/button';
+
+// LINE's official login button (renkei-next), stretched to the card width with the label centred.
+const LINE_BUTTON_CLASS =
+  'w-full [&_.rk-line-login__label]:flex-1 [&_.rk-line-login__label]:justify-center';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -26,10 +30,6 @@ export default function LoginPage() {
       window.history.replaceState(null, '', window.location.pathname);
     }
   }, [t]);
-
-  const startLineLogin = (role: LineSignupRole) => {
-    window.location.assign(lineLoginUrl(role));
-  };
 
   useEffect(() => {
     const checkExistingSession = async () => {
@@ -127,20 +127,16 @@ export default function LoginPage() {
         </div>
 
         <div className="flex flex-col gap-3" aria-label={t('lineLogin')}>
-          <Button
-            type="button"
-            variant="outline"
-            onClick={() => startLineLogin('job-seeker')}
-          >
-            {t('lineAsJobSeeker')}
-          </Button>
-          <Button
-            type="button"
-            variant="outline"
-            onClick={() => startLineLogin('company')}
-          >
-            {t('lineAsCompany')}
-          </Button>
+          <LineLoginButton
+            href={lineLoginUrl('job-seeker')}
+            label={t('lineAsJobSeeker')}
+            className={LINE_BUTTON_CLASS}
+          />
+          <LineLoginButton
+            href={lineLoginUrl('company')}
+            label={t('lineAsCompany')}
+            className={LINE_BUTTON_CLASS}
+          />
           <p className="text-xs text-center text-(--color-muted)">
             {t('lineHint')}
           </p>
