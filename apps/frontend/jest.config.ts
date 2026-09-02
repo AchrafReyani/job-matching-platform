@@ -15,6 +15,8 @@ const config: Config = {
 
   moduleNameMapper: {
     "^@/(.*)$": "<rootDir>/$1",
+    // renkei-next 0.4.0 exports only "import"/"types" conditions, which Jest's CJS resolver skips.
+    "^renkei-next/button$": "<rootDir>/node_modules/renkei-next/dist/button.js",
   },
   testPathIgnorePatterns: ["/node_modules/", "/dist/"],
 

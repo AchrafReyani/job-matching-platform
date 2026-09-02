@@ -85,12 +85,13 @@ describe("LoginPage", () => {
     expect(screen.getByPlaceholderText("Email")).toBeInTheDocument();
     expect(screen.getByPlaceholderText("Password")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Login" })).toBeInTheDocument();
+    // The LINE buttons are renkei-next's <LineLoginButton />: real links to the backend start URL.
     expect(
-      screen.getByRole("button", { name: "Continue with LINE as Job Seeker" }),
-    ).toBeInTheDocument();
+      screen.getByRole("link", { name: "Continue with LINE as Job Seeker" }),
+    ).toHaveAttribute("href", "/api/auth/line?role=job-seeker");
     expect(
-      screen.getByRole("button", { name: "Continue with LINE as Company" }),
-    ).toBeInTheDocument();
+      screen.getByRole("link", { name: "Continue with LINE as Company" }),
+    ).toHaveAttribute("href", "/api/auth/line?role=company");
   });
 
   it("shows a LINE error message when redirected back with ?error=line", async () => {
@@ -239,27 +240,16 @@ describe("LoginPage", () => {
     });
   });
 
-  it("calls lineLoginUrl with the job-seeker role when that button is clicked", async () => {
-    const user = userEvent.setup();
-
+  it("builds both LINE login links from lineLoginUrl with the chosen role", () => {
     render(<LoginPage />);
-
-    await user.click(
-      screen.getByRole("button", { name: "Continue with LINE as Job Seeker" }),
-    );
 
     expect(lineLoginUrlMock).toHaveBeenCalledWith("job-seeker");
-  });
-
-  it("calls lineLoginUrl with the company role when that button is clicked", async () => {
-    const user = userEvent.setup();
-
-    render(<LoginPage />);
-
-    await user.click(
-      screen.getByRole("button", { name: "Continue with LINE as Company" }),
-    );
-
     expect(lineLoginUrlMock).toHaveBeenCalledWith("company");
+    expect(
+      screen.getByRole("link", { name: "Continue with LINE as Job Seeker" }),
+    ).toHaveAttribute("href", "/api/auth/line?role=job-seeker");
+    expect(
+      screen.getByRole("link", { name: "Continue with LINE as Company" }),
+    ).toHaveAttribute("href", "/api/auth/line?role=company");
   });
 });
