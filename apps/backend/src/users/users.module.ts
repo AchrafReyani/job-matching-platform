@@ -1,5 +1,4 @@
 import { Module } from '@nestjs/common';
-import { ThrottlerModule } from '@nestjs/throttler';
 import { PrismaUserRepository } from './infrastructure/prisma-user.repository';
 import { PrismaService } from '../prisma/prisma.service';
 import { USER_REPOSITORY } from './repository/user.repository';
@@ -13,14 +12,6 @@ import { DeleteAccountUseCase } from './usecase/delete-account.usecase';
 import { AccountController } from './controller/account.controller';
 
 @Module({
-  imports: [
-    ThrottlerModule.forRoot([
-      {
-        ttl: 60000, // 1 minute
-        limit: 10, // 10 requests per minute default
-      },
-    ]),
-  ],
   controllers: [AccountController],
   providers: [
     PrismaService,
